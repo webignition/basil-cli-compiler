@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace webignition\BasilCliCompiler\Model;
 
-class GeneratedTestOutput implements \JsonSerializable
+use JsonSerializable;
+
+class GeneratedTestOutput implements JsonSerializable
 {
     private string $source;
     private string $target;
