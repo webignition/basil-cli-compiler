@@ -31,7 +31,7 @@ class ConfigurationFactoryTest extends AbstractBaseTest
         string $baseClass,
         Configuration $expectedConfiguration
     ) {
-        $this->assertEquals($expectedConfiguration, $this->factory->create($rawSource, $rawTarget, $baseClass));
+        self::assertEquals($expectedConfiguration, $this->factory->create($rawSource, $rawTarget, $baseClass));
     }
 
     public function createFromTypedInputSuccessDataProvider(): array
