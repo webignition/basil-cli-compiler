@@ -37,7 +37,7 @@ class ValidatorInvalidResultSerializerTest extends AbstractBaseTest
      */
     public function testSerializeToArray(InvalidResultInterface $invalidResult, array $expectedData)
     {
-        $this->assertSame($expectedData, $this->serializer->serializeToArray($invalidResult));
+        self::assertSame($expectedData, $this->serializer->serializeToArray($invalidResult));
     }
 
     public function serializeToArrayDataProvider(): array

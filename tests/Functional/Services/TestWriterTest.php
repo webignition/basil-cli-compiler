@@ -45,10 +45,10 @@ class TestWriterTest extends \PHPUnit\Framework\TestCase
         $generatedTestOutput = $this->testWriter->generate($test, $fullyQualifiedBaseClass, $outputDirectory);
         $expectedCodePath = $outputDirectory . '/' . $generatedTestOutput->getTarget();
 
-        $this->assertFileExists($expectedCodePath);
-        $this->assertFileIsReadable($expectedCodePath);
+        self::assertFileExists($expectedCodePath);
+        self::assertFileIsReadable($expectedCodePath);
 
-        $this->assertEquals($expectedGeneratedCode, file_get_contents($expectedCodePath));
+        self::assertEquals($expectedGeneratedCode, file_get_contents($expectedCodePath));
 
         if (file_exists($expectedCodePath)) {
             unlink($expectedCodePath);

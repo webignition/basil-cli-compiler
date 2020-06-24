@@ -52,7 +52,7 @@ class TestGeneratorTest extends AbstractBaseTest
 
         $generatedTestOutput = $testGenerator->generate($test, $fullyQualifiedBaseClass, $outputDirectory);
 
-        $this->assertEquals($expectedGeneratedTestOutput, $generatedTestOutput);
+        self::assertEquals($expectedGeneratedTestOutput, $generatedTestOutput);
     }
 
     public function generateDataProvider(): array

@@ -40,7 +40,7 @@ class SuccessOutputTest extends AbstractBaseTest
         ];
 
         $output = new SuccessOutput($this->configuration, $generatedTestOutputCollection);
-        $this->assertSame($generatedTestOutputCollection, $output->getOutput());
+        self::assertSame($generatedTestOutputCollection, $output->getOutput());
     }
 
     /**
@@ -51,7 +51,7 @@ class SuccessOutputTest extends AbstractBaseTest
      */
     public function testGetData(SuccessOutput $output, array $expectedData)
     {
-        $this->assertSame($expectedData, $output->getData());
+        self::assertSame($expectedData, $output->getData());
     }
 
     public function getDataDataProvider(): array
@@ -90,7 +90,7 @@ class SuccessOutputTest extends AbstractBaseTest
      */
     public function testGetTestPaths(SuccessOutput $successOutput, array $expectedTestPaths)
     {
-        $this->assertSame($expectedTestPaths, $successOutput->getTestPaths());
+        self::assertSame($expectedTestPaths, $successOutput->getTestPaths());
     }
 
     public function getTestPathsDataProvider(): array
@@ -124,7 +124,7 @@ class SuccessOutputTest extends AbstractBaseTest
     {
         $data = $output->jsonSerialize();
 
-        $this->assertEquals(
+        self::assertEquals(
             $output,
             SuccessOutput::fromJson((string) json_encode($data))
         );

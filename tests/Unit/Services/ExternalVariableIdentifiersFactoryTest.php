@@ -12,7 +12,7 @@ class ExternalVariableIdentifiersFactoryTest extends AbstractBaseTest
 {
     public function testCreate()
     {
-        $this->assertEquals(
+        self::assertEquals(
             new ExternalVariableIdentifiers(
                 '$this->navigator',
                 '$_ENV',
