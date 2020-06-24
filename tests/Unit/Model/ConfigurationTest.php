@@ -51,10 +51,13 @@ class ConfigurationTest extends AbstractBaseTest
 
     /**
      * @dataProvider fromArrayDataProvider
+     *
+     * @param array<mixed> $data
+     * @param Configuration $expectedConfiguration
      */
     public function testFromArray(array $data, Configuration $expectedConfiguration)
     {
-        $this->assertEquals($expectedConfiguration, Configuration::fromArray($data));
+        self::assertEquals($expectedConfiguration, Configuration::fromArray($data));
     }
 
     public function fromArrayDataProvider(): array

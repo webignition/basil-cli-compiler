@@ -46,6 +46,11 @@ class Configuration implements JsonSerializable
         ];
     }
 
+    /**
+     * @param array<mixed> $data
+     *
+     * @return self
+     */
     public static function fromArray(array $data): self
     {
         return new Configuration(

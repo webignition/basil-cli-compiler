@@ -10,7 +10,7 @@ use webignition\BasilCliCompiler\Tests\Unit\AbstractBaseTest;
 class GeneratedTestOutputTest extends AbstractBaseTest
 {
     private const SOURCE = 'test.yml';
-    private const TARGET = 'build';
+    private const TARGET = 'GeneratedTest.php';
 
     private GeneratedTestOutput $output;
 
