@@ -1233,7 +1233,7 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
                         ->shouldReceive('get')
                         ->andReturn([]);
 
-                    $this->mockTestGeneratorCompilerExternalVariableIdentifiers(
+                    $this->mockTestWriterCompilerExternalVariableIdentifiers(
                         $generateCommandTest->command,
                         $mockExternalVariableIdentifiers
                     );
@@ -1264,7 +1264,7 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
             ->shouldReceive('generate')
             ->andThrow($unsupportedStepException);
 
-        $this->mockTestGenerator($this->command, $testWriter);
+        $this->mockTestWriter($this->command, $testWriter);
 
         $output = new BufferedOutput();
 
@@ -1382,22 +1382,22 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
         ];
     }
 
-    private function mockTestGenerator(GenerateCommand $command, TestWriter $mockTestWriter): void
+    private function mockTestWriter(GenerateCommand $command, TestWriter $mockTestWriter): void
     {
         ObjectReflector::setProperty(
             $command,
             GenerateCommand::class,
-            'testGenerator',
+            'testWriter',
             $mockTestWriter
         );
     }
 
-    private function mockTestGeneratorCompilerExternalVariableIdentifiers(
+    private function mockTestWriterCompilerExternalVariableIdentifiers(
         GenerateCommand $command,
         ExternalVariableIdentifiers $updatedExternalVariableIdentifiers
     ): void {
-        $testGenerator = ObjectReflector::getProperty($command, 'testGenerator');
-        $compiler = ObjectReflector::getProperty($testGenerator, 'compiler');
+        $testWriter = ObjectReflector::getProperty($command, 'testWriter');
+        $compiler = ObjectReflector::getProperty($testWriter, 'compiler');
 
         ObjectReflector::setProperty(
             $compiler,
@@ -1407,7 +1407,7 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
         );
 
         ObjectReflector::setProperty(
-            $testGenerator,
+            $testWriter,
             TestWriter::class,
             'compiler',
             $compiler
@@ -1416,8 +1416,8 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
         ObjectReflector::setProperty(
             $command,
             GenerateCommand::class,
-            'testGenerator',
-            $testGenerator
+            'testWriter',
+            $testWriter
         );
     }
 
