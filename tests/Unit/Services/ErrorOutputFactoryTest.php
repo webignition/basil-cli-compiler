@@ -28,7 +28,7 @@ class ErrorOutputFactoryTest extends AbstractBaseTest
             new ValidatorInvalidResultSerializer()
         );
 
-        $this->assertEquals($expectedOutput, $factory->createFromInvalidConfiguration($configuration));
+        self::assertEquals($expectedOutput, $factory->createFromInvalidConfiguration($configuration));
     }
 
     public function createFromInvalidConfigurationDataProvider(): array
@@ -124,7 +124,7 @@ class ErrorOutputFactoryTest extends AbstractBaseTest
         $validator
             ->shouldReceive('deriveInvalidConfigurationErrorCode')
             ->withArgs(function (Configuration $configuration) use ($expectedConfiguration) {
-                $this->assertEquals($expectedConfiguration, $configuration);
+                self::assertEquals($expectedConfiguration, $configuration);
 
                 return true;
             })

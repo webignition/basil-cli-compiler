@@ -35,7 +35,7 @@ class ErrorOutputTest extends AbstractBaseTest
 
     public function testGetData()
     {
-        $this->assertSame(
+        self::assertSame(
             [
                 'config' => $this->configuration->jsonSerialize(),
                 'status' => 'failure',
@@ -55,7 +55,7 @@ class ErrorOutputTest extends AbstractBaseTest
     {
         $data = $output->jsonSerialize();
 
-        $this->assertEquals(
+        self::assertEquals(
             $output,
             ErrorOutput::fromJson((string) json_encode($data))
         );

@@ -43,7 +43,7 @@ class PhpFileCreatorTest extends AbstractBaseTest
         $creator->setOutputDirectory($outputDirectory);
         $createdFileName = $creator->create($className, $code);
 
-        $this->assertSame($expectedCreatedFilename, $createdFileName);
+        self::assertSame($expectedCreatedFilename, $createdFileName);
     }
 
     public function createDataProvider(): array

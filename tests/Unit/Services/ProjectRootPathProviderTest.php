@@ -13,6 +13,6 @@ class ProjectRootPathProviderTest extends AbstractBaseTest
     {
         $expectedRoot = realpath(__DIR__ . '/../../..');
 
-        $this->assertSame($expectedRoot, (new ProjectRootPathProvider())->get());
+        self::assertSame($expectedRoot, (new ProjectRootPathProvider())->get());
     }
 }
