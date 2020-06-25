@@ -259,12 +259,9 @@ class GenerateCommandTest extends AbstractBaseTest
         ConfigurationValidator $configurationValidator,
         TestWriter $testWriter
     ): GenerateCommand {
-        $projectRootPath = (new ProjectRootPathProvider())->get();
-
         return new GenerateCommand(
             SourceLoader::createLoader(),
             $testWriter,
-            $projectRootPath,
             $configurationFactory,
             $configurationValidator,
             new ErrorOutputFactory($configurationValidator, new ValidatorInvalidResultSerializer())

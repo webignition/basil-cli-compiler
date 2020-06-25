@@ -41,7 +41,6 @@ class GenerateCommand extends Command
 
     private SourceLoader $sourceLoader;
     private TestWriter $testWriter;
-    private string $projectRootPath;
     private ConfigurationFactory $configurationFactory;
     private ConfigurationValidator $configurationValidator;
     private ErrorOutputFactory $errorOutputFactory;
@@ -49,7 +48,6 @@ class GenerateCommand extends Command
     public function __construct(
         SourceLoader $sourceLoader,
         TestWriter $testWriter,
-        string $projectRootPath,
         ConfigurationFactory $configurationFactory,
         ConfigurationValidator $configurationValidator,
         ErrorOutputFactory $errorOutputFactory
@@ -58,7 +56,6 @@ class GenerateCommand extends Command
 
         $this->sourceLoader = $sourceLoader;
         $this->testWriter = $testWriter;
-        $this->projectRootPath = $projectRootPath;
         $this->configurationFactory = $configurationFactory;
         $this->configurationValidator = $configurationValidator;
         $this->errorOutputFactory = $errorOutputFactory;
