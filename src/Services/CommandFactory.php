@@ -35,7 +35,6 @@ class CommandFactory
                 Compiler::create($externalVariableIdentifiers),
                 new PhpFileCreator(),
             ),
-            $this->projectRootPath,
             new ConfigurationFactory($this->projectRootPath),
             $configurationValidator,
             new ErrorOutputFactory($configurationValidator, new ValidatorInvalidResultSerializer()),
