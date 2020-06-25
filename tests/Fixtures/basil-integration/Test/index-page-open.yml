@@ -1,0 +1,7 @@
+config:
+  browser: chrome
+  url: http://127.0.0.1:9080/index.html
+
+"verify page is open":
+  assertions:
+    - $page.url is "http://127.0.0.1:9080/index.html"
