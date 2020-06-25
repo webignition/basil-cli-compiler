@@ -9,4 +9,4 @@ use webignition\BasilCliCompiler\Services\ApplicationFactory;
 
 require 'vendor/autoload.php';
 
-ApplicationFactory::createFactory()->create()->run();
+ApplicationFactory::create()->run();
