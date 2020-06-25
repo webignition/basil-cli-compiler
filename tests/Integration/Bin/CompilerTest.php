@@ -14,6 +14,8 @@ class CompilerTest extends \PHPUnit\Framework\TestCase
      * @dataProvider generateAndRunDataProvider
      *
      * @param string $source
+     * @param string $target
+     * @param array<mixed> $expectedGeneratedTestDataCollection
      */
     public function testGenerateAndRun(
         string $source,
@@ -33,14 +35,14 @@ class CompilerTest extends \PHPUnit\Framework\TestCase
 
             $expectedGeneratedTestData = $expectedGeneratedTestDataCollection[$index];
 
-            $generatedTestContent = file_get_contents($testPath);
+            $generatedTestContent = (string) file_get_contents($testPath);
 
             $classNameReplacement = $expectedGeneratedTestData['classNameReplacement'];
             $generatedTestContent = $this->replaceGeneratedTestClassName($generatedTestContent, $classNameReplacement);
             $generatedTestContent = $this->removeProjectRootPathInGeneratedTest($generatedTestContent);
 
             $expectedTestContentPath = $projectRootPath . '/' . $expectedGeneratedTestData['expectedContentPath'];
-            $expectedTestContent = file_get_contents($expectedTestContentPath);
+            $expectedTestContent = (string) file_get_contents($expectedTestContentPath);
 
             $this->assertSame($expectedTestContent, $generatedTestContent);
         }
@@ -76,7 +78,7 @@ class CompilerTest extends \PHPUnit\Framework\TestCase
 
     private function replaceGeneratedTestClassName(string $generatedTestContent, string $className): string
     {
-        return preg_replace(
+        return (string) preg_replace(
             '/class Generated[a-zA-Z0-9]{32}Test/',
             'class ' . $className,
             $generatedTestContent

@@ -28,7 +28,7 @@ class ApplicationFactory
     public function create(): SingleCommandApplication
     {
         $application = new SingleCommandApplication();
-        $application->setName($this->command->getName());
+        $application->setName((string) $this->command->getName());
         $application->setDefinition($this->command->getDefinition());
 
         $application
