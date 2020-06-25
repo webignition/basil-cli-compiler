@@ -23,8 +23,8 @@
         }
     },
     "scripts": {
-        "cs": "./vendor/bin/phpcs",
-        "static-analysis": "./vendor/bin/phpstan analyse",
+        "cs": "./vendor/bin/ecs check --ansi",
+        "static-analysis": "./vendor/bin/phpstan analyse --ansi",
         "test": "./vendor/bin/phpunit --colors=always",
         "ci": [
             "@composer cs",
