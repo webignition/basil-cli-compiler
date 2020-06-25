@@ -1,0 +1,12 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+namespace webignition\BasilRunner\Bin;
+
+use webignition\BasilCliCompiler\Services\ApplicationFactory;
+
+require dirname(__DIR__) . '/vendor/autoload.php';
+
+ApplicationFactory::createFactory()->create()->run();
