@@ -61,7 +61,7 @@ class CompilerTest extends \PHPUnit\Framework\TestCase
                 'expectedGeneratedTestDataCollection' => [
                     [
                         'classNameReplacement' => 'IndexPageOpenTest',
-                        'expectedContentPath' =>  '/tests/Fixtures/php/Test-Integration/IndexPageOpenTest.php',
+                        'expectedContentPath' => '/tests/Fixtures/php/Test-Integration/IndexPageOpenTest.php',
                     ],
                 ],
             ],

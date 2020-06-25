@@ -201,7 +201,7 @@ class GenerateCommand extends Command
 
         $directoryIterator = new \DirectoryIterator($directorySource);
         foreach ($directoryIterator as $item) {
-            /* @var \DirectoryIterator $item */
+            /** @var \DirectoryIterator $item */
             if ($item->isFile() && 'yml' === $item->getExtension()) {
                 $sourcePaths[] = $item->getPath() . DIRECTORY_SEPARATOR . $item->getFilename();
             }

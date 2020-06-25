@@ -44,7 +44,7 @@ class SuccessOutput extends AbstractOutput implements JsonSerializable
         $testPaths = [];
 
         foreach ($this->getOutput() as $generatedTestOutput) {
-            $testPaths[] = $targetDirectory .  '/' . $generatedTestOutput->getTarget();
+            $testPaths[] = $targetDirectory . '/' . $generatedTestOutput->getTarget();
         }
 
         return $testPaths;
