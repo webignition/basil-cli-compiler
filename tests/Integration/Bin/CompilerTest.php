@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace webignition\BasilCliCompiler\Tests\Integration\Bin;
 
+use Symfony\Component\Process\Process;
 use webignition\BasilCliCompiler\Model\SuccessOutput;
 use webignition\BasilCliCompiler\Services\ProjectRootPathProvider;
 use webignition\BasilCliCompiler\Tests\Integration\AbstractGeneratedTestCase;
@@ -11,21 +12,22 @@ use webignition\BasilCliCompiler\Tests\Integration\AbstractGeneratedTestCase;
 class CompilerTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @dataProvider generateAndRunDataProvider
+     * @dataProvider generateDataProvider
      *
      * @param string $source
      * @param string $target
      * @param array<mixed> $expectedGeneratedTestDataCollection
      */
-    public function testGenerateAndRun(
-        string $source,
-        string $target,
-        array $expectedGeneratedTestDataCollection
-    ) {
+    public function testGenerate(string $source, string $target, array $expectedGeneratedTestDataCollection)
+    {
         $projectRootPath = (new ProjectRootPathProvider())->get();
 
-        $generateCommand = $this->createGenerateCommand($source, $target);
-        $generateCommandOutput = SuccessOutput::fromJson((string) shell_exec($generateCommand));
+        $generateProcess = $this->createGenerateCommandProcess($source, $target);
+        $exitCode = $generateProcess->run();
+
+        $this->assertSame(0, $exitCode);
+
+        $generateCommandOutput = SuccessOutput::fromJson($generateProcess->getOutput());
 
         $testPaths = $generateCommandOutput->getTestPaths();
         self::assertNotEmpty($testPaths);
@@ -52,7 +54,7 @@ class CompilerTest extends \PHPUnit\Framework\TestCase
         }
     }
 
-    public function generateAndRunDataProvider(): array
+    public function generateDataProvider(): array
     {
         return [
             'single test' => [
@@ -68,12 +70,20 @@ class CompilerTest extends \PHPUnit\Framework\TestCase
         ];
     }
 
-    private function createGenerateCommand(string $source, string $target): string
+    /**
+     * @param string $source
+     * @param string $target
+     *
+     * @return Process<string>
+     */
+    private function createGenerateCommandProcess(string $source, string $target): Process
     {
-        return './bin/compiler ' .
-            '--source=' . $source . ' ' .
-            '--target=' . $target . ' ' .
-            '--base-class="' . AbstractGeneratedTestCase::class . '"';
+        return new Process([
+            './bin/compiler',
+            '--source=' . $source,
+            '--target=' . $target,
+            '--base-class=' . AbstractGeneratedTestCase::class
+        ]);
     }
 
     private function replaceGeneratedTestClassName(string $generatedTestContent, string $className): string
