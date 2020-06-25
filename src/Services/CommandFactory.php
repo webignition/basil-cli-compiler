@@ -10,22 +10,9 @@ use webignition\BasilLoader\SourceLoader;
 
 class CommandFactory
 {
-    private string $projectRootPath;
-
-    public function __construct(string $projectRootPath)
+    public static function createGenerateCommand(): GenerateCommand
     {
-        $this->projectRootPath = $projectRootPath;
-    }
-
-    public static function createFactory(): self
-    {
-        return new CommandFactory(
-            (new ProjectRootPathProvider())->get()
-        );
-    }
-
-    public function createGenerateCommand(): GenerateCommand
-    {
+        $projectRootPath = (new ProjectRootPathProvider())->get();
         $externalVariableIdentifiers = ExternalVariableIdentifiersFactory::create();
         $configurationValidator = new ConfigurationValidator();
 
@@ -35,7 +22,7 @@ class CommandFactory
                 Compiler::create($externalVariableIdentifiers),
                 new PhpFileCreator(),
             ),
-            new ConfigurationFactory($this->projectRootPath),
+            new ConfigurationFactory($projectRootPath),
             $configurationValidator,
             new ErrorOutputFactory($configurationValidator, new ValidatorInvalidResultSerializer()),
         );

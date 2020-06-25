@@ -36,7 +36,7 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
     {
         parent::setUp();
 
-        $this->command = CommandFactory::createFactory()->createGenerateCommand();
+        $this->command = CommandFactory::createGenerateCommand();
     }
 
     /**

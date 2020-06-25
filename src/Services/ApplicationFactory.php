@@ -12,8 +12,7 @@ class ApplicationFactory
 {
     public static function create(): SingleCommandApplication
     {
-        $commandFactory = CommandFactory::createFactory();
-        $command = $commandFactory->createGenerateCommand();
+        $command = CommandFactory::createGenerateCommand();
 
         $application = new SingleCommandApplication();
         $application->setName((string) $command->getName());
