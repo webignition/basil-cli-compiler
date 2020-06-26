@@ -8,6 +8,10 @@ install:
 script:
   - composer ci
 
+after_success:
+  - composer compile-phar
+  - composer test-phar
+
 cache:
   directories:
     - $HOME/.composer/cache/files
