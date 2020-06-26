@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace webignition\BasilCliCompiler\Services;
 
-use webignition\BasilCompiler\ExternalVariableIdentifiers;
+use webignition\BasilCliCompiler\Model\ExternalVariableIdentifiers;
 
 class ExternalVariableIdentifiersFactory
 {

@@ -4,56 +4,37 @@ declare(strict_types=1);
 
 namespace webignition\BasilCliCompiler\Services;
 
+use webignition\BasilCliCompiler\Model\CompiledTest;
 use webignition\BasilCliCompiler\Model\GeneratedTestOutput;
-use webignition\BasilCompilableSource\ClassDefinition;
-use webignition\BasilCompilableSource\Expression\ClassDependency;
-use webignition\BasilCompilableSourceFactory\ClassDefinitionFactory;
-use webignition\BasilCompilableSourceFactory\Exception\UnsupportedStepException;
-use webignition\BasilCompiler\Compiler;
-use webignition\BasilCompiler\UnresolvedPlaceholderException;
-use webignition\BasilModels\Test\TestInterface;
 
 class TestWriter
 {
-    private Compiler $compiler;
     private PhpFileCreator $phpFileCreator;
-    private ClassDefinitionFactory $classDefinitionFactory;
 
-    public function __construct(
-        Compiler $compiler,
-        PhpFileCreator $phpFileCreator,
-        ClassDefinitionFactory $classDefinitionFactory
-    ) {
-        $this->compiler = $compiler;
+    public function __construct(PhpFileCreator $phpFileCreator)
+    {
         $this->phpFileCreator = $phpFileCreator;
-        $this->classDefinitionFactory = $classDefinitionFactory;
+    }
+
+    public static function createWriter(): self
+    {
+        return new TestWriter(
+            new PhpFileCreator()
+        );
     }
 
     /**
-     * @param TestInterface $test
-     * @param string $fullyQualifiedBaseClass
+     * @param CompiledTest $compiledTest
      * @param string $outputDirectory
      *
      * @return GeneratedTestOutput
      *
-     * @throws UnresolvedPlaceholderException
-     * @throws UnsupportedStepException
      */
-    public function generate(
-        TestInterface $test,
-        string $fullyQualifiedBaseClass,
-        string $outputDirectory
-    ): GeneratedTestOutput {
-        $classDefinition = $this->classDefinitionFactory->createClassDefinition($test);
-        if ($classDefinition instanceof ClassDefinition) {
-            $classDefinition->setBaseClass(new ClassDependency($fullyQualifiedBaseClass));
-        }
-
-        $code = $this->compiler->compile($classDefinition);
-
+    public function write(CompiledTest $compiledTest, string $outputDirectory): GeneratedTestOutput
+    {
         $this->phpFileCreator->setOutputDirectory($outputDirectory);
-        $filename = $this->phpFileCreator->create($classDefinition->getName(), $code);
+        $filename = $this->phpFileCreator->create($compiledTest->getClassName(), $compiledTest->getCode());
 
-        return new GeneratedTestOutput($test->getPath() ?? '', $filename);
+        return new GeneratedTestOutput($compiledTest->getTestPath() ?? '', $filename);
     }
 }

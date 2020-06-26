@@ -10,10 +10,12 @@ use webignition\BaseBasilTestCase\AbstractBaseTest;
 use webignition\BasilCliCompiler\Command\GenerateCommand;
 use webignition\BasilCliCompiler\Model\Configuration;
 use webignition\BasilCliCompiler\Model\ErrorOutput;
+use webignition\BasilCliCompiler\Model\ExternalVariableIdentifiers;
 use webignition\BasilCliCompiler\Model\SuccessOutput;
 use webignition\BasilCliCompiler\Services\CommandFactory;
+use webignition\BasilCliCompiler\Services\CompiledClassResolver;
+use webignition\BasilCliCompiler\Services\Compiler;
 use webignition\BasilCliCompiler\Services\ProjectRootPathProvider;
-use webignition\BasilCliCompiler\Services\TestWriter;
 use webignition\BasilCliCompiler\Tests\DataProvider\RunFailure\CircularStepImportDataProviderTrait;
 use webignition\BasilCliCompiler\Tests\DataProvider\RunFailure\EmptyTestDataProviderTrait;
 use webignition\BasilCliCompiler\Tests\DataProvider\RunFailure\InvalidPageDataProviderTrait;
@@ -29,8 +31,6 @@ use webignition\BasilCliCompiler\Tests\DataProvider\RunSuccess\SuccessDataProvid
 use webignition\BasilCompilableSourceFactory\Exception\UnsupportedContentException;
 use webignition\BasilCompilableSourceFactory\Exception\UnsupportedStatementException;
 use webignition\BasilCompilableSourceFactory\Exception\UnsupportedStepException;
-use webignition\BasilCompiler\Compiler;
-use webignition\BasilCompiler\ExternalVariableIdentifiers;
 use webignition\BasilModels\Step\Step;
 use webignition\BasilParser\ActionParser;
 use webignition\BasilParser\AssertionParser;
@@ -180,7 +180,7 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
                         ->shouldReceive('get')
                         ->andReturn([]);
 
-                    $this->mockTestWriterCompilerExternalVariableIdentifiers(
+                    $this->mockCompilerCompiledClassResolverExternalVariableIdentifiers(
                         $generateCommandTest->command,
                         $mockExternalVariableIdentifiers
                     );
@@ -206,12 +206,17 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
             '--target' => 'tests/build/target',
         ];
 
-        $testWriter = \Mockery::mock(TestWriter::class);
-        $testWriter
-            ->shouldReceive('generate')
+        $compiler = \Mockery::mock(Compiler::class);
+        $compiler
+            ->shouldReceive('compile')
             ->andThrow($unsupportedStepException);
 
-        $this->mockTestWriter($this->command, $testWriter);
+        ObjectReflector::setProperty(
+            $this->command,
+            GenerateCommand::class,
+            'compiler',
+            $compiler
+        );
 
         $output = new BufferedOutput();
 
@@ -329,42 +334,25 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
         ];
     }
 
-    private function mockTestWriter(GenerateCommand $command, TestWriter $mockTestWriter): void
-    {
-        ObjectReflector::setProperty(
-            $command,
-            GenerateCommand::class,
-            'testWriter',
-            $mockTestWriter
-        );
-    }
-
-    private function mockTestWriterCompilerExternalVariableIdentifiers(
+    private function mockCompilerCompiledClassResolverExternalVariableIdentifiers(
         GenerateCommand $command,
         ExternalVariableIdentifiers $updatedExternalVariableIdentifiers
     ): void {
-        $testWriter = ObjectReflector::getProperty($command, 'testWriter');
-        $compiler = ObjectReflector::getProperty($testWriter, 'compiler');
+        $compiledClassResolver = CompiledClassResolver::createResolver($updatedExternalVariableIdentifiers);
+        $compiler = ObjectReflector::getProperty($command, 'compiler');
 
         ObjectReflector::setProperty(
             $compiler,
             Compiler::class,
-            'externalVariableIdentifiers',
-            $updatedExternalVariableIdentifiers
-        );
-
-        ObjectReflector::setProperty(
-            $testWriter,
-            TestWriter::class,
-            'compiler',
-            $compiler
+            'compiledClassResolver',
+            $compiledClassResolver
         );
 
         ObjectReflector::setProperty(
             $command,
             GenerateCommand::class,
-            'testWriter',
-            $testWriter
+            'compiler',
+            $compiler
         );
     }
 }

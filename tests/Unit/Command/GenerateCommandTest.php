@@ -9,8 +9,7 @@ use webignition\BaseBasilTestCase\AbstractBaseTest as BasilBaseTest;
 use webignition\BasilCliCompiler\Command\GenerateCommand;
 use webignition\BasilCliCompiler\Model\Configuration;
 use webignition\BasilCliCompiler\Model\ErrorOutput;
-use webignition\BasilCliCompiler\Model\GeneratedTestOutput;
-use webignition\BasilCliCompiler\Model\SuccessOutput;
+use webignition\BasilCliCompiler\Services\Compiler;
 use webignition\BasilCliCompiler\Services\ConfigurationFactory;
 use webignition\BasilCliCompiler\Services\ConfigurationValidator;
 use webignition\BasilCliCompiler\Services\ErrorOutputFactory;
@@ -19,117 +18,9 @@ use webignition\BasilCliCompiler\Services\TestWriter;
 use webignition\BasilCliCompiler\Services\ValidatorInvalidResultSerializer;
 use webignition\BasilCliCompiler\Tests\Unit\AbstractBaseTest;
 use webignition\BasilLoader\SourceLoader;
-use webignition\BasilModels\Test\TestInterface;
 
 class GenerateCommandTest extends AbstractBaseTest
 {
-    /**
-     * @dataProvider runSuccessDataProvider
-     *
-     * @param array<string, string> $input
-     * @param TestWriter $testWriter
-     * @param SuccessOutput $expectedCommandOutput
-     *
-     */
-    public function testRunSuccess(
-        array $input,
-        ConfigurationFactory $configurationFactory,
-        TestWriter $testWriter,
-        SuccessOutput $expectedCommandOutput
-    ): void {
-        $configurationValidator = \Mockery::mock(ConfigurationValidator::class);
-        $configurationValidator
-            ->shouldReceive('isValid')
-            ->andReturnTrue();
-
-        $command = $this->createCommand($configurationFactory, $configurationValidator, $testWriter);
-
-        $commandTester = new CommandTester($command);
-
-        $exitCode = $commandTester->execute($input);
-        self::assertSame(0, $exitCode);
-
-        $output = $commandTester->getDisplay();
-        $commandOutput = SuccessOutput::fromJson($output);
-        self::assertEquals($expectedCommandOutput, $commandOutput);
-    }
-
-    public function runSuccessDataProvider(): array
-    {
-        $root = (new ProjectRootPathProvider())->get();
-
-        return [
-            'default' => [
-                'input' => [
-                    '--source' => 'tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
-                    '--target' => 'tests/build/target',
-                ],
-                'configurationFactory' => $this->createConfigurationFactory(
-                    [
-                         'tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
-                         'tests/build/target',
-                        BasilBaseTest::class
-                    ],
-                    new Configuration(
-                        $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
-                        $root . '/tests/build/target',
-                        BasilBaseTest::class
-                    )
-                ),
-                'testWriter' => $this->createTestWriter($this->createTestWriterAndReturnUsingCallable([
-                    'tests/Fixtures/basil/Test/example.com.verify-open-literal.yml' => [
-                        'expectedFullyQualifiedBaseClass' => BasilBaseTest::class,
-                        'expectedTarget' => $root . '/tests/build/target',
-                        'generatedTestOutput' => new GeneratedTestOutput(
-                            $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
-                            'ExampleComVerifyOpenLiteralTest.php'
-                        ),
-                    ],
-                ])),
-                'expectedCommandOutput' => new SuccessOutput(
-                    new Configuration(
-                        $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
-                        $root . '/tests/build/target',
-                        BasilBaseTest::class
-                    ),
-                    [
-                        new GeneratedTestOutput(
-                            $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
-                            'ExampleComVerifyOpenLiteralTest.php'
-                        )
-                    ]
-                ),
-            ],
-        ];
-    }
-
-    /**
-     * @param array<string, array<string, mixed>> $generatedTestOutputExpectations
-     *
-     * @return callable
-     */
-    private function createTestWriterAndReturnUsingCallable(array $generatedTestOutputExpectations): callable
-    {
-        return function (
-            TestInterface $test,
-            string $fullyQualifiedBaseClass,
-            string $target
-        ) use ($generatedTestOutputExpectations) {
-            $instanceData = $generatedTestOutputExpectations[$test->getPath()] ?? null;
-            if (null === $instanceData) {
-                return null;
-            }
-
-            $expectedFullyQualifiedBaseClass = $instanceData['expectedFullyQualifiedBaseClass'] ?? null;
-            self::assertSame($expectedFullyQualifiedBaseClass, $fullyQualifiedBaseClass);
-
-            $expectedTarget = $instanceData['expectedTarget'] ?? null;
-            self::assertSame($expectedTarget, $target);
-
-            return $instanceData['generatedTestOutput'];
-        };
-    }
-
     /**
      * @param array<string, string> $input
      * @param int $validationErrorCode
@@ -147,6 +38,7 @@ class GenerateCommandTest extends AbstractBaseTest
         $command = $this->createCommand(
             $configurationFactory,
             $configurationValidator,
+            \Mockery::mock(Compiler::class),
             \Mockery::mock(TestWriter::class)
         );
 
@@ -257,27 +149,18 @@ class GenerateCommandTest extends AbstractBaseTest
     private function createCommand(
         ConfigurationFactory $configurationFactory,
         ConfigurationValidator $configurationValidator,
+        Compiler $compiler,
         TestWriter $testWriter
     ): GenerateCommand {
         return new GenerateCommand(
             SourceLoader::createLoader(),
+            $compiler,
             $testWriter,
             $configurationFactory,
             $configurationValidator,
             new ErrorOutputFactory($configurationValidator, new ValidatorInvalidResultSerializer()),
             (new ProjectRootPathProvider())->get()
         );
-    }
-
-    private function createTestWriter(callable $andReturnUsingCallable): TestWriter
-    {
-        $testGenerator = \Mockery::mock(TestWriter::class);
-
-        $testGenerator
-            ->shouldReceive('generate')
-            ->andReturnUsing($andReturnUsingCallable);
-
-        return $testGenerator;
     }
 
     /**
