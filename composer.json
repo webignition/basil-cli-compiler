@@ -32,7 +32,7 @@
             "@composer test"
         ],
         "compile-phar": "@php -dphar.readonly=0 bin/compile.php",
-        "test-phar": "./vendor/bin/phpunit tests/Integration/Phar"
+        "test-phar": "./vendor/bin/phpunit --colors=always tests/Integration/Phar"
     },
     "require": {
         "php": ">=7.4",
