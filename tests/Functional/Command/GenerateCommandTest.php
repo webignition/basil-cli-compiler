@@ -12,7 +12,6 @@ use webignition\BasilCliCompiler\Model\Configuration;
 use webignition\BasilCliCompiler\Model\ErrorOutput;
 use webignition\BasilCliCompiler\Model\SuccessOutput;
 use webignition\BasilCliCompiler\Services\CommandFactory;
-use webignition\BasilCliCompiler\Services\ConfigurationValidator;
 use webignition\BasilCliCompiler\Services\ProjectRootPathProvider;
 use webignition\BasilCliCompiler\Services\TestWriter;
 use webignition\BasilCompilableSourceFactory\ClassDefinitionFactory;
@@ -54,7 +53,6 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
         array $expectedGeneratedCode
     ) {
         $this->mockClassNameFactory($generatedCodeClassNames);
-        $this->mockConfigurationValidator();
 
         $output = new BufferedOutput();
 
@@ -106,8 +104,6 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
 
     public function runSuccessDataProvider(): array
     {
-        $root = (new ProjectRootPathProvider())->get();
-
         return [
             'single test' => [
                 'input' => [
@@ -115,16 +111,16 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
                     '--target' => 'tests/build/target',
                 ],
                 'generatedCodeClassNames' => [
-                    $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml' =>
+                    'tests/Fixtures/basil/Test/example.com.verify-open-literal.yml' =>
                         'ExampleComVerifyOpenLiteralTest',
                 ],
                 'expectedGeneratedTestOutputSources' => [
-                    $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
+                    'tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
                 ],
-                'expectedGeneratedCode' => $this->createExpectedGeneratedCodeSet([
-                    $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml' =>
-                        $root . '/tests/Fixtures/php/Test/ExampleComVerifyOpenLiteralTest.php'
-                ]),
+                'expectedGeneratedCode' => [
+                    'tests/Fixtures/basil/Test/example.com.verify-open-literal.yml' =>
+                        file_get_contents('tests/Fixtures/php/Test/ExampleComVerifyOpenLiteralTest.php')
+                ],
             ],
             'test suite' => [
                 'input' => [
@@ -132,26 +128,26 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
                     '--target' => 'tests/build/target',
                 ],
                 'generatedCodeClassNames' => [
-                    $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml' =>
+                    'tests/Fixtures/basil/Test/example.com.verify-open-literal.yml' =>
                         'ExampleComVerifyOpenLiteralTest',
-                    $root . '/tests/Fixtures/basil/Test/example.com.import-step-verify-open-literal.yml' =>
+                    'tests/Fixtures/basil/Test/example.com.import-step-verify-open-literal.yml' =>
                         'ExampleComImportVerifyOpenLiteralTest',
-                    $root . '/tests/Fixtures/basil/Test/example.com.follow-more-information.yml' =>
+                    'tests/Fixtures/basil/Test/example.com.follow-more-information.yml' =>
                         'ExampleComFollowMoreInformationTest',
                 ],
                 'expectedGeneratedTestOutputSources' => [
-                    $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
-                    $root . '/tests/Fixtures/basil/Test/example.com.import-step-verify-open-literal.yml',
-                    $root . '/tests/Fixtures/basil/Test/example.com.follow-more-information.yml',
+                    'tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
+                    'tests/Fixtures/basil/Test/example.com.import-step-verify-open-literal.yml',
+                    'tests/Fixtures/basil/Test/example.com.follow-more-information.yml',
                 ],
-                'expectedGeneratedCode' => $this->createExpectedGeneratedCodeSet([
-                    $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml' =>
-                        $root . '/tests/Fixtures/php/Test/ExampleComVerifyOpenLiteralTest.php',
-                    $root . '/tests/Fixtures/basil/Test/example.com.import-step-verify-open-literal.yml' =>
-                        $root . '/tests/Fixtures/php/Test/ExampleComImportVerifyOpenLiteralTest.php',
-                    $root . '/tests/Fixtures/basil/Test/example.com.follow-more-information.yml' =>
-                        $root . '/tests/Fixtures/php/Test/ExampleComFollowMoreInformationTest.php'
-                ]),
+                'expectedGeneratedCode' => [
+                    'tests/Fixtures/basil/Test/example.com.verify-open-literal.yml' =>
+                        file_get_contents('tests/Fixtures/php/Test/ExampleComVerifyOpenLiteralTest.php'),
+                    'tests/Fixtures/basil/Test/example.com.import-step-verify-open-literal.yml' =>
+                        file_get_contents('tests/Fixtures/php/Test/ExampleComImportVerifyOpenLiteralTest.php'),
+                    'tests/Fixtures/basil/Test/example.com.follow-more-information.yml' =>
+                        file_get_contents('tests/Fixtures/php/Test/ExampleComFollowMoreInformationTest.php')
+                ],
             ],
             'collection of tests by directory' => [
                 'input' => [
@@ -159,31 +155,31 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
                     '--target' => 'tests/build/target',
                 ],
                 'generatedCodeClassNames' => [
-                    $root . '/tests/Fixtures/basil/Test/example.com.follow-more-information.yml' =>
+                    'tests/Fixtures/basil/Test/example.com.follow-more-information.yml' =>
                         'ExampleComFollowMoreInformationTest',
-                    $root . '/tests/Fixtures/basil/Test/example.com.import-step-verify-open-literal.yml' =>
+                    'tests/Fixtures/basil/Test/example.com.import-step-verify-open-literal.yml' =>
                         'ExampleComImportVerifyOpenLiteralTest',
-                    $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml' =>
+                    'tests/Fixtures/basil/Test/example.com.verify-open-literal.yml' =>
                         'ExampleComVerifyOpenLiteralTest',
-                    $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal-data-sets.yml' =>
+                    'tests/Fixtures/basil/Test/example.com.verify-open-literal-data-sets.yml' =>
                         'ExampleComVerifyOpenLiteralDataSetsTest',
                 ],
                 'expectedGeneratedTestOutputSources' => [
-                    $root . '/tests/Fixtures/basil/Test/example.com.follow-more-information.yml',
-                    $root . '/tests/Fixtures/basil/Test/example.com.import-step-verify-open-literal.yml',
-                    $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal-data-sets.yml',
-                    $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
+                    'tests/Fixtures/basil/Test/example.com.follow-more-information.yml',
+                    'tests/Fixtures/basil/Test/example.com.import-step-verify-open-literal.yml',
+                    'tests/Fixtures/basil/Test/example.com.verify-open-literal-data-sets.yml',
+                    'tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
                 ],
-                'expectedGeneratedCode' => $this->createExpectedGeneratedCodeSet([
-                    $root . '/tests/Fixtures/basil/Test/example.com.follow-more-information.yml' =>
-                        $root . '/tests/Fixtures/php/Test/ExampleComFollowMoreInformationTest.php',
-                    $root . '/tests/Fixtures/basil/Test/example.com.import-step-verify-open-literal.yml' =>
-                        $root . '/tests/Fixtures/php/Test/ExampleComImportVerifyOpenLiteralTest.php',
-                    $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal-data-sets.yml' =>
-                        $root . '/tests/Fixtures/php/Test/ExampleComVerifyOpenLiteralDataSetsTest.php',
-                    $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml' =>
-                        $root . '/tests/Fixtures/php/Test/ExampleComVerifyOpenLiteralTest.php',
-                ]),
+                'expectedGeneratedCode' => [
+                    'tests/Fixtures/basil/Test/example.com.follow-more-information.yml' =>
+                        file_get_contents('tests/Fixtures/php/Test/ExampleComFollowMoreInformationTest.php'),
+                    'tests/Fixtures/basil/Test/example.com.import-step-verify-open-literal.yml' =>
+                        file_get_contents('tests/Fixtures/php/Test/ExampleComImportVerifyOpenLiteralTest.php'),
+                    'tests/Fixtures/basil/Test/example.com.verify-open-literal-data-sets.yml' =>
+                        file_get_contents('tests/Fixtures/php/Test/ExampleComVerifyOpenLiteralDataSetsTest.php'),
+                    'tests/Fixtures/basil/Test/example.com.verify-open-literal.yml' =>
+                        file_get_contents('tests/Fixtures/php/Test/ExampleComVerifyOpenLiteralTest.php'),
+                ],
             ],
             'collection of test suites by directory' => [
                 'input' => [
@@ -191,27 +187,27 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
                     '--target' => 'tests/build/target',
                 ],
                 'generatedCodeClassNames' => [
-                    $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml' =>
+                    'tests/Fixtures/basil/Test/example.com.verify-open-literal.yml' =>
                         'ExampleComVerifyOpenLiteralTest',
-                    $root . '/tests/Fixtures/basil/Test/example.com.import-step-verify-open-literal.yml' =>
+                    'tests/Fixtures/basil/Test/example.com.import-step-verify-open-literal.yml' =>
                         'ExampleComImportVerifyOpenLiteralTest',
-                    $root . '/tests/Fixtures/basil/Test/example.com.follow-more-information.yml' =>
+                    'tests/Fixtures/basil/Test/example.com.follow-more-information.yml' =>
                         'ExampleComFollowMoreInformationTest',
                 ],
                 'expectedGeneratedTestOutputSources' => [
-                    $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
-                    $root . '/tests/Fixtures/basil/Test/example.com.import-step-verify-open-literal.yml',
-                    $root . '/tests/Fixtures/basil/Test/example.com.follow-more-information.yml',
-                    $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
+                    'tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
+                    'tests/Fixtures/basil/Test/example.com.import-step-verify-open-literal.yml',
+                    'tests/Fixtures/basil/Test/example.com.follow-more-information.yml',
+                    'tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
                 ],
-                'expectedGeneratedCode' => $this->createExpectedGeneratedCodeSet([
-                    $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml' =>
-                        $root . '/tests/Fixtures/php/Test/ExampleComVerifyOpenLiteralTest.php',
-                    $root . '/tests/Fixtures/basil/Test/example.com.import-step-verify-open-literal.yml' =>
-                        $root . '/tests/Fixtures/php/Test/ExampleComImportVerifyOpenLiteralTest.php',
-                    $root . '/tests/Fixtures/basil/Test/example.com.follow-more-information.yml' =>
-                        $root . '/tests/Fixtures/php/Test/ExampleComFollowMoreInformationTest.php',
-                ]),
+                'expectedGeneratedCode' => [
+                    'tests/Fixtures/basil/Test/example.com.verify-open-literal.yml' =>
+                        file_get_contents('tests/Fixtures/php/Test/ExampleComVerifyOpenLiteralTest.php'),
+                    'tests/Fixtures/basil/Test/example.com.import-step-verify-open-literal.yml' =>
+                        file_get_contents('tests/Fixtures/php/Test/ExampleComImportVerifyOpenLiteralTest.php'),
+                    'tests/Fixtures/basil/Test/example.com.follow-more-information.yml' =>
+                        file_get_contents('tests/Fixtures/php/Test/ExampleComFollowMoreInformationTest.php'),
+                ],
             ],
         ];
     }
@@ -407,8 +403,8 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
     {
         $root = (new ProjectRootPathProvider())->get();
 
-        $emptyTestPath = 'tests/Fixtures/basil/InvalidTest/empty.yml';
-        $emptyTestAbsolutePath = $root . '/' . $emptyTestPath;
+        $emptyTestPath = $root . '/tests/Fixtures/basil/InvalidTest/empty.yml';
+        $emptyTestAbsolutePath = '' . $emptyTestPath;
 
         return [
             'test file is empty' => [
@@ -437,14 +433,14 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
     {
         $root = (new ProjectRootPathProvider())->get();
 
-        $testPath = 'tests/Fixtures/basil/InvalidTest/import-empty-page.yml';
-        $testAbsolutePath = $root . '/' . $testPath;
+        $testPath = $root . '/tests/Fixtures/basil/InvalidTest/import-empty-page.yml';
+        $testAbsolutePath = '' . $testPath;
 
-        $pagePath = 'tests/Fixtures/basil/InvalidPage/url-empty.yml';
-        $pageAbsolutePath = $root . '/' . $pagePath;
+        $pagePath = $root . '/tests/Fixtures/basil/InvalidPage/url-empty.yml';
+        $pageAbsolutePath = '' . $pagePath;
 
-        $testSuitePath = 'tests/Fixtures/basil/InvalidTestSuite/imports-invalid-page.yml';
-        $testSuiteAbsolutePath = $root . '/' . $testSuitePath;
+        $testSuitePath = $root . '/tests/Fixtures/basil/InvalidTestSuite/imports-invalid-page.yml';
+        $testSuiteAbsolutePath = '' . $testSuitePath;
 
         return [
             'test imports invalid page; url empty' => [
@@ -504,11 +500,11 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
     {
         $root = (new ProjectRootPathProvider())->get();
 
-        $testPath = 'tests/Fixtures/basil/InvalidTest/invalid-configuration.yml';
-        $testAbsolutePath = $root . '/' . $testPath;
+        $testPath = $root . '/tests/Fixtures/basil/InvalidTest/invalid-configuration.yml';
+        $testAbsolutePath = '' . $testPath;
 
-        $testSuitePath = 'tests/Fixtures/basil/InvalidTestSuite/imports-invalid-test.yml';
-        $testSuiteAbsolutePath = $root . '/' . $testSuitePath;
+        $testSuitePath = $root . '/tests/Fixtures/basil/InvalidTestSuite/imports-invalid-test.yml';
+        $testSuiteAbsolutePath = '' . $testSuitePath;
 
         return [
             'test has invalid configuration' => [
@@ -576,14 +572,14 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
     {
         $root = (new ProjectRootPathProvider())->get();
 
-        $pagePath = 'tests/Fixtures/basil/InvalidPage/unparseable.yml';
-        $pageAbsolutePath = $root . '/' . $pagePath;
+        $pagePath = $root . '/tests/Fixtures/basil/InvalidPage/unparseable.yml';
+        $pageAbsolutePath = '' . $pagePath;
 
-        $testPath = 'tests/Fixtures/basil/InvalidTest/import-unparseable-page.yml';
-        $testAbsolutePath = $root . '/' . $testPath;
+        $testPath = $root . '/tests/Fixtures/basil/InvalidTest/import-unparseable-page.yml';
+        $testAbsolutePath = '' . $testPath;
 
-        $testSuitePath = 'tests/Fixtures/basil/InvalidTestSuite/imports-unparseable-page.yml';
-        $testSuiteAbsolutePath = $root . '/' . $testSuitePath;
+        $testSuitePath = $root . '/tests/Fixtures/basil/InvalidTestSuite/imports-unparseable-page.yml';
+        $testSuiteAbsolutePath = '' . $testSuitePath;
 
         return [
             'test imports non-parsable page' => [
@@ -1422,17 +1418,12 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     *
-     * GenerateCommand calls TestGenerator::generate()
-     *   TestGenerator calls Compiler::createClassName, ::compile()
-     *     Compiler::createClassName(), ::compile() call ClassDefinitionFactory::createClassDefinition()
-     *       ClassDefinitionFactory::createClassDefinition() calls ClassNameFactory::create()
-     *       -> need to mock ClassNameFactory::create() to make it deterministic
-     *
      * @param array<string, string> $classNames
      */
     private function mockClassNameFactory(array $classNames): void
     {
+        $testWriter = ObjectReflector::getProperty($this->command, 'testWriter');
+
         $classNameFactory = \Mockery::mock(ClassNameFactory::class);
         $classNameFactory
             ->shouldReceive('create')
@@ -1440,10 +1431,8 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
                 return $classNames[$test->getPath()] ?? null;
             });
 
-        $testWriter = ObjectReflector::getProperty($this->command, 'testWriter');
-        $compiler = ObjectReflector::getProperty($testWriter, 'compiler');
-        $classDefinitionFactory = ObjectReflector::getProperty($compiler, 'classDefinitionFactory');
-
+        /** @var ClassDefinitionFactory $classDefinitionFactory */
+        $classDefinitionFactory = ObjectReflector::getProperty($testWriter, 'classDefinitionFactory');
         ObjectReflector::setProperty(
             $classDefinitionFactory,
             ClassDefinitionFactory::class,
@@ -1452,17 +1441,10 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
         );
 
         ObjectReflector::setProperty(
-            $compiler,
-            Compiler::class,
-            'classDefinitionFactory',
-            $classDefinitionFactory
-        );
-
-        ObjectReflector::setProperty(
             $testWriter,
             TestWriter::class,
-            'compiler',
-            $compiler
+            'classDefinitionFactory',
+            $classDefinitionFactory
         );
 
         ObjectReflector::setProperty(
@@ -1470,46 +1452,6 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
             GenerateCommand::class,
             'testWriter',
             $testWriter
-        );
-    }
-
-    private function mockConfigurationValidator(): void
-    {
-        $generateCommandValidator = \Mockery::mock(ConfigurationValidator::class);
-        $generateCommandValidator
-            ->shouldReceive('isValid')
-            ->andReturn(true);
-
-        ObjectReflector::setProperty(
-            $this->command,
-            GenerateCommand::class,
-            'generateCommandValidator',
-            $generateCommandValidator
-        );
-    }
-
-    /**
-     * @param array<string, string> $sourceToOutputMap
-     *
-     * @return array<string, string>
-     */
-    private function createExpectedGeneratedCodeSet(array $sourceToOutputMap): array
-    {
-        $data = [];
-
-        foreach ($sourceToOutputMap as $testPath => $generatedCodePath) {
-            $data[$testPath] = $this->createGeneratedCodeWithTestPath($testPath, $generatedCodePath);
-        }
-
-        return $data;
-    }
-
-    private function createGeneratedCodeWithTestPath(string $testPath, string $generatedCodePath): string
-    {
-        return str_replace(
-            '{{ test_path }}',
-            $testPath,
-            (string) file_get_contents($generatedCodePath)
         );
     }
 }
