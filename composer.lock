@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a240f504eb1cde3033038db7bce38c0c",
+    "content-hash": "142012da5393ed351b703d99f37aa2a2",
     "packages": [
         {
             "name": "doctrine/instantiator",
@@ -3272,16 +3272,16 @@
         },
         {
             "name": "webignition/basil-compiler",
-            "version": "0.15",
+            "version": "0.16",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webignition/basil-compiler.git",
-                "reference": "b0cc13ff263654964a09234160909d7a2e0ad149"
+                "reference": "55c30421ef72fe9120b49197c0171246b0894a10"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webignition/basil-compiler/zipball/b0cc13ff263654964a09234160909d7a2e0ad149",
-                "reference": "b0cc13ff263654964a09234160909d7a2e0ad149",
+                "url": "https://api.github.com/repos/webignition/basil-compiler/zipball/55c30421ef72fe9120b49197c0171246b0894a10",
+                "reference": "55c30421ef72fe9120b49197c0171246b0894a10",
                 "shasum": ""
             },
             "require": {
@@ -3298,7 +3298,9 @@
                 "phpstan/phpstan-mockery": "^0.12.0",
                 "phpunit/phpunit": "~9",
                 "squizlabs/php_codesniffer": "3.*",
-                "webignition/basil-parser": ">=0.24,<1"
+                "symplify/easy-coding-standard": "^8.1",
+                "webignition/basil-parser": ">=0.24,<1",
+                "webignition/object-reflector": ">=0.2,<1"
             },
             "type": "library",
             "autoload": {
@@ -3317,7 +3319,7 @@
                 }
             ],
             "homepage": "https://github.com/webignition/basil-compiler",
-            "time": "2020-06-10T09:31:30+00:00"
+            "time": "2020-06-26T09:09:11+00:00"
         },
         {
             "name": "webignition/basil-data-validator",
