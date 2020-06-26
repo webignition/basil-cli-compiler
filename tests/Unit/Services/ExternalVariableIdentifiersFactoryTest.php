@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace webignition\BasilCliCompiler\Tests\Unit\Services;
 
+use webignition\BasilCliCompiler\Model\ExternalVariableIdentifiers;
 use webignition\BasilCliCompiler\Services\ExternalVariableIdentifiersFactory;
 use webignition\BasilCliCompiler\Tests\Unit\AbstractBaseTest;
-use webignition\BasilCompiler\ExternalVariableIdentifiers;
 
 class ExternalVariableIdentifiersFactoryTest extends AbstractBaseTest
 {

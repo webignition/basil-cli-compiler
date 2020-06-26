@@ -9,14 +9,15 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface as ConsoleOutputInterface;
 use webignition\BaseBasilTestCase\AbstractBaseTest;
+use webignition\BasilCliCompiler\Exception\UnresolvedPlaceholderException;
 use webignition\BasilCliCompiler\Model\OutputInterface;
 use webignition\BasilCliCompiler\Model\SuccessOutput;
+use webignition\BasilCliCompiler\Services\Compiler;
 use webignition\BasilCliCompiler\Services\ConfigurationFactory;
 use webignition\BasilCliCompiler\Services\ConfigurationValidator;
 use webignition\BasilCliCompiler\Services\ErrorOutputFactory;
 use webignition\BasilCliCompiler\Services\TestWriter;
 use webignition\BasilCompilableSourceFactory\Exception\UnsupportedStepException;
-use webignition\BasilCompiler\UnresolvedPlaceholderException;
 use webignition\BasilLoader\Exception\EmptyTestException;
 use webignition\BasilLoader\Exception\InvalidPageException;
 use webignition\BasilLoader\Exception\InvalidTestException;
@@ -41,6 +42,7 @@ class GenerateCommand extends Command
     private const NAME = 'generate';
 
     private SourceLoader $sourceLoader;
+    private Compiler $compiler;
     private TestWriter $testWriter;
     private ConfigurationFactory $configurationFactory;
     private ConfigurationValidator $configurationValidator;
@@ -49,6 +51,7 @@ class GenerateCommand extends Command
 
     public function __construct(
         SourceLoader $sourceLoader,
+        Compiler $compiler,
         TestWriter $testWriter,
         ConfigurationFactory $configurationFactory,
         ConfigurationValidator $configurationValidator,
@@ -58,6 +61,7 @@ class GenerateCommand extends Command
         parent::__construct();
 
         $this->sourceLoader = $sourceLoader;
+        $this->compiler = $compiler;
         $this->testWriter = $testWriter;
         $this->configurationFactory = $configurationFactory;
         $this->configurationValidator = $configurationValidator;
@@ -150,12 +154,9 @@ class GenerateCommand extends Command
             try {
                 foreach ($testSuite->getTests() as $test) {
                     $test = $this->removeProjectRootPathFromTestPath($test);
+                    $compiledTest = $this->compiler->compile($test, $configuration->getBaseClass());
 
-                    $generatedFiles[] = $this->testWriter->generate(
-                        $test,
-                        $configuration->getBaseClass(),
-                        $configuration->getTarget()
-                    );
+                    $generatedFiles[] = $this->testWriter->write($compiledTest, $configuration->getTarget());
                 }
             } catch (
                 UnresolvedPlaceholderException |
