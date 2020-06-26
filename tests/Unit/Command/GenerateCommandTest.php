@@ -37,7 +37,12 @@ class GenerateCommandTest extends AbstractBaseTest
         TestWriter $testWriter,
         SuccessOutput $expectedCommandOutput
     ): void {
-        $command = $this->createCommand($configurationFactory, new ConfigurationValidator(), $testWriter);
+        $configurationValidator = \Mockery::mock(ConfigurationValidator::class);
+        $configurationValidator
+            ->shouldReceive('isValid')
+            ->andReturnTrue();
+
+        $command = $this->createCommand($configurationFactory, $configurationValidator, $testWriter);
 
         $commandTester = new CommandTester($command);
 

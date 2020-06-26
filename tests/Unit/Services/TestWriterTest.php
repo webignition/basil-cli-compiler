@@ -40,7 +40,7 @@ class TestWriterTest extends AbstractBaseTest
             ->shouldReceive('getName')
             ->andReturn($generatedClassName);
 
-        $classDefinitionFactory = \Mockery::mock(ClassDefinitionFactory::createFactory());
+        $classDefinitionFactory = \Mockery::mock(ClassDefinitionFactory::class);
         $classDefinitionFactory
             ->shouldReceive('createClassDefinition')
             ->with($test)

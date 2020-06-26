@@ -224,8 +224,8 @@ class GenerateCommand extends Command
 
     private function removeProjectRootPathFromTestPath(TestInterface $test): TestInterface
     {
-        $path = $test->getPath();
-        $path = preg_replace('/^' . preg_quote($this->projectRootPath, '/') . '/', '', $path);
+        $path = (string) $test->getPath();
+        $path = (string) preg_replace('/^' . preg_quote($this->projectRootPath, '/') . '/', '', $path);
         $path = ltrim($path, '/');
 
         return $test->withPath($path);
