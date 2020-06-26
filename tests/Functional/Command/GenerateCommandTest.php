@@ -25,15 +25,13 @@ use webignition\BasilCliCompiler\Tests\DataProvider\RunFailure\UnknownElementDat
 use webignition\BasilCliCompiler\Tests\DataProvider\RunFailure\UnknownItemDataProviderTrait;
 use webignition\BasilCliCompiler\Tests\DataProvider\RunFailure\UnknownPageElementDataProviderTrait;
 use webignition\BasilCliCompiler\Tests\DataProvider\RunFailure\UnknownTestDataProviderTrait;
-use webignition\BasilCompilableSourceFactory\ClassDefinitionFactory;
-use webignition\BasilCompilableSourceFactory\ClassNameFactory;
+use webignition\BasilCliCompiler\Tests\DataProvider\RunSuccess\SuccessDataProviderTrait;
 use webignition\BasilCompilableSourceFactory\Exception\UnsupportedContentException;
 use webignition\BasilCompilableSourceFactory\Exception\UnsupportedStatementException;
 use webignition\BasilCompilableSourceFactory\Exception\UnsupportedStepException;
 use webignition\BasilCompiler\Compiler;
 use webignition\BasilCompiler\ExternalVariableIdentifiers;
 use webignition\BasilModels\Step\Step;
-use webignition\BasilModels\Test\TestInterface;
 use webignition\BasilParser\ActionParser;
 use webignition\BasilParser\AssertionParser;
 use webignition\ObjectReflector\ObjectReflector;
@@ -51,6 +49,7 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
     use UnknownItemDataProviderTrait;
     use UnknownPageElementDataProviderTrait;
     use UnknownTestDataProviderTrait;
+    use SuccessDataProviderTrait;
 
     private GenerateCommand $command;
 
@@ -63,41 +62,29 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @param array<string, string> $input
-     * @param array<string, string> $generatedCodeClassNames
-     * @param array<string> $expectedGeneratedTestOutputSources
+     * @param int $expectedExitCode
+     * @param SuccessOutput $expectedCommandOutput
      * @param array<string, string> $expectedGeneratedCode
      *
-     * @dataProvider runSuccessDataProvider
+     * @dataProvider successDataProvider
      */
     public function testRunSuccess(
         array $input,
-        array $generatedCodeClassNames,
-        array $expectedGeneratedTestOutputSources,
+        int $expectedExitCode,
+        SuccessOutput $expectedCommandOutput,
         array $expectedGeneratedCode
     ) {
-        $this->mockClassNameFactory($generatedCodeClassNames);
-
         $output = new BufferedOutput();
 
         $exitCode = $this->command->run(new ArrayInput($input), $output);
-        self::assertSame(0, $exitCode);
+        self::assertSame($expectedExitCode, $exitCode);
 
         $commandOutput = SuccessOutput::fromJson($output->fetch());
+        $this->assertEquals($expectedCommandOutput, $commandOutput);
 
         $outputData = $commandOutput->getOutput();
-        self::assertCount(count($expectedGeneratedTestOutputSources), $outputData);
-
-        $generatedTestOutputIndex = 0;
         $generatedTestsToRemove = [];
         foreach ($outputData as $generatedTestOutput) {
-            $expectedGeneratedTestOutputSource = $expectedGeneratedTestOutputSources[$generatedTestOutputIndex] ?? null;
-
-            $generatedTestOutputSource = $generatedTestOutput->getSource();
-            self::assertSame($expectedGeneratedTestOutputSource, $generatedTestOutputSource);
-
-            $expectedGeneratedCodeClassName = $generatedCodeClassNames[$generatedTestOutputSource] ?? '';
-            self::assertSame($expectedGeneratedCodeClassName . '.php', $generatedTestOutput->getTarget());
-
             $commandOutputConfiguration = $commandOutput->getConfiguration();
             $commandOutputTarget = $commandOutputConfiguration->getTarget();
 
@@ -112,7 +99,6 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
             );
 
             $generatedTestsToRemove[] = $expectedCodePath;
-            $generatedTestOutputIndex++;
         }
 
         $generatedTestsToRemove = array_unique($generatedTestsToRemove);
@@ -123,116 +109,6 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
 
             unlink($path);
         }
-    }
-
-    public function runSuccessDataProvider(): array
-    {
-        return [
-            'single test' => [
-                'input' => [
-                    '--source' => 'tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
-                    '--target' => 'tests/build/target',
-                ],
-                'generatedCodeClassNames' => [
-                    'tests/Fixtures/basil/Test/example.com.verify-open-literal.yml' =>
-                        'ExampleComVerifyOpenLiteralTest',
-                ],
-                'expectedGeneratedTestOutputSources' => [
-                    'tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
-                ],
-                'expectedGeneratedCode' => [
-                    'tests/Fixtures/basil/Test/example.com.verify-open-literal.yml' =>
-                        file_get_contents('tests/Fixtures/php/Test/ExampleComVerifyOpenLiteralTest.php')
-                ],
-            ],
-            'test suite' => [
-                'input' => [
-                    '--source' => 'tests/Fixtures/basil/TestSuite/example.com-all.yml',
-                    '--target' => 'tests/build/target',
-                ],
-                'generatedCodeClassNames' => [
-                    'tests/Fixtures/basil/Test/example.com.verify-open-literal.yml' =>
-                        'ExampleComVerifyOpenLiteralTest',
-                    'tests/Fixtures/basil/Test/example.com.import-step-verify-open-literal.yml' =>
-                        'ExampleComImportVerifyOpenLiteralTest',
-                    'tests/Fixtures/basil/Test/example.com.follow-more-information.yml' =>
-                        'ExampleComFollowMoreInformationTest',
-                ],
-                'expectedGeneratedTestOutputSources' => [
-                    'tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
-                    'tests/Fixtures/basil/Test/example.com.import-step-verify-open-literal.yml',
-                    'tests/Fixtures/basil/Test/example.com.follow-more-information.yml',
-                ],
-                'expectedGeneratedCode' => [
-                    'tests/Fixtures/basil/Test/example.com.verify-open-literal.yml' =>
-                        file_get_contents('tests/Fixtures/php/Test/ExampleComVerifyOpenLiteralTest.php'),
-                    'tests/Fixtures/basil/Test/example.com.import-step-verify-open-literal.yml' =>
-                        file_get_contents('tests/Fixtures/php/Test/ExampleComImportVerifyOpenLiteralTest.php'),
-                    'tests/Fixtures/basil/Test/example.com.follow-more-information.yml' =>
-                        file_get_contents('tests/Fixtures/php/Test/ExampleComFollowMoreInformationTest.php')
-                ],
-            ],
-            'collection of tests by directory' => [
-                'input' => [
-                    '--source' => 'tests/Fixtures/basil/Test',
-                    '--target' => 'tests/build/target',
-                ],
-                'generatedCodeClassNames' => [
-                    'tests/Fixtures/basil/Test/example.com.follow-more-information.yml' =>
-                        'ExampleComFollowMoreInformationTest',
-                    'tests/Fixtures/basil/Test/example.com.import-step-verify-open-literal.yml' =>
-                        'ExampleComImportVerifyOpenLiteralTest',
-                    'tests/Fixtures/basil/Test/example.com.verify-open-literal.yml' =>
-                        'ExampleComVerifyOpenLiteralTest',
-                    'tests/Fixtures/basil/Test/example.com.verify-open-literal-data-sets.yml' =>
-                        'ExampleComVerifyOpenLiteralDataSetsTest',
-                ],
-                'expectedGeneratedTestOutputSources' => [
-                    'tests/Fixtures/basil/Test/example.com.follow-more-information.yml',
-                    'tests/Fixtures/basil/Test/example.com.import-step-verify-open-literal.yml',
-                    'tests/Fixtures/basil/Test/example.com.verify-open-literal-data-sets.yml',
-                    'tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
-                ],
-                'expectedGeneratedCode' => [
-                    'tests/Fixtures/basil/Test/example.com.follow-more-information.yml' =>
-                        file_get_contents('tests/Fixtures/php/Test/ExampleComFollowMoreInformationTest.php'),
-                    'tests/Fixtures/basil/Test/example.com.import-step-verify-open-literal.yml' =>
-                        file_get_contents('tests/Fixtures/php/Test/ExampleComImportVerifyOpenLiteralTest.php'),
-                    'tests/Fixtures/basil/Test/example.com.verify-open-literal-data-sets.yml' =>
-                        file_get_contents('tests/Fixtures/php/Test/ExampleComVerifyOpenLiteralDataSetsTest.php'),
-                    'tests/Fixtures/basil/Test/example.com.verify-open-literal.yml' =>
-                        file_get_contents('tests/Fixtures/php/Test/ExampleComVerifyOpenLiteralTest.php'),
-                ],
-            ],
-            'collection of test suites by directory' => [
-                'input' => [
-                    '--source' => 'tests/Fixtures/basil/TestSuite',
-                    '--target' => 'tests/build/target',
-                ],
-                'generatedCodeClassNames' => [
-                    'tests/Fixtures/basil/Test/example.com.verify-open-literal.yml' =>
-                        'ExampleComVerifyOpenLiteralTest',
-                    'tests/Fixtures/basil/Test/example.com.import-step-verify-open-literal.yml' =>
-                        'ExampleComImportVerifyOpenLiteralTest',
-                    'tests/Fixtures/basil/Test/example.com.follow-more-information.yml' =>
-                        'ExampleComFollowMoreInformationTest',
-                ],
-                'expectedGeneratedTestOutputSources' => [
-                    'tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
-                    'tests/Fixtures/basil/Test/example.com.import-step-verify-open-literal.yml',
-                    'tests/Fixtures/basil/Test/example.com.follow-more-information.yml',
-                    'tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
-                ],
-                'expectedGeneratedCode' => [
-                    'tests/Fixtures/basil/Test/example.com.verify-open-literal.yml' =>
-                        file_get_contents('tests/Fixtures/php/Test/ExampleComVerifyOpenLiteralTest.php'),
-                    'tests/Fixtures/basil/Test/example.com.import-step-verify-open-literal.yml' =>
-                        file_get_contents('tests/Fixtures/php/Test/ExampleComImportVerifyOpenLiteralTest.php'),
-                    'tests/Fixtures/basil/Test/example.com.follow-more-information.yml' =>
-                        file_get_contents('tests/Fixtures/php/Test/ExampleComFollowMoreInformationTest.php'),
-                ],
-            ],
-        ];
     }
 
     /**
@@ -486,44 +362,6 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
 
         ObjectReflector::setProperty(
             $command,
-            GenerateCommand::class,
-            'testWriter',
-            $testWriter
-        );
-    }
-
-    /**
-     * @param array<string, string> $classNames
-     */
-    private function mockClassNameFactory(array $classNames): void
-    {
-        $testWriter = ObjectReflector::getProperty($this->command, 'testWriter');
-
-        $classNameFactory = \Mockery::mock(ClassNameFactory::class);
-        $classNameFactory
-            ->shouldReceive('create')
-            ->andReturnUsing(function (TestInterface $test) use ($classNames) {
-                return $classNames[$test->getPath()] ?? null;
-            });
-
-        /** @var ClassDefinitionFactory $classDefinitionFactory */
-        $classDefinitionFactory = ObjectReflector::getProperty($testWriter, 'classDefinitionFactory');
-        ObjectReflector::setProperty(
-            $classDefinitionFactory,
-            ClassDefinitionFactory::class,
-            'classNameFactory',
-            $classNameFactory
-        );
-
-        ObjectReflector::setProperty(
-            $testWriter,
-            TestWriter::class,
-            'classDefinitionFactory',
-            $classDefinitionFactory
-        );
-
-        ObjectReflector::setProperty(
-            $this->command,
             GenerateCommand::class,
             'testWriter',
             $testWriter

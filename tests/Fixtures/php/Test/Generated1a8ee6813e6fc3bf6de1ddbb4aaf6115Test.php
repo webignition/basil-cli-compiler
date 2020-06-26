@@ -6,7 +6,7 @@ use webignition\BaseBasilTestCase\AbstractBaseTest;
 use webignition\DomElementIdentifier\ElementIdentifier;
 use webignition\SymfonyDomCrawlerNavigator\Exception\InvalidLocatorException;
 
-class ExampleComFollowMoreInformationTest extends AbstractBaseTest
+class Generated1a8ee6813e6fc3bf6de1ddbb4aaf6115Test extends AbstractBaseTest
 {
     public static function setUpBeforeClass(): void
     {
