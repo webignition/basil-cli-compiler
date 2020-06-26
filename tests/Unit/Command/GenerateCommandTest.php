@@ -76,8 +76,8 @@ class GenerateCommandTest extends AbstractBaseTest
                         BasilBaseTest::class
                     )
                 ),
-                'testGenerator' => $this->createTestWriter($this->createTestGeneratorAndReturnUsingCallable([
-                    $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml' => [
+                'testWriter' => $this->createTestWriter($this->createTestWriterAndReturnUsingCallable([
+                    'tests/Fixtures/basil/Test/example.com.verify-open-literal.yml' => [
                         'expectedFullyQualifiedBaseClass' => BasilBaseTest::class,
                         'expectedTarget' => $root . '/tests/build/target',
                         'generatedTestOutput' => new GeneratedTestOutput(
@@ -108,7 +108,7 @@ class GenerateCommandTest extends AbstractBaseTest
      *
      * @return callable
      */
-    private function createTestGeneratorAndReturnUsingCallable(array $generatedTestOutputExpectations): callable
+    private function createTestWriterAndReturnUsingCallable(array $generatedTestOutputExpectations): callable
     {
         return function (
             TestInterface $test,
@@ -264,7 +264,8 @@ class GenerateCommandTest extends AbstractBaseTest
             $testWriter,
             $configurationFactory,
             $configurationValidator,
-            new ErrorOutputFactory($configurationValidator, new ValidatorInvalidResultSerializer())
+            new ErrorOutputFactory($configurationValidator, new ValidatorInvalidResultSerializer()),
+            (new ProjectRootPathProvider())->get()
         );
     }
 

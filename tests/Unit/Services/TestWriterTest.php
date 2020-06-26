@@ -9,11 +9,14 @@ use webignition\BasilCliCompiler\Services\PhpFileCreator;
 use webignition\BasilCliCompiler\Services\ProjectRootPathProvider;
 use webignition\BasilCliCompiler\Services\TestWriter;
 use webignition\BasilCliCompiler\Tests\Unit\AbstractBaseTest;
+use webignition\BasilCompilableSource\ClassDefinition;
+use webignition\BasilCompilableSource\Expression\ClassDependency;
+use webignition\BasilCompilableSourceFactory\ClassDefinitionFactory;
 use webignition\BasilCompiler\Compiler;
 use webignition\BasilModels\Test\TestInterface;
 use webignition\BasilParser\Test\TestParser;
 
-class TestGeneratorTest extends AbstractBaseTest
+class TestWriterTest extends AbstractBaseTest
 {
     /**
      * @dataProvider generateDataProvider
@@ -25,17 +28,30 @@ class TestGeneratorTest extends AbstractBaseTest
         string $generatedClassName,
         GeneratedTestOutput $expectedGeneratedTestOutput
     ) {
-        $compiler = \Mockery::mock(Compiler::class);
-        $compiler
-            ->shouldReceive('createClassName')
-            ->with($test)
+        $classDefinition = \Mockery::mock(ClassDefinition::class);
+        $classDefinition
+            ->shouldReceive('setBaseClass')
+            ->withArgs(function (ClassDependency $classDependency) use ($fullyQualifiedBaseClass) {
+                self::assertEquals($classDependency, new ClassDependency($fullyQualifiedBaseClass));
+
+                return true;
+            });
+        $classDefinition
+            ->shouldReceive('getName')
             ->andReturn($generatedClassName);
+
+        $classDefinitionFactory = \Mockery::mock(ClassDefinitionFactory::class);
+        $classDefinitionFactory
+            ->shouldReceive('createClassDefinition')
+            ->with($test)
+            ->andReturn($classDefinition);
 
         $compiledCode = '<?php echo "compiled";';
 
+        $compiler = \Mockery::mock(Compiler::class);
         $compiler
             ->shouldReceive('compile')
-            ->with($test, $fullyQualifiedBaseClass)
+            ->with($classDefinition)
             ->andReturn($compiledCode);
 
         $phpFileCreator = \Mockery::mock(PhpFileCreator::class);
@@ -48,9 +64,9 @@ class TestGeneratorTest extends AbstractBaseTest
             ->with($generatedClassName, $compiledCode)
             ->andReturn($generatedClassName . '.php');
 
-        $testGenerator = new TestWriter($compiler, $phpFileCreator);
+        $testWriter = new TestWriter($compiler, $phpFileCreator, $classDefinitionFactory);
 
-        $generatedTestOutput = $testGenerator->generate($test, $fullyQualifiedBaseClass, $outputDirectory);
+        $generatedTestOutput = $testWriter->generate($test, $fullyQualifiedBaseClass, $outputDirectory);
 
         self::assertEquals($expectedGeneratedTestOutput, $generatedTestOutput);
     }

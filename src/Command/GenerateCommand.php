@@ -26,6 +26,7 @@ use webignition\BasilLoader\Exception\UnknownTestException;
 use webignition\BasilLoader\Exception\YamlLoaderException;
 use webignition\BasilLoader\SourceLoader;
 use webignition\BasilModelProvider\Exception\UnknownItemException;
+use webignition\BasilModels\Test\TestInterface;
 use webignition\BasilResolver\CircularStepImportException;
 use webignition\BasilResolver\UnknownElementException;
 use webignition\BasilResolver\UnknownPageElementException;
@@ -44,13 +45,15 @@ class GenerateCommand extends Command
     private ConfigurationFactory $configurationFactory;
     private ConfigurationValidator $configurationValidator;
     private ErrorOutputFactory $errorOutputFactory;
+    private string $projectRootPath;
 
     public function __construct(
         SourceLoader $sourceLoader,
         TestWriter $testWriter,
         ConfigurationFactory $configurationFactory,
         ConfigurationValidator $configurationValidator,
-        ErrorOutputFactory $errorOutputFactory
+        ErrorOutputFactory $errorOutputFactory,
+        string $projectRootPath
     ) {
         parent::__construct();
 
@@ -59,6 +62,7 @@ class GenerateCommand extends Command
         $this->configurationFactory = $configurationFactory;
         $this->configurationValidator = $configurationValidator;
         $this->errorOutputFactory = $errorOutputFactory;
+        $this->projectRootPath = $projectRootPath;
     }
 
     protected function configure(): void
@@ -145,6 +149,8 @@ class GenerateCommand extends Command
 
             try {
                 foreach ($testSuite->getTests() as $test) {
+                    $test = $this->removeProjectRootPathFromTestPath($test);
+
                     $generatedFiles[] = $this->testWriter->generate(
                         $test,
                         $configuration->getBaseClass(),
@@ -214,5 +220,14 @@ class GenerateCommand extends Command
         $consoleOutput->writeln((string) json_encode($commandOutput, JSON_PRETTY_PRINT));
 
         return $commandOutput->getCode();
+    }
+
+    private function removeProjectRootPathFromTestPath(TestInterface $test): TestInterface
+    {
+        $path = (string) $test->getPath();
+        $path = (string) preg_replace('/^' . preg_quote($this->projectRootPath, '/') . '/', '', $path);
+        $path = ltrim($path, '/');
+
+        return $test->withPath($path);
     }
 }

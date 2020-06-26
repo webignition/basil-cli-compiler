@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace webignition\BasilCliCompiler\Services;
 
 use webignition\BasilCliCompiler\Command\GenerateCommand;
+use webignition\BasilCompilableSourceFactory\ClassDefinitionFactory;
 use webignition\BasilCompiler\Compiler;
 use webignition\BasilLoader\SourceLoader;
 
@@ -21,10 +22,12 @@ class CommandFactory
             new TestWriter(
                 Compiler::create($externalVariableIdentifiers),
                 new PhpFileCreator(),
+                ClassDefinitionFactory::createFactory()
             ),
             new ConfigurationFactory($projectRootPath),
             $configurationValidator,
             new ErrorOutputFactory($configurationValidator, new ValidatorInvalidResultSerializer()),
+            $projectRootPath
         );
     }
 }

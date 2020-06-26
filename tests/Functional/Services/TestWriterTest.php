@@ -9,8 +9,9 @@ use webignition\BasilCliCompiler\Services\ExternalVariableIdentifiersFactory;
 use webignition\BasilCliCompiler\Services\PhpFileCreator;
 use webignition\BasilCliCompiler\Services\ProjectRootPathProvider;
 use webignition\BasilCliCompiler\Services\TestWriter;
+use webignition\BasilCompilableSource\ClassDefinition;
+use webignition\BasilCompilableSource\ClassDefinitionInterface;
 use webignition\BasilCompilableSourceFactory\ClassDefinitionFactory;
-use webignition\BasilCompilableSourceFactory\ClassNameFactory;
 use webignition\BasilCompiler\Compiler;
 use webignition\BasilModels\Test\TestInterface;
 use webignition\BasilParser\Test\TestParser;
@@ -26,7 +27,8 @@ class TestWriterTest extends \PHPUnit\Framework\TestCase
 
         $this->testWriter = new TestWriter(
             Compiler::create(ExternalVariableIdentifiersFactory::create()),
-            new PhpFileCreator()
+            new PhpFileCreator(),
+            ClassDefinitionFactory::createFactory()
         );
     }
 
@@ -40,7 +42,18 @@ class TestWriterTest extends \PHPUnit\Framework\TestCase
         string $generatedClassName,
         string $expectedGeneratedCode
     ) {
-        $this->mockClassNameFactory($generatedClassName);
+        $classDefinitionFactory = \Mockery::mock(ClassDefinitionFactory::createFactory());
+
+        ObjectReflector::setProperty(
+            $this->testWriter,
+            TestWriter::class,
+            'classDefinitionFactory',
+            $classDefinitionFactory
+        );
+
+        $classDefinitionFactory
+            ->shouldReceive('createClassDefinition')
+            ->andReturn($this->createClassDefinitionWithClassName($test, $generatedClassName));
 
         $generatedTestOutput = $this->testWriter->generate($test, $fullyQualifiedBaseClass, $outputDirectory);
         $expectedCodePath = $outputDirectory . '/' . $generatedTestOutput->getTarget();
@@ -53,6 +66,18 @@ class TestWriterTest extends \PHPUnit\Framework\TestCase
         if (file_exists($expectedCodePath)) {
             unlink($expectedCodePath);
         }
+    }
+
+    private function createClassDefinitionWithClassName(
+        TestInterface $test,
+        string $className
+    ): ClassDefinitionInterface {
+        $classDefinitionFactory = ClassDefinitionFactory::createFactory();
+        $classDefinition = $classDefinitionFactory->createClassDefinition($test);
+
+        ObjectReflector::setProperty($classDefinition, ClassDefinition::class, 'name', $className);
+
+        return $classDefinition;
     }
 
     public function generateDataProvider(): array
@@ -74,51 +99,14 @@ class TestWriterTest extends \PHPUnit\Framework\TestCase
                             ],
                         ],
                     ]
-                )->withPath($root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml'),
+                )->withPath('tests/Fixtures/basil/Test/example.com.verify-open-literal.yml'),
                 'fullyQualifiedBaseClass' => AbstractBaseTest::class,
                 'outputDirectory' => $root . '/tests/build/target',
                 'generatedClassName' => 'ExampleComVerifyOpenLiteralTest',
-                'expectedGeneratedCode' => str_replace(
-                    '{{ test_path }}',
-                    $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
-                    (string) file_get_contents(
-                        $root . '/tests/Fixtures/php/Test/ExampleComVerifyOpenLiteralTest.php'
-                    )
+                'expectedGeneratedCode' => (string) file_get_contents(
+                    $root . '/tests/Fixtures/php/Test/ExampleComVerifyOpenLiteralTest.php'
                 ),
             ],
         ];
-    }
-
-    /**
-     * TestGenerator calls Compiler::createClassName, ::compile()
-     *   Compiler::createClassName(), ::compile() call ClassDefinitionFactory::createClassDefinition()
-     *     ClassDefinitionFactory::createClassDefinition() calls ClassNameFactory::create()
-     *     -> need to mock ClassNameFactory::create() to make it deterministic
-     *
-     * @param string $className
-     */
-    private function mockClassNameFactory(string $className): void
-    {
-        $classNameFactory = \Mockery::mock(ClassNameFactory::class);
-        $classNameFactory
-            ->shouldReceive('create')
-            ->andReturn($className);
-
-        $compiler = ObjectReflector::getProperty($this->testWriter, 'compiler');
-        $classDefinitionFactory = ObjectReflector::getProperty($compiler, 'classDefinitionFactory');
-
-        ObjectReflector::setProperty(
-            $classDefinitionFactory,
-            ClassDefinitionFactory::class,
-            'classNameFactory',
-            $classNameFactory
-        );
-
-        ObjectReflector::setProperty(
-            $compiler,
-            Compiler::class,
-            'classDefinitionFactory',
-            $classDefinitionFactory
-        );
     }
 }
