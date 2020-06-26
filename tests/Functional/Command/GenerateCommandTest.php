@@ -14,21 +14,43 @@ use webignition\BasilCliCompiler\Model\SuccessOutput;
 use webignition\BasilCliCompiler\Services\CommandFactory;
 use webignition\BasilCliCompiler\Services\ProjectRootPathProvider;
 use webignition\BasilCliCompiler\Services\TestWriter;
-use webignition\BasilCompilableSourceFactory\ClassDefinitionFactory;
-use webignition\BasilCompilableSourceFactory\ClassNameFactory;
+use webignition\BasilCliCompiler\Tests\DataProvider\RunFailure\CircularStepImportDataProviderTrait;
+use webignition\BasilCliCompiler\Tests\DataProvider\RunFailure\EmptyTestDataProviderTrait;
+use webignition\BasilCliCompiler\Tests\DataProvider\RunFailure\InvalidPageDataProviderTrait;
+use webignition\BasilCliCompiler\Tests\DataProvider\RunFailure\InvalidTestDataProviderTrait;
+use webignition\BasilCliCompiler\Tests\DataProvider\RunFailure\NonLoadableDataDataProviderTrait;
+use webignition\BasilCliCompiler\Tests\DataProvider\RunFailure\NonRetrievableImportDataProviderTrait;
+use webignition\BasilCliCompiler\Tests\DataProvider\RunFailure\ParseExceptionDataProviderTrait;
+use webignition\BasilCliCompiler\Tests\DataProvider\RunFailure\UnknownElementDataProviderTrait;
+use webignition\BasilCliCompiler\Tests\DataProvider\RunFailure\UnknownItemDataProviderTrait;
+use webignition\BasilCliCompiler\Tests\DataProvider\RunFailure\UnknownPageElementDataProviderTrait;
+use webignition\BasilCliCompiler\Tests\DataProvider\RunFailure\UnknownTestDataProviderTrait;
+use webignition\BasilCliCompiler\Tests\DataProvider\RunSuccess\SuccessDataProviderTrait;
 use webignition\BasilCompilableSourceFactory\Exception\UnsupportedContentException;
 use webignition\BasilCompilableSourceFactory\Exception\UnsupportedStatementException;
 use webignition\BasilCompilableSourceFactory\Exception\UnsupportedStepException;
 use webignition\BasilCompiler\Compiler;
 use webignition\BasilCompiler\ExternalVariableIdentifiers;
 use webignition\BasilModels\Step\Step;
-use webignition\BasilModels\Test\TestInterface;
 use webignition\BasilParser\ActionParser;
 use webignition\BasilParser\AssertionParser;
 use webignition\ObjectReflector\ObjectReflector;
 
 class GenerateCommandTest extends \PHPUnit\Framework\TestCase
 {
+    use NonLoadableDataDataProviderTrait;
+    use CircularStepImportDataProviderTrait;
+    use EmptyTestDataProviderTrait;
+    use InvalidPageDataProviderTrait;
+    use InvalidTestDataProviderTrait;
+    use NonRetrievableImportDataProviderTrait;
+    use ParseExceptionDataProviderTrait;
+    use UnknownElementDataProviderTrait;
+    use UnknownItemDataProviderTrait;
+    use UnknownPageElementDataProviderTrait;
+    use UnknownTestDataProviderTrait;
+    use SuccessDataProviderTrait;
+
     private GenerateCommand $command;
 
     protected function setUp(): void
@@ -40,41 +62,29 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @param array<string, string> $input
-     * @param array<string, string> $generatedCodeClassNames
-     * @param array<string> $expectedGeneratedTestOutputSources
+     * @param int $expectedExitCode
+     * @param SuccessOutput $expectedCommandOutput
      * @param array<string, string> $expectedGeneratedCode
      *
-     * @dataProvider runSuccessDataProvider
+     * @dataProvider successDataProvider
      */
     public function testRunSuccess(
         array $input,
-        array $generatedCodeClassNames,
-        array $expectedGeneratedTestOutputSources,
+        int $expectedExitCode,
+        SuccessOutput $expectedCommandOutput,
         array $expectedGeneratedCode
     ) {
-        $this->mockClassNameFactory($generatedCodeClassNames);
-
         $output = new BufferedOutput();
 
         $exitCode = $this->command->run(new ArrayInput($input), $output);
-        self::assertSame(0, $exitCode);
+        self::assertSame($expectedExitCode, $exitCode);
 
         $commandOutput = SuccessOutput::fromJson($output->fetch());
+        $this->assertEquals($expectedCommandOutput, $commandOutput);
 
         $outputData = $commandOutput->getOutput();
-        self::assertCount(count($expectedGeneratedTestOutputSources), $outputData);
-
-        $generatedTestOutputIndex = 0;
         $generatedTestsToRemove = [];
         foreach ($outputData as $generatedTestOutput) {
-            $expectedGeneratedTestOutputSource = $expectedGeneratedTestOutputSources[$generatedTestOutputIndex] ?? null;
-
-            $generatedTestOutputSource = $generatedTestOutput->getSource();
-            self::assertSame($expectedGeneratedTestOutputSource, $generatedTestOutputSource);
-
-            $expectedGeneratedCodeClassName = $generatedCodeClassNames[$generatedTestOutputSource] ?? '';
-            self::assertSame($expectedGeneratedCodeClassName . '.php', $generatedTestOutput->getTarget());
-
             $commandOutputConfiguration = $commandOutput->getConfiguration();
             $commandOutputTarget = $commandOutputConfiguration->getTarget();
 
@@ -89,7 +99,6 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
             );
 
             $generatedTestsToRemove[] = $expectedCodePath;
-            $generatedTestOutputIndex++;
         }
 
         $generatedTestsToRemove = array_unique($generatedTestsToRemove);
@@ -102,133 +111,23 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
         }
     }
 
-    public function runSuccessDataProvider(): array
-    {
-        return [
-            'single test' => [
-                'input' => [
-                    '--source' => 'tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
-                    '--target' => 'tests/build/target',
-                ],
-                'generatedCodeClassNames' => [
-                    'tests/Fixtures/basil/Test/example.com.verify-open-literal.yml' =>
-                        'ExampleComVerifyOpenLiteralTest',
-                ],
-                'expectedGeneratedTestOutputSources' => [
-                    'tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
-                ],
-                'expectedGeneratedCode' => [
-                    'tests/Fixtures/basil/Test/example.com.verify-open-literal.yml' =>
-                        file_get_contents('tests/Fixtures/php/Test/ExampleComVerifyOpenLiteralTest.php')
-                ],
-            ],
-            'test suite' => [
-                'input' => [
-                    '--source' => 'tests/Fixtures/basil/TestSuite/example.com-all.yml',
-                    '--target' => 'tests/build/target',
-                ],
-                'generatedCodeClassNames' => [
-                    'tests/Fixtures/basil/Test/example.com.verify-open-literal.yml' =>
-                        'ExampleComVerifyOpenLiteralTest',
-                    'tests/Fixtures/basil/Test/example.com.import-step-verify-open-literal.yml' =>
-                        'ExampleComImportVerifyOpenLiteralTest',
-                    'tests/Fixtures/basil/Test/example.com.follow-more-information.yml' =>
-                        'ExampleComFollowMoreInformationTest',
-                ],
-                'expectedGeneratedTestOutputSources' => [
-                    'tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
-                    'tests/Fixtures/basil/Test/example.com.import-step-verify-open-literal.yml',
-                    'tests/Fixtures/basil/Test/example.com.follow-more-information.yml',
-                ],
-                'expectedGeneratedCode' => [
-                    'tests/Fixtures/basil/Test/example.com.verify-open-literal.yml' =>
-                        file_get_contents('tests/Fixtures/php/Test/ExampleComVerifyOpenLiteralTest.php'),
-                    'tests/Fixtures/basil/Test/example.com.import-step-verify-open-literal.yml' =>
-                        file_get_contents('tests/Fixtures/php/Test/ExampleComImportVerifyOpenLiteralTest.php'),
-                    'tests/Fixtures/basil/Test/example.com.follow-more-information.yml' =>
-                        file_get_contents('tests/Fixtures/php/Test/ExampleComFollowMoreInformationTest.php')
-                ],
-            ],
-            'collection of tests by directory' => [
-                'input' => [
-                    '--source' => 'tests/Fixtures/basil/Test',
-                    '--target' => 'tests/build/target',
-                ],
-                'generatedCodeClassNames' => [
-                    'tests/Fixtures/basil/Test/example.com.follow-more-information.yml' =>
-                        'ExampleComFollowMoreInformationTest',
-                    'tests/Fixtures/basil/Test/example.com.import-step-verify-open-literal.yml' =>
-                        'ExampleComImportVerifyOpenLiteralTest',
-                    'tests/Fixtures/basil/Test/example.com.verify-open-literal.yml' =>
-                        'ExampleComVerifyOpenLiteralTest',
-                    'tests/Fixtures/basil/Test/example.com.verify-open-literal-data-sets.yml' =>
-                        'ExampleComVerifyOpenLiteralDataSetsTest',
-                ],
-                'expectedGeneratedTestOutputSources' => [
-                    'tests/Fixtures/basil/Test/example.com.follow-more-information.yml',
-                    'tests/Fixtures/basil/Test/example.com.import-step-verify-open-literal.yml',
-                    'tests/Fixtures/basil/Test/example.com.verify-open-literal-data-sets.yml',
-                    'tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
-                ],
-                'expectedGeneratedCode' => [
-                    'tests/Fixtures/basil/Test/example.com.follow-more-information.yml' =>
-                        file_get_contents('tests/Fixtures/php/Test/ExampleComFollowMoreInformationTest.php'),
-                    'tests/Fixtures/basil/Test/example.com.import-step-verify-open-literal.yml' =>
-                        file_get_contents('tests/Fixtures/php/Test/ExampleComImportVerifyOpenLiteralTest.php'),
-                    'tests/Fixtures/basil/Test/example.com.verify-open-literal-data-sets.yml' =>
-                        file_get_contents('tests/Fixtures/php/Test/ExampleComVerifyOpenLiteralDataSetsTest.php'),
-                    'tests/Fixtures/basil/Test/example.com.verify-open-literal.yml' =>
-                        file_get_contents('tests/Fixtures/php/Test/ExampleComVerifyOpenLiteralTest.php'),
-                ],
-            ],
-            'collection of test suites by directory' => [
-                'input' => [
-                    '--source' => 'tests/Fixtures/basil/TestSuite',
-                    '--target' => 'tests/build/target',
-                ],
-                'generatedCodeClassNames' => [
-                    'tests/Fixtures/basil/Test/example.com.verify-open-literal.yml' =>
-                        'ExampleComVerifyOpenLiteralTest',
-                    'tests/Fixtures/basil/Test/example.com.import-step-verify-open-literal.yml' =>
-                        'ExampleComImportVerifyOpenLiteralTest',
-                    'tests/Fixtures/basil/Test/example.com.follow-more-information.yml' =>
-                        'ExampleComFollowMoreInformationTest',
-                ],
-                'expectedGeneratedTestOutputSources' => [
-                    'tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
-                    'tests/Fixtures/basil/Test/example.com.import-step-verify-open-literal.yml',
-                    'tests/Fixtures/basil/Test/example.com.follow-more-information.yml',
-                    'tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
-                ],
-                'expectedGeneratedCode' => [
-                    'tests/Fixtures/basil/Test/example.com.verify-open-literal.yml' =>
-                        file_get_contents('tests/Fixtures/php/Test/ExampleComVerifyOpenLiteralTest.php'),
-                    'tests/Fixtures/basil/Test/example.com.import-step-verify-open-literal.yml' =>
-                        file_get_contents('tests/Fixtures/php/Test/ExampleComImportVerifyOpenLiteralTest.php'),
-                    'tests/Fixtures/basil/Test/example.com.follow-more-information.yml' =>
-                        file_get_contents('tests/Fixtures/php/Test/ExampleComFollowMoreInformationTest.php'),
-                ],
-            ],
-        ];
-    }
-
     /**
      * @param array<mixed> $input
      * @param int $expectedExitCode
      * @param ErrorOutput $expectedCommandOutput
      *
-     * @dataProvider runFailureNonLoadableDataDataProvider
-     * @dataProvider runFailureCircularStepImportDataProvider
-     * @dataProvider runFailureEmptyTestDataProvider
-     * @dataProvider runInvalidPageDataProvider
-     * @dataProvider runInvalidTestDataProvider
-     * @dataProvider runNonRetrievableImportDataProvider
-     * @dataProvider runParseExceptionDataProvider
-     * @dataProvider runUnknownElementDataProvider
-     * @dataProvider runUnknownItemDataProvider
-     * @dataProvider runUnknownPageElementDataProvider
-     * @dataProvider runUnknownTestDataProvider
-     * @dataProvider runUnresolvedPlaceholderDataProvider
+     * @dataProvider nonLoadableDataDataProvider
+     * @dataProvider circularStepImportDataProvider
+     * @dataProvider emptyTestDataProvider
+     * @dataProvider invalidPageDataProvider
+     * @dataProvider invalidTestDataProvider
+     * @dataProvider nonRetrievableImportDataProvider
+     * @dataProvider parseExceptionDataProvider
+     * @dataProvider unknownElementDataProvider
+     * @dataProvider unknownItemDataProvider
+     * @dataProvider unknownPageElementDataProvider
+     * @dataProvider unknownTestDataProvider
+     * @dataProvider unresolvedPlaceholderDataProvider
      */
     public function testRunFailure(
         array $input,
@@ -237,7 +136,7 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
         ?callable $initializer = null
     ) {
         if (null !== $initializer) {
-            $initializer($this);
+            $initializer($this, $this->command);
         }
 
         $output = new BufferedOutput();
@@ -250,955 +149,7 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
         self::assertEquals($expectedCommandOutput, $commandOutput);
     }
 
-    public function runFailureNonLoadableDataDataProvider(): array
-    {
-        $root = (new ProjectRootPathProvider())->get();
-
-        return [
-            'test contains invalid yaml' => [
-                'input' => [
-                    '--source' => 'tests/Fixtures/basil/InvalidTest/invalid.unparseable.yml',
-                    '--target' => 'tests/build/target',
-                ],
-                'expectedExitCode' => ErrorOutput::CODE_LOADER_INVALID_YAML,
-                'expectedCommandOutput' => new ErrorOutput(
-                    new Configuration(
-                        $root . '/tests/Fixtures/basil/InvalidTest/invalid.unparseable.yml',
-                        $root . '/tests/build/target',
-                        AbstractBaseTest::class
-                    ),
-                    'Unexpected characters near "https://example.com"" at line 3 (near "url: "https://example.com"").',
-                    ErrorOutput::CODE_LOADER_INVALID_YAML,
-                    [
-                        'path' => $root . '/tests/Fixtures/basil/InvalidTest/invalid.unparseable.yml',
-                    ]
-                ),
-            ],
-            'test suite imports test containing invalid yaml' => [
-                'input' => [
-                    '--source' => 'tests/Fixtures/basil/InvalidTestSuite/imports-unparseable.yml',
-                    '--target' => 'tests/build/target',
-                ],
-                'expectedExitCode' => ErrorOutput::CODE_LOADER_INVALID_YAML,
-                'expectedCommandOutput' => new ErrorOutput(
-                    new Configuration(
-                        $root . '/tests/Fixtures/basil/InvalidTestSuite/imports-unparseable.yml',
-                        $root . '/tests/build/target',
-                        AbstractBaseTest::class
-                    ),
-                    'Unexpected characters near "https://example.com"" at line 3 (near "url: "https://example.com"").',
-                    ErrorOutput::CODE_LOADER_INVALID_YAML,
-                    [
-                        'path' => $root . '/tests/Fixtures/basil/InvalidTest/invalid.unparseable.yml',
-                    ]
-                ),
-            ],
-            'test file contains non-array data' => [
-                'input' => [
-                    '--source' => 'tests/Fixtures/basil/InvalidTest/invalid.not-an-array.yml',
-                    '--target' => 'tests/build/target',
-                ],
-                'expectedExitCode' => ErrorOutput::CODE_LOADER_INVALID_YAML,
-                'expectedCommandOutput' => new ErrorOutput(
-                    new Configuration(
-                        $root . '/tests/Fixtures/basil/InvalidTest/invalid.not-an-array.yml',
-                        $root . '/tests/build/target',
-                        AbstractBaseTest::class
-                    ),
-                    'Data is not an array',
-                    ErrorOutput::CODE_LOADER_INVALID_YAML,
-                    [
-                        'path' => $root . '/tests/Fixtures/basil/InvalidTest/invalid.not-an-array.yml',
-                    ]
-                ),
-            ],
-            'test suite imports test containing non-array data' => [
-                'input' => [
-                    '--source' => 'tests/Fixtures/basil/InvalidTestSuite/imports-not-an-array.yml',
-                    '--target' => 'tests/build/target',
-                ],
-                'expectedExitCode' => ErrorOutput::CODE_LOADER_INVALID_YAML,
-                'expectedCommandOutput' => new ErrorOutput(
-                    new Configuration(
-                        $root . '/tests/Fixtures/basil/InvalidTestSuite/imports-not-an-array.yml',
-                        $root . '/tests/build/target',
-                        AbstractBaseTest::class
-                    ),
-                    'Data is not an array',
-                    ErrorOutput::CODE_LOADER_INVALID_YAML,
-                    [
-                        'path' => $root . '/tests/Fixtures/basil/InvalidTest/invalid.not-an-array.yml',
-                    ]
-                ),
-            ],
-            'test suite contains unparseable yaml' => [
-                'input' => [
-                    '--source' => 'tests/Fixtures/basil/InvalidTestSuite/unparseable-yaml.yml',
-                    '--target' => 'tests/build/target',
-                ],
-                'expectedExitCode' => ErrorOutput::CODE_LOADER_INVALID_YAML,
-                'expectedCommandOutput' => new ErrorOutput(
-                    new Configuration(
-                        $root . '/tests/Fixtures/basil/InvalidTestSuite/unparseable-yaml.yml',
-                        $root . '/tests/build/target',
-                        AbstractBaseTest::class
-                    ),
-                    'Malformed inline YAML string: ""../Test/lacking-closing-quote.yml" at line 2.',
-                    ErrorOutput::CODE_LOADER_INVALID_YAML,
-                    [
-                        'path' => $root . '/tests/Fixtures/basil/InvalidTestSuite/unparseable-yaml.yml',
-                    ]
-                ),
-            ],
-        ];
-    }
-
-    public function runFailureCircularStepImportDataProvider(): array
-    {
-        $root = (new ProjectRootPathProvider())->get();
-
-        return [
-            'test imports step which imports self' => [
-                'input' => [
-                    '--source' => 'tests/Fixtures/basil/InvalidTest/invalid.import-circular-reference-self.yml',
-                    '--target' => 'tests/build/target',
-                ],
-                'expectedExitCode' => ErrorOutput::CODE_LOADER_CIRCULAR_STEP_IMPORT,
-                'expectedCommandOutput' => new ErrorOutput(
-                    new Configuration(
-                        $root . '/tests/Fixtures/basil/InvalidTest/invalid.import-circular-reference-self.yml',
-                        $root . '/tests/build/target',
-                        AbstractBaseTest::class
-                    ),
-                    'Circular step import "circular_reference_self"',
-                    ErrorOutput::CODE_LOADER_CIRCULAR_STEP_IMPORT,
-                    [
-                        'import_name' => 'circular_reference_self',
-                    ]
-                ),
-            ],
-            'test imports step which step imports self' => [
-                'input' => [
-                    '--source' => 'tests/Fixtures/basil/InvalidTest/invalid.import-circular-reference-indirect.yml',
-                    '--target' => 'tests/build/target',
-                ],
-                'expectedExitCode' => ErrorOutput::CODE_LOADER_CIRCULAR_STEP_IMPORT,
-                'expectedCommandOutput' => new ErrorOutput(
-                    new Configuration(
-                        $root . '/tests/Fixtures/basil/InvalidTest/invalid.import-circular-reference-indirect.yml',
-                        $root . '/tests/build/target',
-                        AbstractBaseTest::class
-                    ),
-                    'Circular step import "circular_reference_self"',
-                    ErrorOutput::CODE_LOADER_CIRCULAR_STEP_IMPORT,
-                    [
-                        'import_name' => 'circular_reference_self',
-                    ]
-                ),
-            ],
-        ];
-    }
-
-    public function runFailureEmptyTestDataProvider(): array
-    {
-        $root = (new ProjectRootPathProvider())->get();
-
-        $emptyTestPath = $root . '/tests/Fixtures/basil/InvalidTest/empty.yml';
-        $emptyTestAbsolutePath = '' . $emptyTestPath;
-
-        return [
-            'test file is empty' => [
-                'input' => [
-                    '--source' => $emptyTestPath,
-                    '--target' => 'tests/build/target',
-                ],
-                'expectedExitCode' => ErrorOutput::CODE_LOADER_EMPTY_TEST,
-                'expectedCommandOutput' => new ErrorOutput(
-                    new Configuration(
-                        $emptyTestAbsolutePath,
-                        $root . '/tests/build/target',
-                        AbstractBaseTest::class
-                    ),
-                    'Empty test at path "' . $emptyTestAbsolutePath . '"',
-                    ErrorOutput::CODE_LOADER_EMPTY_TEST,
-                    [
-                        'path' => $emptyTestAbsolutePath,
-                    ]
-                ),
-            ],
-        ];
-    }
-
-    public function runInvalidPageDataProvider(): array
-    {
-        $root = (new ProjectRootPathProvider())->get();
-
-        $testPath = $root . '/tests/Fixtures/basil/InvalidTest/import-empty-page.yml';
-        $testAbsolutePath = '' . $testPath;
-
-        $pagePath = $root . '/tests/Fixtures/basil/InvalidPage/url-empty.yml';
-        $pageAbsolutePath = '' . $pagePath;
-
-        $testSuitePath = $root . '/tests/Fixtures/basil/InvalidTestSuite/imports-invalid-page.yml';
-        $testSuiteAbsolutePath = '' . $testSuitePath;
-
-        return [
-            'test imports invalid page; url empty' => [
-                'input' => [
-                    '--source' => $testPath,
-                    '--target' => 'tests/build/target',
-                ],
-                'expectedExitCode' => ErrorOutput::CODE_LOADER_INVALID_PAGE,
-                'expectedCommandOutput' => new ErrorOutput(
-                    new Configuration(
-                        $testAbsolutePath,
-                        $root . '/tests/build/target',
-                        AbstractBaseTest::class
-                    ),
-                    'Invalid page "empty_url_page" at path "' . $pageAbsolutePath . '": page-url-empty',
-                    ErrorOutput::CODE_LOADER_INVALID_PAGE,
-                    [
-                        'test_path' => $testAbsolutePath,
-                        'import_name' => 'empty_url_page',
-                        'page_path' => $pageAbsolutePath,
-                        'validation_result' => [
-                            'type' => 'page',
-                            'reason' => 'page-url-empty',
-                        ],
-                    ]
-                ),
-            ],
-            'test suite imports test which imports invalid page; url empty' => [
-                'input' => [
-                    '--source' => $testSuitePath,
-                    '--target' => 'tests/build/target',
-                ],
-                'expectedExitCode' => ErrorOutput::CODE_LOADER_INVALID_PAGE,
-                'expectedCommandOutput' => new ErrorOutput(
-                    new Configuration(
-                        $testSuiteAbsolutePath,
-                        $root . '/tests/build/target',
-                        AbstractBaseTest::class
-                    ),
-                    'Invalid page "empty_url_page" at path "' . $pageAbsolutePath . '": page-url-empty',
-                    ErrorOutput::CODE_LOADER_INVALID_PAGE,
-                    [
-                        'test_path' => $testAbsolutePath,
-                        'import_name' => 'empty_url_page',
-                        'page_path' => $pageAbsolutePath,
-                        'validation_result' => [
-                            'type' => 'page',
-                            'reason' => 'page-url-empty',
-                        ],
-                    ]
-                ),
-            ],
-        ];
-    }
-
-    public function runInvalidTestDataProvider(): array
-    {
-        $root = (new ProjectRootPathProvider())->get();
-
-        $testPath = $root . '/tests/Fixtures/basil/InvalidTest/invalid-configuration.yml';
-        $testAbsolutePath = '' . $testPath;
-
-        $testSuitePath = $root . '/tests/Fixtures/basil/InvalidTestSuite/imports-invalid-test.yml';
-        $testSuiteAbsolutePath = '' . $testSuitePath;
-
-        return [
-            'test has invalid configuration' => [
-                'input' => [
-                    '--source' => $testPath,
-                    '--target' => 'tests/build/target',
-                ],
-                'expectedExitCode' => ErrorOutput::CODE_LOADER_INVALID_TEST,
-                'expectedCommandOutput' => new ErrorOutput(
-                    new Configuration(
-                        $testAbsolutePath,
-                        $root . '/tests/build/target',
-                        AbstractBaseTest::class
-                    ),
-                    'Invalid test at path "' .
-                    $testAbsolutePath .
-                    '": test-configuration-invalid',
-                    ErrorOutput::CODE_LOADER_INVALID_TEST,
-                    [
-                        'test_path' => $testAbsolutePath,
-                        'validation_result' => [
-                            'type' => 'test',
-                            'reason' => 'test-configuration-invalid',
-                            'previous' => [
-                                'type' => 'test-configuration',
-                                'reason' => 'test-configuration-browser-empty',
-                            ],
-                        ],
-                    ]
-                ),
-            ],
-            'test suite imports test with invalid configuration' => [
-                'input' => [
-                    '--source' => $testSuitePath,
-                    '--target' => 'tests/build/target',
-                ],
-                'expectedExitCode' => ErrorOutput::CODE_LOADER_INVALID_TEST,
-                'expectedCommandOutput' => new ErrorOutput(
-                    new Configuration(
-                        $testSuiteAbsolutePath,
-                        $root . '/tests/build/target',
-                        AbstractBaseTest::class
-                    ),
-                    'Invalid test at path "' .
-                    $testAbsolutePath .
-                    '": test-configuration-invalid',
-                    ErrorOutput::CODE_LOADER_INVALID_TEST,
-                    [
-                        'test_path' => $testAbsolutePath,
-                        'validation_result' => [
-                            'type' => 'test',
-                            'reason' => 'test-configuration-invalid',
-                            'previous' => [
-                                'type' => 'test-configuration',
-                                'reason' => 'test-configuration-browser-empty',
-                            ],
-                        ],
-                    ]
-                ),
-            ],
-        ];
-    }
-
-    public function runNonRetrievableImportDataProvider(): array
-    {
-        $root = (new ProjectRootPathProvider())->get();
-
-        $pagePath = $root . '/tests/Fixtures/basil/InvalidPage/unparseable.yml';
-        $pageAbsolutePath = '' . $pagePath;
-
-        $testPath = $root . '/tests/Fixtures/basil/InvalidTest/import-unparseable-page.yml';
-        $testAbsolutePath = '' . $testPath;
-
-        $testSuitePath = $root . '/tests/Fixtures/basil/InvalidTestSuite/imports-unparseable-page.yml';
-        $testSuiteAbsolutePath = '' . $testSuitePath;
-
-        return [
-            'test imports non-parsable page' => [
-                'input' => [
-                    '--source' => $testPath,
-                    '--target' => 'tests/build/target',
-                ],
-                'expectedExitCode' => ErrorOutput::CODE_LOADER_NON_RETRIEVABLE_IMPORT,
-                'expectedCommandOutput' => new ErrorOutput(
-                    new Configuration(
-                        $testAbsolutePath,
-                        $root . '/tests/build/target',
-                        AbstractBaseTest::class
-                    ),
-                    'Cannot retrieve page "unparseable_page" from "' . $pageAbsolutePath . '"',
-                    ErrorOutput::CODE_LOADER_NON_RETRIEVABLE_IMPORT,
-                    [
-                        'test_path' => $testAbsolutePath,
-                        'type' => 'page',
-                        'name' => 'unparseable_page',
-                        'import_path' => $pageAbsolutePath,
-                        'loader_error' => [
-                            'message' => 'Malformed inline YAML string: ""http://example.com" at line 2.',
-                            'path' => $pageAbsolutePath,
-                        ],
-                    ]
-                ),
-            ],
-            'test suite imports test which imports non-parsable page' => [
-                'input' => [
-                    '--source' => $testSuiteAbsolutePath,
-                    '--target' => 'tests/build/target',
-                ],
-                'expectedExitCode' => ErrorOutput::CODE_LOADER_NON_RETRIEVABLE_IMPORT,
-                'expectedCommandOutput' => new ErrorOutput(
-                    new Configuration(
-                        $testSuiteAbsolutePath,
-                        $root . '/tests/build/target',
-                        AbstractBaseTest::class
-                    ),
-                    'Cannot retrieve page "unparseable_page" from "' . $pageAbsolutePath . '"',
-                    ErrorOutput::CODE_LOADER_NON_RETRIEVABLE_IMPORT,
-                    [
-                        'test_path' => $testAbsolutePath,
-                        'type' => 'page',
-                        'name' => 'unparseable_page',
-                        'import_path' => $pageAbsolutePath,
-                        'loader_error' => [
-                            'message' => 'Malformed inline YAML string: ""http://example.com" at line 2.',
-                            'path' => $pageAbsolutePath,
-                        ],
-                    ]
-                ),
-            ],
-        ];
-    }
-
-    public function runParseExceptionDataProvider(): array
-    {
-        $root = (new ProjectRootPathProvider())->get();
-
-        return [
-            'test declares step, step contains unparseable action' => [
-                'input' => [
-                    '--source' => 'tests/Fixtures/basil/InvalidTest/unparseable-action.yml',
-                    '--target' => 'tests/build/target',
-                ],
-                'expectedExitCode' => ErrorOutput::CODE_LOADER_UNPARSEABLE_DATA,
-                'expectedCommandOutput' => new ErrorOutput(
-                    new Configuration(
-                        $root . '/tests/Fixtures/basil/InvalidTest/unparseable-action.yml',
-                        $root . '/tests/build/target',
-                        AbstractBaseTest::class
-                    ),
-                    'Unparseable test',
-                    ErrorOutput::CODE_LOADER_UNPARSEABLE_DATA,
-                    [
-                        'type' => 'test',
-                        'test_path' => $root . '/tests/Fixtures/basil/InvalidTest/unparseable-action.yml',
-                        'step_name' => 'contains unparseable action',
-                        'statement_type' => 'action',
-                        'statement' => 'click invalid-identifier',
-                        'reason' => 'invalid-identifier',
-
-                    ]
-                ),
-            ],
-            'test declares step, step contains unparseable assertion' => [
-                'input' => [
-                    '--source' => 'tests/Fixtures/basil/InvalidTest/unparseable-assertion.yml',
-                    '--target' => 'tests/build/target',
-                ],
-                'expectedExitCode' => ErrorOutput::CODE_LOADER_UNPARSEABLE_DATA,
-                'expectedCommandOutput' => new ErrorOutput(
-                    new Configuration(
-                        $root . '/tests/Fixtures/basil/InvalidTest/unparseable-assertion.yml',
-                        $root . '/tests/build/target',
-                        AbstractBaseTest::class
-                    ),
-                    'Unparseable test',
-                    ErrorOutput::CODE_LOADER_UNPARSEABLE_DATA,
-                    [
-                        'type' => 'test',
-                        'test_path' => $root . '/tests/Fixtures/basil/InvalidTest/unparseable-assertion.yml',
-                        'step_name' => 'contains unparseable assertion',
-                        'statement_type' => 'assertion',
-                        'statement' => '$page.url is',
-                        'reason' => 'empty-value',
-
-                    ]
-                ),
-            ],
-            'test imports step, step contains unparseable action' => [
-                'input' => [
-                    '--source' => 'tests/Fixtures/basil/InvalidTest/import-unparseable-action.yml',
-                    '--target' => 'tests/build/target',
-                ],
-                'expectedExitCode' => ErrorOutput::CODE_LOADER_UNPARSEABLE_DATA,
-                'expectedCommandOutput' => new ErrorOutput(
-                    new Configuration(
-                        $root . '/tests/Fixtures/basil/InvalidTest/import-unparseable-action.yml',
-                        $root . '/tests/build/target',
-                        AbstractBaseTest::class
-                    ),
-                    'Unparseable step',
-                    ErrorOutput::CODE_LOADER_UNPARSEABLE_DATA,
-                    [
-                        'type' => 'step',
-                        'test_path' => $root . '/tests/Fixtures/basil/InvalidTest/import-unparseable-action.yml',
-                        'step_path' => $root . '/tests/Fixtures/basil/Step/unparseable-action.yml',
-                        'statement_type' => 'action',
-                        'statement' => 'click invalid-identifier',
-                        'reason' => 'invalid-identifier',
-
-                    ]
-                ),
-            ],
-            'test imports step, step contains unparseable assertion' => [
-                'input' => [
-                    '--source' => 'tests/Fixtures/basil/InvalidTest/import-unparseable-assertion.yml',
-                    '--target' => 'tests/build/target',
-                ],
-                'expectedExitCode' => ErrorOutput::CODE_LOADER_UNPARSEABLE_DATA,
-                'expectedCommandOutput' => new ErrorOutput(
-                    new Configuration(
-                        $root . '/tests/Fixtures/basil/InvalidTest/import-unparseable-assertion.yml',
-                        $root . '/tests/build/target',
-                        AbstractBaseTest::class
-                    ),
-                    'Unparseable step',
-                    ErrorOutput::CODE_LOADER_UNPARSEABLE_DATA,
-                    [
-                        'type' => 'step',
-                        'test_path' => $root . '/tests/Fixtures/basil/InvalidTest/import-unparseable-assertion.yml',
-                        'step_path' => $root . '/tests/Fixtures/basil/Step/unparseable-assertion.yml',
-                        'statement_type' => 'assertion',
-                        'statement' => '$page.url is',
-                        'reason' => 'empty-value',
-
-                    ]
-                ),
-            ],
-            'test suite imports test which declares step, step contains unparseable action' => [
-                'input' => [
-                    '--source' => 'tests/Fixtures/basil/InvalidTestSuite/imports-test-declaring-unparseable-action.yml',
-                    '--target' => 'tests/build/target',
-                ],
-                'expectedExitCode' => ErrorOutput::CODE_LOADER_UNPARSEABLE_DATA,
-                'expectedCommandOutput' => new ErrorOutput(
-                    new Configuration(
-                        $root . '/tests/Fixtures/basil/InvalidTestSuite/imports-test-declaring-unparseable-action.yml',
-                        $root . '/tests/build/target',
-                        AbstractBaseTest::class
-                    ),
-                    'Unparseable test',
-                    ErrorOutput::CODE_LOADER_UNPARSEABLE_DATA,
-                    [
-                        'type' => 'test',
-                        'test_path' => $root . '/tests/Fixtures/basil/InvalidTest/unparseable-action.yml',
-                        'step_name' => 'contains unparseable action',
-                        'statement_type' => 'action',
-                        'statement' => 'click invalid-identifier',
-                        'reason' => 'invalid-identifier',
-
-                    ]
-                ),
-            ],
-            'test suite imports test which imports step, step contains unparseable action' => [
-                'input' => [
-                    '--source' => 'tests/Fixtures/basil/InvalidTestSuite/imports-test-importing-unparseable-action.yml',
-                    '--target' => 'tests/build/target',
-                ],
-                'expectedExitCode' => ErrorOutput::CODE_LOADER_UNPARSEABLE_DATA,
-                'expectedCommandOutput' => new ErrorOutput(
-                    new Configuration(
-                        $root . '/tests/Fixtures/basil/InvalidTestSuite/imports-test-importing-unparseable-action.yml',
-                        $root . '/tests/build/target',
-                        AbstractBaseTest::class
-                    ),
-                    'Unparseable step',
-                    ErrorOutput::CODE_LOADER_UNPARSEABLE_DATA,
-                    [
-                        'type' => 'step',
-                        'test_path' => $root . '/tests/Fixtures/basil/InvalidTest/import-unparseable-action.yml',
-                        'step_path' => $root . '/tests/Fixtures/basil/Step/unparseable-action.yml',
-                        'statement_type' => 'action',
-                        'statement' => 'click invalid-identifier',
-                        'reason' => 'invalid-identifier',
-
-                    ]
-                ),
-            ],
-            'test declares step, step contains non-array actions data' => [
-                'input' => [
-                    '--source' => 'tests/Fixtures/basil/InvalidTest/non-array-actions-data.yml',
-                    '--target' => 'tests/build/target',
-                ],
-                'expectedExitCode' => ErrorOutput::CODE_LOADER_UNPARSEABLE_DATA,
-                'expectedCommandOutput' => new ErrorOutput(
-                    new Configuration(
-                        $root . '/tests/Fixtures/basil/InvalidTest/non-array-actions-data.yml',
-                        $root . '/tests/build/target',
-                        AbstractBaseTest::class
-                    ),
-                    'Unparseable test',
-                    ErrorOutput::CODE_LOADER_UNPARSEABLE_DATA,
-                    [
-                        'type' => 'test',
-                        'test_path' => $root . '/tests/Fixtures/basil/InvalidTest/non-array-actions-data.yml',
-                        'step_name' => 'non-array actions data',
-                        'reason' => 'invalid-actions-data',
-
-                    ]
-                ),
-            ],
-            'test declares step, step contains non-array assertions data' => [
-                'input' => [
-                    '--source' => 'tests/Fixtures/basil/InvalidTest/non-array-assertions-data.yml',
-                    '--target' => 'tests/build/target',
-                ],
-                'expectedExitCode' => ErrorOutput::CODE_LOADER_UNPARSEABLE_DATA,
-                'expectedCommandOutput' => new ErrorOutput(
-                    new Configuration(
-                        $root . '/tests/Fixtures/basil/InvalidTest/non-array-assertions-data.yml',
-                        $root . '/tests/build/target',
-                        AbstractBaseTest::class
-                    ),
-                    'Unparseable test',
-                    ErrorOutput::CODE_LOADER_UNPARSEABLE_DATA,
-                    [
-                        'type' => 'test',
-                        'test_path' => $root . '/tests/Fixtures/basil/InvalidTest/non-array-assertions-data.yml',
-                        'step_name' => 'non-array assertions data',
-                        'reason' => 'invalid-assertions-data',
-
-                    ]
-                ),
-            ],
-            'test imports step, step contains non-array actions data' => [
-                'input' => [
-                    '--source' => 'tests/Fixtures/basil/InvalidTest/import-non-array-actions-data.yml',
-                    '--target' => 'tests/build/target',
-                ],
-                'expectedExitCode' => ErrorOutput::CODE_LOADER_UNPARSEABLE_DATA,
-                'expectedCommandOutput' => new ErrorOutput(
-                    new Configuration(
-                        $root . '/tests/Fixtures/basil/InvalidTest/import-non-array-actions-data.yml',
-                        $root . '/tests/build/target',
-                        AbstractBaseTest::class
-                    ),
-                    'Unparseable step',
-                    ErrorOutput::CODE_LOADER_UNPARSEABLE_DATA,
-                    [
-                        'type' => 'step',
-                        'test_path' => $root . '/tests/Fixtures/basil/InvalidTest/import-non-array-actions-data.yml',
-                        'step_path' => $root . '/tests/Fixtures/basil/Step/non-array-actions-data.yml',
-                        'reason' => 'invalid-actions-data',
-                    ]
-                ),
-            ],
-            'test imports step, step contains non-array assertions data' => [
-                'input' => [
-                    '--source' => 'tests/Fixtures/basil/InvalidTest/import-non-array-assertions-data.yml',
-                    '--target' => 'tests/build/target',
-                ],
-                'expectedExitCode' => ErrorOutput::CODE_LOADER_UNPARSEABLE_DATA,
-                'expectedCommandOutput' => new ErrorOutput(
-                    new Configuration(
-                        $root . '/tests/Fixtures/basil/InvalidTest/import-non-array-assertions-data.yml',
-                        $root . '/tests/build/target',
-                        AbstractBaseTest::class
-                    ),
-                    'Unparseable step',
-                    ErrorOutput::CODE_LOADER_UNPARSEABLE_DATA,
-                    [
-                        'type' => 'step',
-                        'test_path' => $root . '/tests/Fixtures/basil/InvalidTest/import-non-array-assertions-data.yml',
-                        'step_path' => $root . '/tests/Fixtures/basil/Step/non-array-assertions-data.yml',
-                        'reason' => 'invalid-assertions-data',
-                    ]
-                ),
-            ],
-        ];
-    }
-
-    public function runUnknownElementDataProvider(): array
-    {
-        $root = (new ProjectRootPathProvider())->get();
-
-        return [
-            'test declares step, step contains action with unknown element' => [
-                'input' => [
-                    '--source' => 'tests/Fixtures/basil/InvalidTest/action-contains-unknown-element.yml',
-                    '--target' => 'tests/build/target',
-                ],
-                'expectedExitCode' => ErrorOutput::CODE_LOADER_UNKNOWN_ELEMENT,
-                'expectedCommandOutput' => new ErrorOutput(
-                    new Configuration(
-                        $root . '/tests/Fixtures/basil/InvalidTest/action-contains-unknown-element.yml',
-                        $root . '/tests/build/target',
-                        AbstractBaseTest::class
-                    ),
-                    'Unknown element "unknown_element_name"',
-                    ErrorOutput::CODE_LOADER_UNKNOWN_ELEMENT,
-                    [
-                        'element_name' => 'unknown_element_name',
-                        'test_path' => $root . '/tests/Fixtures/basil/InvalidTest/action-contains-unknown-element.yml',
-                        'step_name' => 'action contains unknown element',
-                        'statement' => 'click $elements.unknown_element_name',
-                    ]
-                ),
-            ],
-            'test imports step, step contains action with unknown element' => [
-                'input' => [
-                    '--source' => 'tests/Fixtures/basil/InvalidTest/import-action-containing-unknown-element.yml',
-                    '--target' => 'tests/build/target',
-                ],
-                'expectedExitCode' => ErrorOutput::CODE_LOADER_UNKNOWN_ELEMENT,
-                'expectedCommandOutput' => new ErrorOutput(
-                    new Configuration(
-                        $root . '/tests/Fixtures/basil/InvalidTest/import-action-containing-unknown-element.yml',
-                        $root . '/tests/build/target',
-                        AbstractBaseTest::class
-                    ),
-                    'Unknown element "unknown_element_name"',
-                    ErrorOutput::CODE_LOADER_UNKNOWN_ELEMENT,
-                    [
-                        'element_name' => 'unknown_element_name',
-                        'test_path' => $root .
-                            '/tests/Fixtures/basil/InvalidTest/import-action-containing-unknown-element.yml',
-                        'step_name' => 'use action_contains_unknown_element',
-                        'statement' => 'click $elements.unknown_element_name',
-                    ]
-                ),
-            ],
-            'test suite imports test declaring step, step contains action with unknown element' => [
-                'input' => [
-                    '--source' => 'tests/Fixtures/basil/InvalidTestSuite/' .
-                        'imports-test-declaring-action-containing-unknown-element.yml',
-                    '--target' => 'tests/build/target',
-                ],
-                'expectedExitCode' => ErrorOutput::CODE_LOADER_UNKNOWN_ELEMENT,
-                'expectedCommandOutput' => new ErrorOutput(
-                    new Configuration(
-                        $root . '/tests/Fixtures/basil/InvalidTestSuite/' .
-                        'imports-test-declaring-action-containing-unknown-element.yml',
-                        $root . '/tests/build/target',
-                        AbstractBaseTest::class
-                    ),
-                    'Unknown element "unknown_element_name"',
-                    ErrorOutput::CODE_LOADER_UNKNOWN_ELEMENT,
-                    [
-                        'element_name' => 'unknown_element_name',
-                        'test_path' => $root . '/tests/Fixtures/basil/InvalidTest/action-contains-unknown-element.yml',
-                        'step_name' => 'action contains unknown element',
-                        'statement' => 'click $elements.unknown_element_name',
-                    ]
-                ),
-            ],
-            'test suite imports test importing step, step contains action with unknown element' => [
-                'input' => [
-                    '--source' => 'tests/Fixtures/basil/InvalidTestSuite/' .
-                        'imports-test-importing-action-containing-unknown-element.yml',
-                    '--target' => 'tests/build/target',
-                ],
-                'expectedExitCode' => ErrorOutput::CODE_LOADER_UNKNOWN_ELEMENT,
-                'expectedCommandOutput' => new ErrorOutput(
-                    new Configuration(
-                        $root . '/tests/Fixtures/basil/InvalidTestSuite/' .
-                        'imports-test-importing-action-containing-unknown-element.yml',
-                        $root . '/tests/build/target',
-                        AbstractBaseTest::class
-                    ),
-                    'Unknown element "unknown_element_name"',
-                    ErrorOutput::CODE_LOADER_UNKNOWN_ELEMENT,
-                    [
-                        'element_name' => 'unknown_element_name',
-                        'test_path' => $root .
-                            '/tests/Fixtures/basil/InvalidTest/import-action-containing-unknown-element.yml',
-                        'step_name' => 'use action_contains_unknown_element',
-                        'statement' => 'click $elements.unknown_element_name',
-                    ]
-                ),
-            ],
-        ];
-    }
-
-    public function runUnknownItemDataProvider(): array
-    {
-        $root = (new ProjectRootPathProvider())->get();
-
-        return [
-            'test declares step, step uses unknown dataset' => [
-                'input' => [
-                    '--source' => 'tests/Fixtures/basil/InvalidTest/step-uses-unknown-dataset.yml',
-                    '--target' => 'tests/build/target',
-                ],
-                'expectedExitCode' => ErrorOutput::CODE_LOADER_UNKNOWN_ITEM,
-                'expectedCommandOutput' => new ErrorOutput(
-                    new Configuration(
-                        $root . '/tests/Fixtures/basil/InvalidTest/step-uses-unknown-dataset.yml',
-                        $root . '/tests/build/target',
-                        AbstractBaseTest::class
-                    ),
-                    'Unknown dataset "unknown_data_provider_name"',
-                    ErrorOutput::CODE_LOADER_UNKNOWN_ITEM,
-                    [
-                        'type' => 'dataset',
-                        'name' => 'unknown_data_provider_name',
-                        'test_path' => $root . '/tests/Fixtures/basil/InvalidTest/step-uses-unknown-dataset.yml',
-                        'step_name' => 'step name',
-                        'statement' => '',
-                    ]
-                ),
-            ],
-            'test declares step, step uses unknown page' => [
-                'input' => [
-                    '--source' => 'tests/Fixtures/basil/InvalidTest/step-uses-unknown-page.yml',
-                    '--target' => 'tests/build/target',
-                ],
-                'expectedExitCode' => ErrorOutput::CODE_LOADER_UNKNOWN_ITEM,
-                'expectedCommandOutput' => new ErrorOutput(
-                    new Configuration(
-                        $root . '/tests/Fixtures/basil/InvalidTest/step-uses-unknown-page.yml',
-                        $root . '/tests/build/target',
-                        AbstractBaseTest::class
-                    ),
-                    'Unknown page "unknown_page_import"',
-                    ErrorOutput::CODE_LOADER_UNKNOWN_ITEM,
-                    [
-                        'type' => 'page',
-                        'name' => 'unknown_page_import',
-                        'test_path' => $root . '/tests/Fixtures/basil/InvalidTest/step-uses-unknown-page.yml',
-                        'step_name' => 'step name',
-                        'statement' => '',
-                    ]
-                ),
-            ],
-            'test declares step, step uses step' => [
-                'input' => [
-                    '--source' => 'tests/Fixtures/basil/InvalidTest/step-uses-unknown-step.yml',
-                    '--target' => 'tests/build/target',
-                ],
-                'expectedExitCode' => ErrorOutput::CODE_LOADER_UNKNOWN_ITEM,
-                'expectedCommandOutput' => new ErrorOutput(
-                    new Configuration(
-                        $root . '/tests/Fixtures/basil/InvalidTest/step-uses-unknown-step.yml',
-                        $root . '/tests/build/target',
-                        AbstractBaseTest::class
-                    ),
-                    'Unknown step "unknown_step"',
-                    ErrorOutput::CODE_LOADER_UNKNOWN_ITEM,
-                    [
-                        'type' => 'step',
-                        'name' => 'unknown_step',
-                        'test_path' => $root . '/tests/Fixtures/basil/InvalidTest/step-uses-unknown-step.yml',
-                        'step_name' => 'step name',
-                        'statement' => '',
-                    ]
-                ),
-            ],
-            'test suite imports test declaring step, step uses unknown dataset' => [
-                'input' => [
-                    '--source' =>
-                        'tests/Fixtures/basil/InvalidTestSuite/imports-test-declaring-step-using-unknown-dataset.yml',
-                    '--target' => 'tests/build/target',
-                ],
-                'expectedExitCode' => ErrorOutput::CODE_LOADER_UNKNOWN_ITEM,
-                'expectedCommandOutput' => new ErrorOutput(
-                    new Configuration(
-                        $root .
-                        '/tests/Fixtures/basil/InvalidTestSuite/imports-test-declaring-step-using-unknown-dataset.yml',
-                        $root . '/tests/build/target',
-                        AbstractBaseTest::class
-                    ),
-                    'Unknown dataset "unknown_data_provider_name"',
-                    ErrorOutput::CODE_LOADER_UNKNOWN_ITEM,
-                    [
-                        'type' => 'dataset',
-                        'name' => 'unknown_data_provider_name',
-                        'test_path' => $root . '/tests/Fixtures/basil/InvalidTest/step-uses-unknown-dataset.yml',
-                        'step_name' => 'step name',
-                        'statement' => '',
-                    ]
-                ),
-            ],
-        ];
-    }
-
-    public function runUnknownPageElementDataProvider(): array
-    {
-        $root = (new ProjectRootPathProvider())->get();
-
-        return [
-            'test declares step, step contains action using unknown page element' => [
-                'input' => [
-                    '--source' => 'tests/Fixtures/basil/InvalidTest/action-contains-unknown-page-element.yml',
-                    '--target' => 'tests/build/target',
-                ],
-                'expectedExitCode' => ErrorOutput::CODE_LOADER_UNKNOWN_PAGE_ELEMENT,
-                'expectedCommandOutput' => new ErrorOutput(
-                    new Configuration(
-                        $root . '/tests/Fixtures/basil/InvalidTest/action-contains-unknown-page-element.yml',
-                        $root . '/tests/build/target',
-                        AbstractBaseTest::class
-                    ),
-                    'Unknown page element "unknown_element" in page "page_import_name"',
-                    ErrorOutput::CODE_LOADER_UNKNOWN_PAGE_ELEMENT,
-                    [
-                        'import_name' => 'page_import_name',
-                        'element_name' => 'unknown_element',
-                        'test_path' =>
-                            $root . '/tests/Fixtures/basil/InvalidTest/action-contains-unknown-page-element.yml',
-                        'step_name' => 'action contains unknown page element',
-                        'statement' => 'click $page_import_name.elements.unknown_element'
-                    ]
-                ),
-            ],
-            'test imports step, test passes step unknown page element' => [
-                'input' => [
-                    '--source' => 'tests/Fixtures/basil/InvalidTest/imports-test-passes-unknown-element.yml',
-                    '--target' => 'tests/build/target',
-                ],
-                'expectedExitCode' => ErrorOutput::CODE_LOADER_UNKNOWN_PAGE_ELEMENT,
-                'expectedCommandOutput' => new ErrorOutput(
-                    new Configuration(
-                        $root . '/tests/Fixtures/basil/InvalidTest/imports-test-passes-unknown-element.yml',
-                        $root . '/tests/build/target',
-                        AbstractBaseTest::class
-                    ),
-                    'Unknown page element "unknown_element" in page "page_import_name"',
-                    ErrorOutput::CODE_LOADER_UNKNOWN_PAGE_ELEMENT,
-                    [
-                        'import_name' => 'page_import_name',
-                        'element_name' => 'unknown_element',
-                        'test_path' =>
-                            $root . '/tests/Fixtures/basil/InvalidTest/imports-test-passes-unknown-element.yml',
-                        'step_name' => 'action contains unknown page element',
-                        'statement' => ''
-                    ]
-                ),
-            ],
-            'test suite imports test declaring step, step contains action using unknown page element' => [
-                'input' => [
-                    '--source' => 'tests/Fixtures/basil/InvalidTestSuite/' .
-                        'imports-test-declaring-action-containing-unknown-page-element.yml',
-                    '--target' => 'tests/build/target',
-                ],
-                'expectedExitCode' => ErrorOutput::CODE_LOADER_UNKNOWN_PAGE_ELEMENT,
-                'expectedCommandOutput' => new ErrorOutput(
-                    new Configuration(
-                        $root . '/tests/Fixtures/basil/InvalidTestSuite/' .
-                        'imports-test-declaring-action-containing-unknown-page-element.yml',
-                        $root . '/tests/build/target',
-                        AbstractBaseTest::class
-                    ),
-                    'Unknown page element "unknown_element" in page "page_import_name"',
-                    ErrorOutput::CODE_LOADER_UNKNOWN_PAGE_ELEMENT,
-                    [
-                        'import_name' => 'page_import_name',
-                        'element_name' => 'unknown_element',
-                        'test_path' =>
-                            $root . '/tests/Fixtures/basil/InvalidTest/action-contains-unknown-page-element.yml',
-                        'step_name' => 'action contains unknown page element',
-                        'statement' => 'click $page_import_name.elements.unknown_element'
-                    ]
-                ),
-            ],
-        ];
-    }
-
-    public function runUnknownTestDataProvider(): array
-    {
-        $root = (new ProjectRootPathProvider())->get();
-
-        return [
-            'test suite imports test that does not exist' => [
-                'input' => [
-                    '--source' => 'tests/Fixtures/basil/InvalidTestSuite/imports-non-existent-test.yml',
-                    '--target' => 'tests/build/target',
-                ],
-                'expectedExitCode' => ErrorOutput::CODE_LOADER_UNKNOWN_TEST,
-                'expectedCommandOutput' => new ErrorOutput(
-                    new Configuration(
-                        $root . '/tests/Fixtures/basil/InvalidTestSuite/imports-non-existent-test.yml',
-                        $root . '/tests/build/target',
-                        AbstractBaseTest::class
-                    ),
-                    'Unknown test "' . $root . '/tests/Fixtures/basil/Test/non-existent.yml"',
-                    ErrorOutput::CODE_LOADER_UNKNOWN_TEST,
-                    [
-                        'import_name' => $root . '/tests/Fixtures/basil/Test/non-existent.yml',
-                    ]
-                ),
-            ],
-        ];
-    }
-
-    public function runUnresolvedPlaceholderDataProvider(): array
+    public function unresolvedPlaceholderDataProvider(): array
     {
         $root = (new ProjectRootPathProvider())->get();
 
@@ -1411,44 +362,6 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
 
         ObjectReflector::setProperty(
             $command,
-            GenerateCommand::class,
-            'testWriter',
-            $testWriter
-        );
-    }
-
-    /**
-     * @param array<string, string> $classNames
-     */
-    private function mockClassNameFactory(array $classNames): void
-    {
-        $testWriter = ObjectReflector::getProperty($this->command, 'testWriter');
-
-        $classNameFactory = \Mockery::mock(ClassNameFactory::class);
-        $classNameFactory
-            ->shouldReceive('create')
-            ->andReturnUsing(function (TestInterface $test) use ($classNames) {
-                return $classNames[$test->getPath()] ?? null;
-            });
-
-        /** @var ClassDefinitionFactory $classDefinitionFactory */
-        $classDefinitionFactory = ObjectReflector::getProperty($testWriter, 'classDefinitionFactory');
-        ObjectReflector::setProperty(
-            $classDefinitionFactory,
-            ClassDefinitionFactory::class,
-            'classNameFactory',
-            $classNameFactory
-        );
-
-        ObjectReflector::setProperty(
-            $testWriter,
-            TestWriter::class,
-            'classDefinitionFactory',
-            $classDefinitionFactory
-        );
-
-        ObjectReflector::setProperty(
-            $this->command,
             GenerateCommand::class,
             'testWriter',
             $testWriter

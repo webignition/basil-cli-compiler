@@ -9,13 +9,10 @@ use webignition\BasilCliCompiler\Services\ExternalVariableIdentifiersFactory;
 use webignition\BasilCliCompiler\Services\PhpFileCreator;
 use webignition\BasilCliCompiler\Services\ProjectRootPathProvider;
 use webignition\BasilCliCompiler\Services\TestWriter;
-use webignition\BasilCompilableSource\ClassDefinition;
-use webignition\BasilCompilableSource\ClassDefinitionInterface;
 use webignition\BasilCompilableSourceFactory\ClassDefinitionFactory;
 use webignition\BasilCompiler\Compiler;
 use webignition\BasilModels\Test\TestInterface;
 use webignition\BasilParser\Test\TestParser;
-use webignition\ObjectReflector\ObjectReflector;
 
 class TestWriterTest extends \PHPUnit\Framework\TestCase
 {
@@ -39,22 +36,8 @@ class TestWriterTest extends \PHPUnit\Framework\TestCase
         TestInterface $test,
         string $fullyQualifiedBaseClass,
         string $outputDirectory,
-        string $generatedClassName,
         string $expectedGeneratedCode
     ) {
-        $classDefinitionFactory = \Mockery::mock(ClassDefinitionFactory::createFactory());
-
-        ObjectReflector::setProperty(
-            $this->testWriter,
-            TestWriter::class,
-            'classDefinitionFactory',
-            $classDefinitionFactory
-        );
-
-        $classDefinitionFactory
-            ->shouldReceive('createClassDefinition')
-            ->andReturn($this->createClassDefinitionWithClassName($test, $generatedClassName));
-
         $generatedTestOutput = $this->testWriter->generate($test, $fullyQualifiedBaseClass, $outputDirectory);
         $expectedCodePath = $outputDirectory . '/' . $generatedTestOutput->getTarget();
 
@@ -66,18 +49,6 @@ class TestWriterTest extends \PHPUnit\Framework\TestCase
         if (file_exists($expectedCodePath)) {
             unlink($expectedCodePath);
         }
-    }
-
-    private function createClassDefinitionWithClassName(
-        TestInterface $test,
-        string $className
-    ): ClassDefinitionInterface {
-        $classDefinitionFactory = ClassDefinitionFactory::createFactory();
-        $classDefinition = $classDefinitionFactory->createClassDefinition($test);
-
-        ObjectReflector::setProperty($classDefinition, ClassDefinition::class, 'name', $className);
-
-        return $classDefinition;
     }
 
     public function generateDataProvider(): array
@@ -102,9 +73,8 @@ class TestWriterTest extends \PHPUnit\Framework\TestCase
                 )->withPath('tests/Fixtures/basil/Test/example.com.verify-open-literal.yml'),
                 'fullyQualifiedBaseClass' => AbstractBaseTest::class,
                 'outputDirectory' => $root . '/tests/build/target',
-                'generatedClassName' => 'ExampleComVerifyOpenLiteralTest',
                 'expectedGeneratedCode' => (string) file_get_contents(
-                    $root . '/tests/Fixtures/php/Test/ExampleComVerifyOpenLiteralTest.php'
+                    $root . '/tests/Fixtures/php/Test/Generated0233b88be49ad918bec797dcba9b01afTest.php'
                 ),
             ],
         ];

@@ -4,13 +4,13 @@ namespace webignition\BasilCliCompiler\Generated;
 
 use webignition\BaseBasilTestCase\AbstractBaseTest;
 
-class ExampleComImportVerifyOpenLiteralTest extends AbstractBaseTest
+class Generated0233b88be49ad918bec797dcba9b01afTest extends AbstractBaseTest
 {
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
         self::$client->request('GET', 'https://example.com/');
-        self::setBasilTestPath('tests/Fixtures/basil/Test/example.com.import-step-verify-open-literal.yml');
+        self::setBasilTestPath('tests/Fixtures/basil/Test/example.com.verify-open-literal.yml');
     }
 
     public function test1()

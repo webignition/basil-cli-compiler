@@ -5,7 +5,7 @@ namespace webignition\BasilCliCompiler\Generated;
 use webignition\BaseBasilTestCase\AbstractBaseTest;
 use webignition\BasilModels\DataSet\DataSet;
 
-class ExampleComVerifyOpenLiteralDataSetsTest extends AbstractBaseTest
+class Generated6a67c4998bdf379738159830570c8ebeTest extends AbstractBaseTest
 {
     public static function setUpBeforeClass(): void
     {
