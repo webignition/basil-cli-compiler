@@ -5,13 +5,16 @@ declare(strict_types=1);
 
 namespace webignition\BasilRunner\Bin;
 
-if (\Phar::running() !== '') {
-    require 'phar://compiler.phar/vendor/autoload.php';;
-} else {
+$pharPath = \Phar::running(false);
+
+if ('' === $pharPath) {
     require 'vendor/autoload.php';
+    $projectRootPath = realpath(__DIR__ . '/..');
+} else {
+    require 'phar://compiler.phar/vendor/autoload.php';
+    $projectRootPath = realpath(dirname($pharPath));
 }
 
 use webignition\BasilCliCompiler\Services\ApplicationFactory;
 
-$projectRootPath = realpath(__DIR__ . '/..');
 ApplicationFactory::create($projectRootPath)->run();
