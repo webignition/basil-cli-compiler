@@ -10,9 +10,9 @@ use Symfony\Component\Console\SingleCommandApplication;
 
 class ApplicationFactory
 {
-    public static function create(): SingleCommandApplication
+    public static function create(string $projectRootPath): SingleCommandApplication
     {
-        $command = CommandFactory::createGenerateCommand();
+        $command = CommandFactory::createGenerateCommand($projectRootPath);
 
         $application = new SingleCommandApplication();
         $application->setName((string) $command->getName());

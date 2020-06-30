@@ -7,7 +7,7 @@ namespace webignition\BasilCliCompiler\Tests\DataProvider\RunFailure;
 use webignition\BaseBasilTestCase\AbstractBaseTest;
 use webignition\BasilCliCompiler\Model\Configuration;
 use webignition\BasilCliCompiler\Model\ErrorOutput;
-use webignition\BasilCliCompiler\Services\ProjectRootPathProvider;
+use webignition\BasilCliCompiler\Tests\Services\ProjectRootPathProvider;
 
 trait NonRetrievableImportDataProviderTrait
 {

@@ -9,8 +9,8 @@ use webignition\BasilCliCompiler\Model\Configuration;
 use webignition\BasilCliCompiler\Model\ErrorOutput;
 use webignition\BasilCliCompiler\Services\ConfigurationValidator;
 use webignition\BasilCliCompiler\Services\ErrorOutputFactory;
-use webignition\BasilCliCompiler\Services\ProjectRootPathProvider;
 use webignition\BasilCliCompiler\Services\ValidatorInvalidResultSerializer;
+use webignition\BasilCliCompiler\Tests\Services\ProjectRootPathProvider;
 use webignition\BasilCliCompiler\Tests\Unit\AbstractBaseTest;
 
 class ErrorOutputFactoryTest extends AbstractBaseTest
