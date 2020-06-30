@@ -9,7 +9,6 @@ use webignition\BasilCliCompiler\Model\ErrorOutput;
 use webignition\BasilCliCompiler\Model\OutputInterface;
 use webignition\BasilCliCompiler\Model\SuccessOutput;
 use webignition\BasilCliCompiler\PharCompiler;
-use webignition\BasilCliCompiler\Services\ProjectRootPathProvider;
 use webignition\BasilCliCompiler\Tests\DataProvider\RunFailure\CircularStepImportDataProviderTrait;
 use webignition\BasilCliCompiler\Tests\DataProvider\RunFailure\EmptyTestDataProviderTrait;
 use webignition\BasilCliCompiler\Tests\DataProvider\RunFailure\InvalidPageDataProviderTrait;
@@ -22,6 +21,7 @@ use webignition\BasilCliCompiler\Tests\DataProvider\RunFailure\UnknownItemDataPr
 use webignition\BasilCliCompiler\Tests\DataProvider\RunFailure\UnknownPageElementDataProviderTrait;
 use webignition\BasilCliCompiler\Tests\DataProvider\RunFailure\UnknownTestDataProviderTrait;
 use webignition\BasilCliCompiler\Tests\DataProvider\RunSuccess\SuccessDataProviderTrait;
+use webignition\BasilCliCompiler\Tests\Services\ProjectRootPathProvider;
 
 class PharTest extends \PHPUnit\Framework\TestCase
 {

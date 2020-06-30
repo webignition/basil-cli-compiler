@@ -9,4 +9,5 @@ use webignition\BasilCliCompiler\Services\ApplicationFactory;
 
 require 'vendor/autoload.php';
 
-ApplicationFactory::create()->run();
+$projectRootPath = realpath(__DIR__ . '/..');
+ApplicationFactory::create($projectRootPath)->run();

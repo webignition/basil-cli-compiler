@@ -9,9 +9,8 @@ use webignition\BasilLoader\SourceLoader;
 
 class CommandFactory
 {
-    public static function createGenerateCommand(): GenerateCommand
+    public static function createGenerateCommand(string $projectRootPath): GenerateCommand
     {
-        $projectRootPath = (new ProjectRootPathProvider())->get();
         $configurationValidator = new ConfigurationValidator();
 
         return new GenerateCommand(

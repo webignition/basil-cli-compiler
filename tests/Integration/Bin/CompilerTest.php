@@ -6,8 +6,8 @@ namespace webignition\BasilCliCompiler\Tests\Integration\Bin;
 
 use Symfony\Component\Process\Process;
 use webignition\BasilCliCompiler\Model\SuccessOutput;
-use webignition\BasilCliCompiler\Services\ProjectRootPathProvider;
 use webignition\BasilCliCompiler\Tests\Integration\AbstractGeneratedTestCase;
+use webignition\BasilCliCompiler\Tests\Services\ProjectRootPathProvider;
 
 class CompilerTest extends \PHPUnit\Framework\TestCase
 {

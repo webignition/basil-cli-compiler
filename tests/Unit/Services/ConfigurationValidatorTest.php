@@ -8,7 +8,7 @@ use phpmock\mockery\PHPMockery;
 use webignition\BasilCliCompiler\Model\Configuration;
 use webignition\BasilCliCompiler\Model\ErrorOutput;
 use webignition\BasilCliCompiler\Services\ConfigurationValidator;
-use webignition\BasilCliCompiler\Services\ProjectRootPathProvider;
+use webignition\BasilCliCompiler\Tests\Services\ProjectRootPathProvider;
 use webignition\BasilCliCompiler\Tests\Unit\AbstractBaseTest;
 
 class ConfigurationValidatorTest extends AbstractBaseTest

@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace webignition\BasilCliCompiler\Tests\Functional\Services;
 
 use webignition\BasilCliCompiler\Model\CompiledTest;
-use webignition\BasilCliCompiler\Services\ProjectRootPathProvider;
 use webignition\BasilCliCompiler\Services\TestWriter;
+use webignition\BasilCliCompiler\Tests\Services\ProjectRootPathProvider;
 
 class TestWriterTest extends \PHPUnit\Framework\TestCase
 {

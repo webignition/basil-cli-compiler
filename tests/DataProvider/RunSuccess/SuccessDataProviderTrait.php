@@ -8,7 +8,7 @@ use webignition\BaseBasilTestCase\AbstractBaseTest;
 use webignition\BasilCliCompiler\Model\Configuration;
 use webignition\BasilCliCompiler\Model\GeneratedTestOutput;
 use webignition\BasilCliCompiler\Model\SuccessOutput;
-use webignition\BasilCliCompiler\Services\ProjectRootPathProvider;
+use webignition\BasilCliCompiler\Tests\Services\ProjectRootPathProvider;
 
 trait SuccessDataProviderTrait
 {

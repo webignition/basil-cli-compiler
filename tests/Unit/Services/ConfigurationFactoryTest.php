@@ -6,7 +6,7 @@ namespace webignition\BasilCliCompiler\Tests\Unit\Services;
 
 use webignition\BasilCliCompiler\Model\Configuration;
 use webignition\BasilCliCompiler\Services\ConfigurationFactory;
-use webignition\BasilCliCompiler\Services\ProjectRootPathProvider;
+use webignition\BasilCliCompiler\Tests\Services\ProjectRootPathProvider;
 use webignition\BasilCliCompiler\Tests\Unit\AbstractBaseTest;
 
 class ConfigurationFactoryTest extends AbstractBaseTest
