@@ -2,9 +2,11 @@
 
 declare(strict_types=1);
 
-require __DIR__ . '/../vendor/autoload.php';
+$root = (string) realpath(__DIR__ . '/..');
+
+require $root . '/vendor/autoload.php';
 
 use webignition\BasilCliCompiler\PharCompiler;
 
-$pharCompiler = new PharCompiler();
+$pharCompiler = new PharCompiler($root);
 $pharCompiler->compile();

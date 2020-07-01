@@ -13,9 +13,9 @@ class PharCompiler
 
     private string $baseDirectory;
 
-    public function __construct()
+    public function __construct(string $baseDirectory)
     {
-        $this->baseDirectory = (string) realpath(__DIR__ . '/..');
+        $this->baseDirectory = $baseDirectory;
     }
 
     public function compile(string $pharFile = self::DEFAULT_PHAR_FILENAME): void
