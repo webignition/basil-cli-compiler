@@ -9,35 +9,48 @@ use Symfony\Component\Finder\Finder;
 
 class PharCompiler
 {
-    public const DEFAULT_PHAR_FILENAME = 'build/compiler.phar';
-
     private string $baseDirectory;
+    private string $pharPath;
+    private string $alias;
+    private string $binPath;
 
-    public function __construct()
-    {
-        $this->baseDirectory = (string) realpath(__DIR__ . '/..');
+    /**
+     * @var string[]
+     */
+    private array $sourcePaths;
+
+    /**
+     * @param string $baseDirectory
+     * @param string $pharPath
+     * @param string $binPath
+     * @param string[] $sourcePaths
+     */
+    public function __construct(
+        string $baseDirectory,
+        string $pharPath,
+        string $binPath,
+        array $sourcePaths
+    ) {
+        $this->baseDirectory = $baseDirectory;
+        $this->pharPath = $pharPath;
+        $this->alias = basename($pharPath);
+        $this->binPath = $binPath;
+        $this->sourcePaths = $sourcePaths;
     }
 
-    public function compile(string $pharFile = self::DEFAULT_PHAR_FILENAME): void
+    public function compile(): void
     {
-        $phar = new Phar($pharFile, 0, 'compiler.phar');
+        $phar = new Phar($this->pharPath, 0, $this->alias);
         $phar->startBuffering();
 
         $this->addBinCompiler($phar);
 
-        $filesIterator = $this->createFilesFinder([
-            'src',
-            'vendor/composer',
-            'vendor/myclabs',
-            'vendor/php-webdriver',
-            'vendor/phpunit/phpunit',
-            'vendor/symfony',
-            'vendor/webignition',
-        ]);
+        $phar->buildFromIterator(
+            $this->createFilesFinder($this->sourcePaths),
+            $this->baseDirectory
+        );
 
-        $phar->buildFromIterator($filesIterator, $this->baseDirectory);
-
-        $this->addVendorAutoload($phar);
+        $phar->addFile('vendor/autoload.php');
 
         $phar->setStub($this->createStub());
         $phar->stopBuffering();
@@ -45,9 +58,9 @@ class PharCompiler
 
     private function addBinCompiler(Phar $phar): void
     {
-        $content = (string) file_get_contents(__DIR__ . '/../bin/compiler');
+        $content = (string) file_get_contents($this->baseDirectory . '/' . $this->binPath);
         $content = (string) preg_replace('{^#!/usr/bin/env php\s*}', '', $content);
-        $phar->addFromString('bin/compiler', $content);
+        $phar->addFromString($this->binPath, $content);
     }
 
     /**
@@ -70,23 +83,18 @@ class PharCompiler
         return $finder->getIterator();
     }
 
-    private function addVendorAutoload(Phar $phar): void
-    {
-        $phar->addFile('vendor/autoload.php');
-    }
-
     private function createStub(): string
     {
-        return <<< EOF
+        return <<<EOT
 #!/usr/bin/env php
 <?php
 
-Phar::mapPhar('compiler.phar');
+Phar::mapPhar('$this->alias');
 
-require 'phar://compiler.phar/bin/compiler';
+require 'phar://$this->alias/$this->binPath';
 
 __HALT_COMPILER();
 
-EOF;
+EOT;
     }
 }
