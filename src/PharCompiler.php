@@ -11,16 +11,18 @@ class PharCompiler
 {
     private string $baseDirectory;
     private string $pharPath;
+    private string $alias;
 
     public function __construct(string $baseDirectory, string $pharPath)
     {
         $this->baseDirectory = $baseDirectory;
         $this->pharPath = $pharPath;
+        $this->alias = basename($pharPath);
     }
 
     public function compile(): void
     {
-        $phar = new Phar($this->pharPath, 0, 'compiler.phar');
+        $phar = new Phar($this->pharPath, 0, $this->alias);
         $phar->startBuffering();
 
         $this->addBinCompiler($phar);
@@ -77,16 +79,16 @@ class PharCompiler
 
     private function createStub(): string
     {
-        return <<< EOF
-#!/usr/bin/env php
-<?php
-
-Phar::mapPhar('compiler.phar');
-
-require 'phar://compiler.phar/bin/compiler';
-
-__HALT_COMPILER();
-
-EOF;
+        return
+            '#!/usr/bin/env php' . "\n" .
+            '<?php' . "\n" .
+            "\n" .
+            'Phar::mapPhar(\'' . $this->alias . '\');' . "\n" .
+            "\n" .
+            'require \'phar://' . $this->alias . '/bin/compiler\';' . "\n" .
+            '' . "\n" .
+            '__HALT_COMPILER();' . "\n" .
+            "\n"
+        ;
     }
 }
