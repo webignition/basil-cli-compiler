@@ -43,13 +43,18 @@ class PharCompiler
         $phar->stopBuffering();
     }
 
-    private function addBinCompiler($phar)
+    private function addBinCompiler(Phar $phar): void
     {
-        $content = file_get_contents(__DIR__ . '/../bin/compiler');
-        $content = preg_replace('{^#!/usr/bin/env php\s*}', '', $content);
+        $content = (string) file_get_contents(__DIR__ . '/../bin/compiler');
+        $content = (string) preg_replace('{^#!/usr/bin/env php\s*}', '', $content);
         $phar->addFromString('bin/compiler', $content);
     }
 
+    /**
+     * @param string[] $paths
+     *
+     * @return \Iterator<\SplFileInfo>
+     */
     private function createFilesFinder(array $paths): \Iterator
     {
         $finder = new Finder();
