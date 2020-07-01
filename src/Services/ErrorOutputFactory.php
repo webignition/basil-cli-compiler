@@ -76,8 +76,6 @@ class ErrorOutputFactory
             'target invalid; is not a directory (is it a file?)',
         ErrorOutput::CODE_COMMAND_CONFIG_TARGET_INVALID_NOT_WRITABLE =>
             'target invalid; directory is not writable',
-        ErrorOutput::CODE_COMMAND_CONFIG_BASE_CLASS_DOES_NOT_EXIST =>
-            'base class invalid: does not exist'
     ];
 
     private ConfigurationValidator $generateCommandConfigurationValidator;

@@ -84,10 +84,6 @@ class ConfigurationValidatorTest extends AbstractBaseTest
                 'configuration' => new Configuration($source, $source, AbstractBaseTest::class),
                 'expectedIsValid' => false,
             ],
-            'invalid: base class does not exist' => [
-                'configuration' => new Configuration($source, $target, 'Foo'),
-                'expectedIsValid' => false,
-            ],
         ];
     }
 

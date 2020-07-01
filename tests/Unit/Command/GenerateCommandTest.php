@@ -69,12 +69,6 @@ class GenerateCommandTest extends AbstractBaseTest
             BasilBaseTest::class
         );
 
-        $invalidConfiguration = new Configuration(
-            $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
-            $root . '/tests/build/target',
-            'NonExistentBaseClass'
-        );
-
         return [
             'source empty' => [
                 'input' => [
@@ -118,31 +112,6 @@ class GenerateCommandTest extends AbstractBaseTest
                     ErrorOutput::CODE_COMMAND_CONFIG_TARGET_EMPTY
                 ),
             ],
-            'invalid configuration: source does not exist' => [
-                'input' => [
-                    '--source' => 'tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
-                    '--target' => 'tests/build/target',
-                    '--base-class' => 'NonExistentBaseClass',
-                ],
-                'configurationFactory' => $this->createConfigurationFactory(
-                    [
-                        'tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
-                        'tests/build/target',
-                        'NonExistentBaseClass',
-                    ],
-                    $invalidConfiguration
-                ),
-                'configurationValidator' => $this->createGenerateCommandConfigurationValidator(
-                    $invalidConfiguration,
-                    ErrorOutput::CODE_COMMAND_CONFIG_BASE_CLASS_DOES_NOT_EXIST
-                ),
-                'validationErrorCode' => ErrorOutput::CODE_COMMAND_CONFIG_BASE_CLASS_DOES_NOT_EXIST,
-                'expectedCommandOutput' => new ErrorOutput(
-                    $invalidConfiguration,
-                    'base class invalid: does not exist',
-                    ErrorOutput::CODE_COMMAND_CONFIG_BASE_CLASS_DOES_NOT_EXIST
-                ),
-            ],
         ];
     }
 
@@ -179,32 +148,5 @@ class GenerateCommandTest extends AbstractBaseTest
             ->andReturn($configuration);
 
         return $factory;
-    }
-
-    private function createGenerateCommandConfigurationValidator(
-        Configuration $expectedConfiguration,
-        int $errorCode
-    ): ConfigurationValidator {
-        $validator = \Mockery::mock(ConfigurationValidator::class);
-
-        $validator
-            ->shouldReceive('isValid')
-            ->withArgs(function (Configuration $configuration) use ($expectedConfiguration) {
-                self::assertEquals($expectedConfiguration, $configuration);
-
-                return true;
-            })
-            ->andReturnFalse();
-
-        $validator
-            ->shouldReceive('deriveInvalidConfigurationErrorCode')
-            ->withArgs(function (Configuration $configuration) use ($expectedConfiguration) {
-                self::assertEquals($expectedConfiguration, $configuration);
-
-                return true;
-            })
-            ->andReturn($errorCode);
-
-        return $validator;
     }
 }

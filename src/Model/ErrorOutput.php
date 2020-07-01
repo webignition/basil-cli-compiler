@@ -16,7 +16,6 @@ class ErrorOutput extends AbstractOutput implements JsonSerializable
     public const CODE_COMMAND_CONFIG_TARGET_INVALID_DOES_NOT_EXIST = 104;
     public const CODE_COMMAND_CONFIG_TARGET_INVALID_NOT_A_DIRECTORY = 105;
     public const CODE_COMMAND_CONFIG_TARGET_INVALID_NOT_WRITABLE = 106;
-    public const CODE_COMMAND_CONFIG_BASE_CLASS_DOES_NOT_EXIST = 107;
     public const CODE_LOADER_INVALID_YAML = 200;
     public const CODE_LOADER_CIRCULAR_STEP_IMPORT = 201;
     public const CODE_LOADER_EMPTY_TEST = 202;
