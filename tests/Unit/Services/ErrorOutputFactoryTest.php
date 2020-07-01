@@ -100,18 +100,6 @@ class ErrorOutputFactoryTest extends AbstractBaseTest
                     ErrorOutput::CODE_COMMAND_CONFIG_TARGET_INVALID_NOT_A_DIRECTORY
                 ),
             ],
-            'base class does not exist' => [
-                'configuration' => new Configuration($source, $target, 'Foo'),
-                'generateCommandConfigurationValidator' => $this->createConfigurationValidator(
-                    new Configuration($source, $target, 'Foo'),
-                    ErrorOutput::CODE_COMMAND_CONFIG_BASE_CLASS_DOES_NOT_EXIST
-                ),
-                'expectedOutput' => new ErrorOutput(
-                    new Configuration($source, $target, 'Foo'),
-                    'base class invalid: does not exist',
-                    ErrorOutput::CODE_COMMAND_CONFIG_BASE_CLASS_DOES_NOT_EXIST
-                ),
-            ],
         ];
     }
 

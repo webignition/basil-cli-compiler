@@ -34,10 +34,6 @@ class ConfigurationValidator
             return false;
         }
 
-        if (!class_exists($configuration->getBaseClass())) {
-            return false;
-        }
-
         return true;
     }
 
@@ -63,10 +59,6 @@ class ConfigurationValidator
 
         if (!is_writable($target)) {
             return ErrorOutput::CODE_COMMAND_CONFIG_TARGET_INVALID_NOT_WRITABLE;
-        }
-
-        if (!class_exists($configuration->getBaseClass())) {
-            return ErrorOutput::CODE_COMMAND_CONFIG_BASE_CLASS_DOES_NOT_EXIST;
         }
 
         return 0;
