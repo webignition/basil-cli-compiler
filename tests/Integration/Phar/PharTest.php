@@ -45,7 +45,7 @@ class PharTest extends \PHPUnit\Framework\TestCase
         parent::setUp();
 
         $projectRootPath = (new ProjectRootPathProvider())->get();
-        $this->expectedPharPath = $projectRootPath . '/' . PharCompiler::DEFAULT_PHAR_FILENAME;
+        $this->expectedPharPath = $projectRootPath . '/compiler.phar';
 
         $this->assertFileExists($this->expectedPharPath);
     }

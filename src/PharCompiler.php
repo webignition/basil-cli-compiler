@@ -6,82 +6,83 @@ namespace webignition\BasilCliCompiler;
 
 use Phar;
 use Symfony\Component\Finder\Finder;
-use Symfony\Component\Finder\SplFileInfo;
 
 class PharCompiler
 {
     public const DEFAULT_PHAR_FILENAME = 'build/compiler.phar';
-    private const COMPILER_PATH = 'bin/compiler';
+
+    private string $baseDirectory;
+
+    public function __construct()
+    {
+        $this->baseDirectory = (string) realpath(__DIR__ . '/..');
+    }
 
     public function compile(string $pharFile = self::DEFAULT_PHAR_FILENAME): void
     {
         $phar = new Phar($pharFile, 0, 'compiler.phar');
         $phar->startBuffering();
 
-        $this->addSrc($phar);
-        $this->addDependenciesByDirectory($phar, [
+        $this->addBinCompiler($phar);
+
+        $filesIterator = $this->createFilesFinder([
+            'src',
+            'vendor/composer',
+            'vendor/myclabs',
+            'vendor/php-webdriver',
+            'vendor/phpunit/phpunit',
             'vendor/symfony',
             'vendor/webignition',
         ]);
+
+        $phar->buildFromIterator($filesIterator, $this->baseDirectory);
+
         $this->addVendorAutoload($phar);
 
-        $phar->setStub($this->createStubFromBinCompiler());
+        $phar->setStub($this->createStub());
         $phar->stopBuffering();
     }
 
-    private function createStubFromBinCompiler(): string
+    private function addBinCompiler($phar)
     {
-        $stubBody = (string) file_get_contents(self::COMPILER_PATH);
-        $stubBodyLines = explode("\n", $stubBody);
-        array_shift($stubBodyLines);
-        $stubBody = implode("\n", $stubBodyLines);
-
-        return $stubBody . "\n" . '__HALT_COMPILER();';
+        $content = file_get_contents(__DIR__ . '/../bin/compiler');
+        $content = preg_replace('{^#!/usr/bin/env php\s*}', '', $content);
+        $phar->addFromString('bin/compiler', $content);
     }
 
-    private function addSrc(Phar $phar): void
+    private function createFilesFinder(array $paths): \Iterator
     {
         $finder = new Finder();
-        $finder->files()
-            ->ignoreVCS(true)
-            ->name('*.php')
-            ->notName('PharCompiler.php')
-            ->in('src')
-        ;
-
-        foreach ($finder as $file) {
-            $phar->addFile($file->getPathname());
-        }
-    }
-
-    /**
-     * @param Phar $phar
-     * @param string[] $paths
-     */
-    private function addDependenciesByDirectory(Phar $phar, array $paths): void
-    {
-        $finder = new Finder();
-        $finder->files()
+        $finder
+            ->files()
             ->ignoreVCS(true)
             ->name('*.php')
             ->exclude('Tests')
             ->exclude('tests')
             ->exclude('docs')
-            ->in($paths)
-        ;
+            ->in($paths);
 
-        foreach ($finder as $file) {
-            $phar->addFile($file->getPathname());
-        }
+        return $finder->getIterator();
     }
 
     private function addVendorAutoload(Phar $phar): void
     {
-        $vendorAutoloadFile = new SplFileInfo(
-            'vendor/autoload.php',
-            'vendor',
-            'vendor/autoload.php'
-        );
-        $phar->addFile($vendorAutoloadFile->getPathname());
+        $phar->addFile('vendor/autoload.php');
+    }
+
+    private function createStub(): string
+    {
+        return <<< EOF
+#!/usr/bin/env php
+<?php
+
+Phar::mapPhar('compiler.phar');
+
+require 'phar://compiler.phar/bin/compiler';
+
+__HALT_COMPILER();
+
+EOF;
+
     }
 }

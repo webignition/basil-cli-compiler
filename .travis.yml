@@ -9,8 +9,7 @@ script:
 - composer ci
 
 after_success:
-- composer compile-phar
-- composer test-phar
+- composer phar-build
 
 cache:
   directories:
