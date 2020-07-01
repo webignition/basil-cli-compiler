@@ -85,16 +85,16 @@ class PharCompiler
 
     private function createStub(): string
     {
-        return
-            '#!/usr/bin/env php' . "\n" .
-            '<?php' . "\n" .
-            "\n" .
-            'Phar::mapPhar(\'' . $this->alias . '\');' . "\n" .
-            "\n" .
-            'require \'phar://' . $this->alias . '/' . $this->binPath . '\';' . "\n" .
-            '' . "\n" .
-            '__HALT_COMPILER();' . "\n" .
-            "\n"
-        ;
+        return <<<EOT
+#!/usr/bin/env php
+<?php
+
+Phar::mapPhar('$this->alias');
+
+require 'phar://$this->alias/$this->binPath';
+
+__HALT_COMPILER();
+
+EOT;
     }
 }
