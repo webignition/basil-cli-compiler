@@ -50,7 +50,7 @@ class PharCompiler
             $this->baseDirectory
         );
 
-        $this->addVendorAutoload($phar);
+        $phar->addFile('vendor/autoload.php');
 
         $phar->setStub($this->createStub());
         $phar->stopBuffering();
@@ -81,11 +81,6 @@ class PharCompiler
             ->in($paths);
 
         return $finder->getIterator();
-    }
-
-    private function addVendorAutoload(Phar $phar): void
-    {
-        $phar->addFile('vendor/autoload.php');
     }
 
     private function createStub(): string
