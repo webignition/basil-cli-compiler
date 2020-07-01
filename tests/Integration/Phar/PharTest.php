@@ -8,7 +8,6 @@ use Symfony\Component\Process\Process;
 use webignition\BasilCliCompiler\Model\ErrorOutput;
 use webignition\BasilCliCompiler\Model\OutputInterface;
 use webignition\BasilCliCompiler\Model\SuccessOutput;
-use webignition\BasilCliCompiler\PharCompiler;
 use webignition\BasilCliCompiler\Tests\DataProvider\RunFailure\CircularStepImportDataProviderTrait;
 use webignition\BasilCliCompiler\Tests\DataProvider\RunFailure\EmptyTestDataProviderTrait;
 use webignition\BasilCliCompiler\Tests\DataProvider\RunFailure\InvalidPageDataProviderTrait;

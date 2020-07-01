@@ -83,6 +83,5 @@ require 'phar://compiler.phar/bin/compiler';
 __HALT_COMPILER();
 
 EOF;
-
     }
 }
