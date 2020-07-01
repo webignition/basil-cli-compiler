@@ -14,12 +14,28 @@ class PharCompiler
     private string $alias;
     private string $binPath;
 
-    public function __construct(string $baseDirectory, string $pharPath, string $binPath)
-    {
+    /**
+     * @var string[]
+     */
+    private array $sourcePaths;
+
+    /**
+     * @param string $baseDirectory
+     * @param string $pharPath
+     * @param string $binPath
+     * @param string[] $sourcePaths
+     */
+    public function __construct(
+        string $baseDirectory,
+        string $pharPath,
+        string $binPath,
+        array $sourcePaths
+    ) {
         $this->baseDirectory = $baseDirectory;
         $this->pharPath = $pharPath;
         $this->alias = basename($pharPath);
         $this->binPath = $binPath;
+        $this->sourcePaths = $sourcePaths;
     }
 
     public function compile(): void
@@ -29,17 +45,10 @@ class PharCompiler
 
         $this->addBinCompiler($phar);
 
-        $filesIterator = $this->createFilesFinder([
-            'src',
-            'vendor/composer',
-            'vendor/myclabs',
-            'vendor/php-webdriver',
-            'vendor/phpunit/phpunit',
-            'vendor/symfony',
-            'vendor/webignition',
-        ]);
-
-        $phar->buildFromIterator($filesIterator, $this->baseDirectory);
+        $phar->buildFromIterator(
+            $this->createFilesFinder($this->sourcePaths),
+            $this->baseDirectory
+        );
 
         $this->addVendorAutoload($phar);
 

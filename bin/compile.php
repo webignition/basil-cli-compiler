@@ -11,7 +11,16 @@ use webignition\BasilCliCompiler\PharCompiler;
 $pharCompiler = new PharCompiler(
     $root,
     'build/compiler.phar',
-    'bin/compiler'
+    'bin/compiler',
+    [
+        'src',
+        'vendor/composer',
+        'vendor/myclabs',
+        'vendor/php-webdriver',
+        'vendor/phpunit/phpunit',
+        'vendor/symfony',
+        'vendor/webignition',
+    ]
 );
 
 $pharCompiler->compile();
