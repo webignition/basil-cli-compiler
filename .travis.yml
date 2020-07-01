@@ -10,6 +10,7 @@ script:
 
 after_success:
 - composer phar-build
+- composer phar-test
 
 cache:
   directories:
