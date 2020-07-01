@@ -27,17 +27,29 @@
         "static-analysis": "./vendor/bin/phpstan analyse --ansi",
         "test": "./vendor/bin/phpunit --colors=always",
         "ci": [
-            "@composer cs",
-            "@composer static-analysis",
-            "@composer test"
+            "@cs",
+            "@static-analysis",
+            "@test"
         ],
-        "compile-phar": "@php -dphar.readonly=0 bin/compile.php",
-        "test-phar": "./vendor/bin/phpunit --colors=always tests/Integration/Phar"
+        "phar-dump-autoload": "@composer dump-autoload --classmap-authoritative --no-dev --no-scripts --optimize",
+        "phar-compile": "@php -dphar.readonly=0 bin/compile.php",
+        "phar-build": [
+            "rm -f build/compiler.phar",
+            "@phar-dump-autoload",
+            "@phar-compile"
+        ],
+        "phar-test": [
+            "@composer dump-autoload",
+            "cp ./build/compiler.phar .",
+            "./vendor/bin/phpunit --colors=always tests/Integration/Phar",
+            "rm compiler.phar"
+        ]
     },
     "require": {
         "php": ">=7.4",
         "ext-json": "*",
         "symfony/console": "^5.1",
+        "symfony/finder": "^5.1",
         "webignition/base-basil-test-case": "^0.27.0",
         "webignition/basil-compilable-source": "^0.42.0",
         "webignition/basil-loader": "^0.27.0",
