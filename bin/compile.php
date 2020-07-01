@@ -8,5 +8,9 @@ require $root . '/vendor/autoload.php';
 
 use webignition\BasilCliCompiler\PharCompiler;
 
-$pharCompiler = new PharCompiler($root);
+$pharCompiler = new PharCompiler(
+    $root,
+    'build/compiler.phar'
+);
+
 $pharCompiler->compile();

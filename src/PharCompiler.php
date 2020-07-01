@@ -9,18 +9,18 @@ use Symfony\Component\Finder\Finder;
 
 class PharCompiler
 {
-    public const DEFAULT_PHAR_FILENAME = 'build/compiler.phar';
-
     private string $baseDirectory;
+    private string $pharPath;
 
-    public function __construct(string $baseDirectory)
+    public function __construct(string $baseDirectory, string $pharPath)
     {
         $this->baseDirectory = $baseDirectory;
+        $this->pharPath = $pharPath;
     }
 
-    public function compile(string $pharFile = self::DEFAULT_PHAR_FILENAME): void
+    public function compile(): void
     {
-        $phar = new Phar($pharFile, 0, 'compiler.phar');
+        $phar = new Phar($this->pharPath, 0, 'compiler.phar');
         $phar->startBuffering();
 
         $this->addBinCompiler($phar);
