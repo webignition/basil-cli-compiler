@@ -12,12 +12,14 @@ class PharCompiler
     private string $baseDirectory;
     private string $pharPath;
     private string $alias;
+    private string $binPath;
 
-    public function __construct(string $baseDirectory, string $pharPath)
+    public function __construct(string $baseDirectory, string $pharPath, string $binPath)
     {
         $this->baseDirectory = $baseDirectory;
         $this->pharPath = $pharPath;
         $this->alias = basename($pharPath);
+        $this->binPath = $binPath;
     }
 
     public function compile(): void
@@ -47,9 +49,9 @@ class PharCompiler
 
     private function addBinCompiler(Phar $phar): void
     {
-        $content = (string) file_get_contents(__DIR__ . '/../bin/compiler');
+        $content = (string) file_get_contents($this->baseDirectory . '/' . $this->binPath);
         $content = (string) preg_replace('{^#!/usr/bin/env php\s*}', '', $content);
-        $phar->addFromString('bin/compiler', $content);
+        $phar->addFromString($this->binPath, $content);
     }
 
     /**
@@ -85,7 +87,7 @@ class PharCompiler
             "\n" .
             'Phar::mapPhar(\'' . $this->alias . '\');' . "\n" .
             "\n" .
-            'require \'phar://' . $this->alias . '/bin/compiler\';' . "\n" .
+            'require \'phar://' . $this->alias . '/' . $this->binPath . '\';' . "\n" .
             '' . "\n" .
             '__HALT_COMPILER();' . "\n" .
             "\n"

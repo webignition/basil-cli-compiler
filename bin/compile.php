@@ -10,7 +10,8 @@ use webignition\BasilCliCompiler\PharCompiler;
 
 $pharCompiler = new PharCompiler(
     $root,
-    'build/compiler.phar'
+    'build/compiler.phar',
+    'bin/compiler'
 );
 
 $pharCompiler->compile();
