@@ -15,6 +15,10 @@ if ('' === $pharPath) {
     $projectRootPath = realpath(dirname($pharPath));
 }
 
-use webignition\BasilCliCompiler\Services\ApplicationFactory;
+use webignition\BasilCliCompiler\Services\CommandFactory;
+use webignition\SingleCommandApplicationFactory\Factory;
 
-ApplicationFactory::create($projectRootPath)->run();
+$command = CommandFactory::createGenerateCommand($projectRootPath);
+
+$application = (new Factory())->create($command, '0.1-beta');
+$application->run();
