@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
+use webignition\SingleCommandApplicationPharBuilder\Builder;
+
 $root = (string) realpath(__DIR__ . '/..');
 
 require $root . '/vendor/autoload.php';
 
-use webignition\BasilCliCompiler\PharCompiler;
-
-$pharCompiler = new PharCompiler(
+$pharCompiler = new Builder(
     $root,
     'build/compiler.phar',
     'bin/compiler',
@@ -23,4 +23,4 @@ $pharCompiler = new PharCompiler(
     ]
 );
 
-$pharCompiler->compile();
+$pharCompiler->build();
