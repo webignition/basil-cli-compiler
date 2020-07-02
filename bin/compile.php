@@ -8,7 +8,7 @@ require $root . '/vendor/autoload.php';
 
 use webignition\SingleCommandApplicationPharBuilder\Builder;
 
-$pharCompiler = new Builder(
+$builder = new Builder(
     $root,
     'build/compiler.phar',
     'bin/compiler',
@@ -23,4 +23,4 @@ $pharCompiler = new Builder(
     ]
 );
 
-$pharCompiler->build();
+$builder->build();
