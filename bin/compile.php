@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-use webignition\SingleCommandApplicationPharBuilder\Builder;
-
 $root = (string) realpath(__DIR__ . '/..');
 
 require $root . '/vendor/autoload.php';
+
+use webignition\SingleCommandApplicationPharBuilder\Builder;
 
 $pharCompiler = new Builder(
     $root,
