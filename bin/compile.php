@@ -6,9 +6,9 @@ $root = (string) realpath(__DIR__ . '/..');
 
 require $root . '/vendor/autoload.php';
 
-use webignition\BasilCliCompiler\PharCompiler;
+use webignition\SingleCommandApplicationPharBuilder\Builder;
 
-$pharCompiler = new PharCompiler(
+$builder = new Builder(
     $root,
     'build/compiler.phar',
     'bin/compiler',
@@ -23,4 +23,4 @@ $pharCompiler = new PharCompiler(
     ]
 );
 
-$pharCompiler->compile();
+$builder->build();
