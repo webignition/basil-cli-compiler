@@ -31,14 +31,14 @@ class GeneratedTestOutputTest extends AbstractBaseTest
         self::assertSame(self::TARGET, $this->output->getTarget());
     }
 
-    public function testJsonSerialize()
+    public function testGetData()
     {
         self::assertSame(
             [
                 'source' => self::SOURCE,
                 'target' => self::TARGET,
             ],
-            $this->output->jsonSerialize()
+            $this->output->getData()
         );
     }
 

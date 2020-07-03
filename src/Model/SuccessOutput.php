@@ -4,20 +4,18 @@ declare(strict_types=1);
 
 namespace webignition\BasilCliCompiler\Model;
 
-use JsonSerializable;
-
-class SuccessOutput extends AbstractOutput implements JsonSerializable
+class SuccessOutput extends AbstractOutput
 {
     public const CODE = 0;
 
     /**
-     * @var array<GeneratedTestOutput>
+     * @var GeneratedTestOutput[]
      */
     private array $output;
 
     /**
      * @param Configuration $configuration
-     * @param array<GeneratedTestOutput> $output
+     * @param GeneratedTestOutput[] $output
      */
     public function __construct(Configuration $configuration, array $output)
     {
@@ -53,17 +51,26 @@ class SuccessOutput extends AbstractOutput implements JsonSerializable
     /**
      * @return array<mixed>
      */
-    public function jsonSerialize(): array
+    public function getData(): array
     {
-        $serializedData = parent::jsonSerialize();
-        $serializedData['output'] = $this->output;
+        $generatedTestData = [];
+        foreach ($this->output as $generatedTestOutput) {
+            $generatedTestData[] = $generatedTestOutput->getData();
+        }
+
+        $serializedData = parent::getData();
+        $serializedData['output'] = $generatedTestData;
 
         return $serializedData;
     }
 
-    public static function fromJson(string $json): SuccessOutput
+    /**
+     * @param array<mixed> $data
+     *
+     * @return SuccessOutput
+     */
+    public static function fromArray(array $data): SuccessOutput
     {
-        $data = json_decode($json, true);
         $configData = $data['config'] ?? [];
         $outputData = $data['output'] ?? [];
 

@@ -6,6 +6,7 @@ namespace webignition\BasilCliCompiler\Tests\Functional\Command;
 
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
+use Symfony\Component\Yaml\Yaml;
 use webignition\BaseBasilTestCase\AbstractBaseTest;
 use webignition\BasilCliCompiler\Command\GenerateCommand;
 use webignition\BasilCliCompiler\Model\Configuration;
@@ -81,7 +82,7 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
         $exitCode = $this->command->run(new ArrayInput($input), $output);
         self::assertSame($expectedExitCode, $exitCode);
 
-        $commandOutput = SuccessOutput::fromJson($output->fetch());
+        $commandOutput = SuccessOutput::fromArray((array) Yaml::parse($output->fetch()));
         $this->assertEquals($expectedCommandOutput, $commandOutput);
 
         $outputData = $commandOutput->getOutput();
@@ -146,7 +147,7 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
         $exitCode = $this->command->run(new ArrayInput($input), $output);
         self::assertSame($expectedExitCode, $exitCode);
 
-        $commandOutput = ErrorOutput::fromJson($output->fetch());
+        $commandOutput = ErrorOutput::fromArray((array) Yaml::parse($output->fetch()));
 
         self::assertEquals($expectedCommandOutput, $commandOutput);
     }
@@ -236,7 +237,7 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
             $expectedErrorOutputContext
         );
 
-        $commandOutput = ErrorOutput::fromJson($output->fetch());
+        $commandOutput = ErrorOutput::fromArray((array) Yaml::parse($output->fetch()));
 
         self::assertEquals($expectedCommandOutput, $commandOutput);
     }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace webignition\BasilCliCompiler\Tests\Integration\Phar;
 
 use Symfony\Component\Process\Process;
+use Symfony\Component\Yaml\Yaml;
 use webignition\BasilCliCompiler\Model\ErrorOutput;
 use webignition\BasilCliCompiler\Model\OutputInterface;
 use webignition\BasilCliCompiler\Model\SuccessOutput;
@@ -86,9 +87,11 @@ class PharTest extends \PHPUnit\Framework\TestCase
 
         $this->assertSame($expectedExitCode, $exitCode);
 
+        $processOutputData = (array) Yaml::parse($pharProcess->getOutput());
+
         $commandOutput = 0 === $exitCode
-            ? SuccessOutput::fromJson($pharProcess->getOutput())
-            : ErrorOutput::fromJson($pharProcess->getOutput());
+            ? SuccessOutput::fromArray($processOutputData)
+            : ErrorOutput::fromArray($processOutputData);
 
         $this->assertEquals($expectedCommandOutput, $commandOutput);
 

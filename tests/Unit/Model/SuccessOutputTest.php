@@ -66,7 +66,7 @@ class SuccessOutputTest extends AbstractBaseTest
             'empty generated test output collection' => [
                 'output' => new SuccessOutput($configuration, []),
                 'expectedData' => [
-                    'config' => $configuration->jsonSerialize(),
+                    'config' => $configuration->getData(),
                     'status' => 'success',
                     'output' => [],
                 ],
@@ -74,9 +74,18 @@ class SuccessOutputTest extends AbstractBaseTest
             'populated generated test output collection' => [
                 'output' => new SuccessOutput($configuration, $generatedTestOutputCollection),
                 'expectedData' => [
-                    'config' => $configuration->jsonSerialize(),
+                    'config' => $configuration->getData(),
                     'status' => 'success',
-                    'output' => $generatedTestOutputCollection,
+                    'output' => [
+                        [
+                            'source' => 'test1.yml',
+                            'target' => 'GeneratedTest1.php',
+                        ],
+                        [
+                            'source' => 'test2.yml',
+                            'target' => 'GeneratedTest2.php',
+                        ],
+                    ],
                 ],
             ],
         ];
@@ -120,13 +129,11 @@ class SuccessOutputTest extends AbstractBaseTest
     /**
      * @dataProvider jsonSerializedFromJsonDataProvider
      */
-    public function testJsonSerializeTestFromJson(SuccessOutput $output)
+    public function testGetDataFromArray(SuccessOutput $output)
     {
-        $data = $output->jsonSerialize();
-
         self::assertEquals(
             $output,
-            SuccessOutput::fromJson((string) json_encode($data))
+            SuccessOutput::fromArray($output->getData())
         );
     }
 

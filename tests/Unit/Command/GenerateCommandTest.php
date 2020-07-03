@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace webignition\BasilCliCompiler\Tests\Unit\Command;
 
 use Symfony\Component\Console\Tester\CommandTester;
+use Symfony\Component\Yaml\Yaml;
 use webignition\BaseBasilTestCase\AbstractBaseTest as BasilBaseTest;
 use webignition\BasilCliCompiler\Command\GenerateCommand;
 use webignition\BasilCliCompiler\Model\Configuration;
@@ -48,8 +49,7 @@ class GenerateCommandTest extends AbstractBaseTest
         self::assertSame($validationErrorCode, $exitCode);
 
         $output = $commandTester->getDisplay();
-
-        $commandOutput = ErrorOutput::fromJson($output);
+        $commandOutput = ErrorOutput::fromArray((array) Yaml::parse($output));
         self::assertEquals($expectedCommandOutput, $commandOutput);
     }
 
