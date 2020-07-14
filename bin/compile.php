@@ -6,21 +6,9 @@ $root = (string) realpath(__DIR__ . '/..');
 
 require $root . '/vendor/autoload.php';
 
-use webignition\SingleCommandApplicationPharBuilder\Builder;
+use webignition\BasilCliCompiler\Services\PharBuilder;
 
-$builder = new Builder(
-    $root,
-    'build/compiler.phar',
-    'bin/compiler',
-    [
-        'src',
-        'vendor/composer',
-        'vendor/myclabs',
-        'vendor/php-webdriver',
-        'vendor/phpunit/phpunit',
-        'vendor/symfony',
-        'vendor/webignition',
-    ]
-);
+$binPath = __DIR__ . '/compiler';
 
-$builder->build();
+$pharBuilder = new PharBuilder();
+$pharBuilder->build($root, $binPath);

@@ -5,6 +5,8 @@ declare(strict_types=1);
 
 namespace webignition\BasilRunner\Bin;
 
+const VERSION = 'dev-master';
+
 $pharPath = \Phar::running(false);
 
 if ('' === $pharPath) {
@@ -20,5 +22,5 @@ use webignition\SingleCommandApplicationFactory\Factory;
 
 $command = CommandFactory::createGenerateCommand($projectRootPath);
 
-$application = (new Factory())->create($command, '0.1-beta');
+$application = (new Factory())->create($command, VERSION);
 $application->run();
