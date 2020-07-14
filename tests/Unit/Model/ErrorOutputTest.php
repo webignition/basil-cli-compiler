@@ -37,7 +37,7 @@ class ErrorOutputTest extends AbstractBaseTest
     {
         self::assertSame(
             [
-                'config' => $this->configuration->jsonSerialize(),
+                'config' => $this->configuration->getData(),
                 'status' => 'failure',
                 'error' => [
                     'message' => $this->message,
@@ -49,19 +49,17 @@ class ErrorOutputTest extends AbstractBaseTest
     }
 
     /**
-     * @dataProvider jsonSerializedFromJsonDataProvider
+     * @dataProvider getDataFromArrayDataProvider
      */
-    public function testJsonSerializeTestFromJson(ErrorOutput $output)
+    public function testGetDataFromArray(ErrorOutput $output)
     {
-        $data = $output->jsonSerialize();
-
         self::assertEquals(
             $output,
-            ErrorOutput::fromJson((string) json_encode($data))
+            ErrorOutput::fromArray($output->getData())
         );
     }
 
-    public function jsonSerializedFromJsonDataProvider(): array
+    public function getDataFromArrayDataProvider(): array
     {
         return [
             'without context' => [

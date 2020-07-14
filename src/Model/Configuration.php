@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace webignition\BasilCliCompiler\Model;
 
-use JsonSerializable;
-
-class Configuration implements JsonSerializable
+class Configuration
 {
     private string $source;
     private string $target;
@@ -37,7 +35,7 @@ class Configuration implements JsonSerializable
     /**
      * @return array<string, string>
      */
-    public function jsonSerialize(): array
+    public function getData(): array
     {
         return [
             'source' => $this->source,

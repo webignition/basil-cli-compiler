@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace webignition\BasilCliCompiler\Model;
 
-use JsonSerializable;
-
-interface OutputInterface extends JsonSerializable
+interface OutputInterface
 {
     public function getConfiguration(): Configuration;
     public function getCode(): int;

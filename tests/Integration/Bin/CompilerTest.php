@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace webignition\BasilCliCompiler\Tests\Integration\Bin;
 
 use Symfony\Component\Process\Process;
+use Symfony\Component\Yaml\Yaml;
 use webignition\BasilCliCompiler\Model\SuccessOutput;
 use webignition\BasilCliCompiler\Tests\Integration\AbstractGeneratedTestCase;
 use webignition\BasilCliCompiler\Tests\Services\ProjectRootPathProvider;
@@ -27,7 +28,7 @@ class CompilerTest extends \PHPUnit\Framework\TestCase
 
         $this->assertSame(0, $exitCode);
 
-        $generateCommandOutput = SuccessOutput::fromJson($generateProcess->getOutput());
+        $generateCommandOutput = SuccessOutput::fromArray((array) Yaml::parse($generateProcess->getOutput()));
 
         $testPaths = $generateCommandOutput->getTestPaths();
         self::assertNotEmpty($testPaths);

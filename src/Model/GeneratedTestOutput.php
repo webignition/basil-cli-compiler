@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace webignition\BasilCliCompiler\Model;
 
-use JsonSerializable;
-
-class GeneratedTestOutput implements JsonSerializable
+class GeneratedTestOutput
 {
     private string $source;
     private string $target;
@@ -30,7 +28,7 @@ class GeneratedTestOutput implements JsonSerializable
     /**
      * @return array<string, string>
      */
-    public function jsonSerialize(): array
+    public function getData(): array
     {
         return [
            'source' => $this->source,

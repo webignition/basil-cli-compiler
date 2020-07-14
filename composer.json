@@ -50,6 +50,7 @@
         "ext-json": "*",
         "symfony/console": "^5.1",
         "symfony/finder": "^5.1",
+        "symfony/yaml": "^5.1",
         "webignition/base-basil-test-case": "^0.27.0",
         "webignition/basil-compilable-source": "^0.42.0",
         "webignition/basil-loader": "^0.27.0",

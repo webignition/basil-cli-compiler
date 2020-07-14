@@ -32,16 +32,8 @@ abstract class AbstractOutput implements OutputInterface
 
     public function getData(): array
     {
-        return $this->jsonSerialize();
-    }
-
-    /**
-     * @return array<mixed>
-     */
-    public function jsonSerialize(): array
-    {
         return [
-            'config' => $this->configuration->jsonSerialize(),
+            'config' => $this->configuration->getData(),
             'status' => $this->status,
         ];
     }

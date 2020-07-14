@@ -37,7 +37,7 @@ class ConfigurationTest extends AbstractBaseTest
         self::assertSame(self::BASE_CLASS, $this->configuration->getBaseClass());
     }
 
-    public function testJsonSerialize()
+    public function testGetData()
     {
         self::assertSame(
             [
@@ -45,7 +45,7 @@ class ConfigurationTest extends AbstractBaseTest
                 'target' => self::TARGET,
                 'base-class' => self::BASE_CLASS,
             ],
-            $this->configuration->jsonSerialize()
+            $this->configuration->getData()
         );
     }
 

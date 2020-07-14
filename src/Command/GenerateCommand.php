@@ -8,6 +8,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface as ConsoleOutputInterface;
+use Symfony\Component\Yaml\Yaml;
 use webignition\BaseBasilTestCase\AbstractBaseTest;
 use webignition\BasilCliCompiler\Exception\UnresolvedPlaceholderException;
 use webignition\BasilCliCompiler\Model\OutputInterface;
@@ -218,7 +219,10 @@ class GenerateCommand extends Command
 
     private function render(ConsoleOutputInterface $consoleOutput, OutputInterface $commandOutput): int
     {
-        $consoleOutput->writeln((string) json_encode($commandOutput, JSON_PRETTY_PRINT));
+        $consoleOutput->writeln(Yaml::dump(
+            $commandOutput->getData(),
+            3
+        ));
 
         return $commandOutput->getCode();
     }

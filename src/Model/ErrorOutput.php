@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace webignition\BasilCliCompiler\Model;
 
-use JsonSerializable;
-
-class ErrorOutput extends AbstractOutput implements JsonSerializable
+class ErrorOutput extends AbstractOutput
 {
     public const CODE_UNKNOWN = 99;
     public const CODE_COMMAND_CONFIG_SOURCE_EMPTY = 100;
@@ -55,10 +53,7 @@ class ErrorOutput extends AbstractOutput implements JsonSerializable
         $this->context = $context;
     }
 
-    /**
-     * @return array<mixed>
-     */
-    public function jsonSerialize(): array
+    public function getData(): array
     {
         $errorData = [
             'message' => $this->message,
@@ -69,15 +64,19 @@ class ErrorOutput extends AbstractOutput implements JsonSerializable
             $errorData['context'] = $this->context;
         }
 
-        $serializedData = parent::jsonSerialize();
+        $serializedData = parent::getData();
         $serializedData['error'] = $errorData;
 
         return $serializedData;
     }
 
-    public static function fromJson(string $json): ErrorOutput
+    /**
+     * @param array<mixed> $data
+     *
+     * @return ErrorOutput
+     */
+    public static function fromArray(array $data): ErrorOutput
     {
-        $data = json_decode($json, true);
         $configData = $data['config'] ?? [];
         $errorData = $data['error'] ?? [];
         $contextData = $errorData['context'] ?? [];
@@ -85,7 +84,7 @@ class ErrorOutput extends AbstractOutput implements JsonSerializable
         return new ErrorOutput(
             Configuration::fromArray($configData),
             $errorData['message'] ?? '',
-            (int) $errorData['code'] ?? self::CODE_UNKNOWN,
+            (int) ($errorData['code'] ?? self::CODE_UNKNOWN),
             $contextData
         );
     }
