@@ -10,6 +10,7 @@ class Generated1a8ee6813e6fc3bf6de1ddbb4aaf6115Test extends AbstractBaseTest
 {
     public static function setUpBeforeClass(): void
     {
+        self::setUpClient(0);
         parent::setUpBeforeClass();
         self::$client->request('GET', 'https://example.com/');
         self::setBasilTestPath('tests/Fixtures/basil/Test/example.com.follow-more-information.yml');
