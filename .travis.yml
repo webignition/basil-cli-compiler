@@ -10,10 +10,8 @@ install:
 
 script:
   - composer ci
-  - cd docker
-  - ./test-build.sh
-  - ./test-run.sh
-  - cd ..
+  - ./docker/build.sh compiler:latest
+  - ./docker/test.sh compiler:latest
 
 cache:
   directories:
