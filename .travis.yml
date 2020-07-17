@@ -1,12 +1,16 @@
 language: php
 php:
-- '7.4'
+  - '7.4'
+
+services:
+  - docker
 
 install:
-- composer install --prefer-dist
+  - composer install --prefer-dist --no-suggest
 
 script:
-- composer ci
+  - composer ci
+  - cd docker && ./test-build.sh && ./test-run.sh && cd ..
 
 cache:
   directories:
