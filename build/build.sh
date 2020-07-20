@@ -1,3 +1,6 @@
 #!/usr/bin/env bash
 
-docker build -f docker/Dockerfile -t $1 .
+CURRENT_DIRECTORY="$(dirname "$0")"
+source $CURRENT_DIRECTORY/.image_name.sh
+
+docker build -f docker/Dockerfile -t $IMAGE_NAME .
