@@ -2,11 +2,8 @@
 
 REPOSITORY="basil-compiler"
 
-if [ -z "$1" ]; then
-  TAG="latest"
-else
-  TAG=$1
-fi
+DEFAULT_TAG="${TRAVIS_BRANCH:-master}"
+TAG="${1:-${DEFAULT_TAG}}"
 
-IMAGE_NAME=$REPOSITORY:$TAG
-echo "Image name: "$IMAGE_NAME
+IMAGE_NAME=${REPOSITORY}:${TAG}
+echo "Image name: "${IMAGE_NAME}
