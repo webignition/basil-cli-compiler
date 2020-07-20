@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-REPOSITORY="basil-compiler"
+IMAGE_REPOSITORY="smartassert/basil-compiler"
 
 DEFAULT_TAG="${TRAVIS_BRANCH:-master}"
 TAG="${1:-${DEFAULT_TAG}}"
 
-IMAGE_NAME=${REPOSITORY}:${TAG}
+IMAGE_NAME=${IMAGE_REPOSITORY}:${TAG}
 echo "Image name: "${IMAGE_NAME}
