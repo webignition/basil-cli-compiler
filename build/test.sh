@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 CURRENT_DIRECTORY="$(dirname "$0")"
-source ${CURRENT_DIRECTORY}/.image_name.sh
+source ${CURRENT_DIRECTORY}/.image_data.sh
 
 mkdir -p docker/data/input
 mkdir -p docker/data/output
