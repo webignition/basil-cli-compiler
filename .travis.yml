@@ -11,6 +11,7 @@ install:
 script:
   - composer ci
   - ./build/build.sh
+  - ./build/build_tagged_with_travis_branch_exists.sh
   - ./build/test.sh
 
 cache:

@@ -14,9 +14,10 @@ EXPECTED_FILENAME="Generated8a4077150b8e96cf57e90e6bf5dd6076Test.php"
 OUTPUT=$(docker run -v "$(pwd)"/docker/data:/app/data -it ${IMAGE_NAME} ls data/output/${EXPECTED_FILENAME} | wc -l)
 
 if [ ${OUTPUT} != "1" ]; then
+  echo "Test generation failed"
   exit 1
 else
-  echo "Test generated successfully"
+  echo "Test generation successful"
 fi
 
 rm -Rf docker/data
