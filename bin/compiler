@@ -7,8 +7,15 @@ namespace webignition\BasilRunner\Bin;
 
 const VERSION = 'dev-master';
 
-require 'vendor/autoload.php';
-$projectRootPath = realpath(__DIR__ . '/..');
+$pharPath = \Phar::running(false);
+
+if ('' === $pharPath) {
+    require 'vendor/autoload.php';
+    $projectRootPath = realpath(__DIR__ . '/..');
+} else {
+    require 'phar://compiler.phar/vendor/autoload.php';
+    $projectRootPath = realpath(dirname($pharPath));
+}
 
 use webignition\BasilCliCompiler\Services\CommandFactory;
 use webignition\SingleCommandApplicationFactory\Factory;

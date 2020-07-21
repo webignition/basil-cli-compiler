@@ -30,6 +30,19 @@
             "@cs",
             "@static-analysis",
             "@test"
+        ],
+        "phar-dump-autoload": "@composer dump-autoload --classmap-authoritative --no-dev --no-scripts --optimize",
+        "phar-compile": "@php -dphar.readonly=0 bin/compile.php",
+        "phar-build": [
+            "rm -f build/compiler.phar",
+            "@phar-dump-autoload",
+            "@phar-compile"
+        ],
+        "phar-test": [
+            "@composer dump-autoload",
+            "cp ./build/compiler.phar .",
+            "./vendor/bin/phpunit --colors=always tests/Integration/Phar",
+            "rm compiler.phar"
         ]
     },
     "require": {
@@ -43,6 +56,7 @@
         "webignition/basil-models": "^0.56",
         "webignition/php-basil-compilable-source-factory": "^0.52.0",
         "webignition/single-command-application-factory": "^0.1.0",
+        "webignition/single-command-application-phar-builder": "^0.2.0",
         "webignition/symfony-console-typed-input": "^0.5.0"
     },
     "require-dev": {
