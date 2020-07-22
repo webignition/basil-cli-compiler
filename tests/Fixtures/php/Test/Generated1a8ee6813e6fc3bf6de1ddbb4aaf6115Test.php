@@ -3,6 +3,7 @@
 namespace webignition\BasilCliCompiler\Generated;
 
 use webignition\BaseBasilTestCase\AbstractBaseTest;
+use webignition\BasilModels\Test\Configuration;
 use webignition\DomElementIdentifier\ElementIdentifier;
 use webignition\SymfonyDomCrawlerNavigator\Exception\InvalidLocatorException;
 
@@ -10,7 +11,10 @@ class Generated1a8ee6813e6fc3bf6de1ddbb4aaf6115Test extends AbstractBaseTest
 {
     public static function setUpBeforeClass(): void
     {
-        self::setUpClient(0);
+        self::setBasilTestConfiguration(new Configuration(
+            'chrome',
+            'https://example.com/'
+        ));
         parent::setUpBeforeClass();
         self::$client->request('GET', 'https://example.com/');
         self::setBasilTestPath('tests/Fixtures/basil/Test/example.com.follow-more-information.yml');
