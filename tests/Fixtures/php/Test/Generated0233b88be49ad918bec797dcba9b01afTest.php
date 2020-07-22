@@ -3,12 +3,16 @@
 namespace webignition\BasilCliCompiler\Generated;
 
 use webignition\BaseBasilTestCase\AbstractBaseTest;
+use webignition\BasilModels\Test\Configuration;
 
 class Generated0233b88be49ad918bec797dcba9b01afTest extends AbstractBaseTest
 {
     public static function setUpBeforeClass(): void
     {
-        self::setUpClient(0);
+        self::setBasilTestConfiguration(new Configuration(
+            'chrome',
+            'https://example.com/'
+        ));
         parent::setUpBeforeClass();
         self::$client->request('GET', 'https://example.com/');
         self::setBasilTestPath('tests/Fixtures/basil/Test/example.com.verify-open-literal.yml');
