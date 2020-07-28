@@ -38,29 +38,30 @@ class CompilerTest extends \PHPUnit\Framework\TestCase
     public function compileDataProvider(): array
     {
         $testParser = TestParser::create();
+        $test = $testParser->parse(
+            [
+                'config' => [
+                    'browser' => 'chrome',
+                    'url' => 'https://example.com/',
+                ],
+                'verify page is open' => [
+                    'assertions' => [
+                        '$page.url is "https://example.com/"',
+                    ],
+                ],
+            ]
+        )->withPath('tests/Fixtures/basil/Test/example.com.verify-open-literal.yml');
 
         return [
             'default' => [
-                'test' => $testParser->parse(
-                    [
-                        'config' => [
-                            'browser' => 'chrome',
-                            'url' => 'https://example.com/',
-                        ],
-                        'verify page is open' => [
-                            'assertions' => [
-                                '$page.url is "https://example.com/"',
-                            ],
-                        ],
-                    ]
-                )->withPath('tests/Fixtures/basil/Test/example.com.verify-open-literal.yml'),
+                'test' => $test,
                 'fullyQualifiedBaseClass' => AbstractBaseTest::class,
                 'expectedCompiledTest' => new CompiledTest(
+                    $test,
                     $this->createExpectedCodeFromSource(
                         'tests/Fixtures/php/Test/Generated0233b88be49ad918bec797dcba9b01afTest.php'
                     ),
-                    'Generated0233b88be49ad918bec797dcba9b01afTest',
-                    'tests/Fixtures/basil/Test/example.com.verify-open-literal.yml'
+                    'Generated0233b88be49ad918bec797dcba9b01afTest'
                 ),
             ],
         ];

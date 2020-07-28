@@ -221,7 +221,7 @@ class GenerateCommand extends Command
     {
         $consoleOutput->writeln(Yaml::dump(
             $commandOutput->getData(),
-            3
+            4
         ));
 
         return $commandOutput->getCode();
