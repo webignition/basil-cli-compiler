@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace webignition\BasilCliCompiler\Tests\Unit\Model;
 
 use webignition\BasilCliCompiler\Model\Configuration;
-use webignition\BasilCliCompiler\Model\GeneratedTestOutput;
 use webignition\BasilCliCompiler\Model\SuccessOutput;
+use webignition\BasilCliCompiler\Model\TestManifest;
 use webignition\BasilCliCompiler\Tests\Unit\AbstractBaseTest;
 use webignition\BasilModels\Test\Configuration as TestModelConfiguration;
 
@@ -35,21 +35,21 @@ class SuccessOutputTest extends AbstractBaseTest
 
     public function testGetOutput()
     {
-        $generatedTestOutputCollection = [
-            new GeneratedTestOutput(
+        $testManifests = [
+            new TestManifest(
                 new TestModelConfiguration('chrome', 'http://example.com'),
                 'test1.yml',
                 'GeneratedTest1.php'
             ),
-            new GeneratedTestOutput(
+            new TestManifest(
                 new TestModelConfiguration('firefox', 'http://example.com'),
                 'test2.yml',
                 'GeneratedTest2.php'
             ),
         ];
 
-        $output = new SuccessOutput($this->configuration, $generatedTestOutputCollection);
-        self::assertSame($generatedTestOutputCollection, $output->getOutput());
+        $output = new SuccessOutput($this->configuration, $testManifests);
+        self::assertSame($testManifests, $output->getTestManifests());
     }
 
     /**
@@ -66,13 +66,13 @@ class SuccessOutputTest extends AbstractBaseTest
     public function getDataDataProvider(): array
     {
         $configuration = new Configuration('test.yml', 'build', AbstractBaseTest::class);
-        $generatedTestOutputCollection = [
-            new GeneratedTestOutput(
+        $testManifests = [
+            new TestManifest(
                 new TestModelConfiguration('chrome', 'http://example.com'),
                 'test1.yml',
                 'GeneratedTest1.php'
             ),
-            new GeneratedTestOutput(
+            new TestManifest(
                 new TestModelConfiguration('firefox', 'http://example.com'),
                 'test2.yml',
                 'GeneratedTest2.php'
@@ -88,7 +88,7 @@ class SuccessOutputTest extends AbstractBaseTest
                 ],
             ],
             'populated generated test output collection' => [
-                'output' => new SuccessOutput($configuration, $generatedTestOutputCollection),
+                'output' => new SuccessOutput($configuration, $testManifests),
                 'expectedData' => [
                     'config' => $configuration->getData(),
                     'output' => [
@@ -137,9 +137,9 @@ class SuccessOutputTest extends AbstractBaseTest
             ],
             'populated generated test output collection' => [
                 'successOutput' => new SuccessOutput($compilerConfiguration, [
-                    new GeneratedTestOutput($testConfiguration, 'test1.yml', 'GeneratedTest1.php'),
-                    new GeneratedTestOutput($testConfiguration, 'test2.yml', 'GeneratedTest2.php'),
-                    new GeneratedTestOutput($testConfiguration, 'test3.yml', 'GeneratedTest3.php'),
+                    new TestManifest($testConfiguration, 'test1.yml', 'GeneratedTest1.php'),
+                    new TestManifest($testConfiguration, 'test2.yml', 'GeneratedTest2.php'),
+                    new TestManifest($testConfiguration, 'test3.yml', 'GeneratedTest3.php'),
                 ]),
                 'expectedTestPaths' => [
                     'build/GeneratedTest1.php',
@@ -172,9 +172,9 @@ class SuccessOutputTest extends AbstractBaseTest
             ],
             'populated generated test output collection' => [
                 'successOutput' => new SuccessOutput($compilerConfiguration, [
-                    new GeneratedTestOutput($testConfiguration, 'test1.yml', 'GeneratedTest1.php'),
-                    new GeneratedTestOutput($testConfiguration, 'test2.yml', 'GeneratedTest2.php'),
-                    new GeneratedTestOutput($testConfiguration, 'test3.yml', 'GeneratedTest3.php'),
+                    new TestManifest($testConfiguration, 'test1.yml', 'GeneratedTest1.php'),
+                    new TestManifest($testConfiguration, 'test2.yml', 'GeneratedTest2.php'),
+                    new TestManifest($testConfiguration, 'test3.yml', 'GeneratedTest3.php'),
                 ]),
             ],
         ];

@@ -9,27 +9,27 @@ class SuccessOutput extends AbstractOutput
     public const CODE = 0;
 
     /**
-     * @var GeneratedTestOutput[]
+     * @var TestManifest[]
      */
-    private array $output;
+    private array $testManifests;
 
     /**
      * @param Configuration $configuration
-     * @param GeneratedTestOutput[] $output
+     * @param TestManifest[] $output
      */
     public function __construct(Configuration $configuration, array $output)
     {
         parent::__construct($configuration, self::CODE);
 
-        $this->output = $output;
+        $this->testManifests = $output;
     }
 
     /**
-     * @return GeneratedTestOutput[]
+     * @return TestManifest[]
      */
-    public function getOutput(): array
+    public function getTestManifests(): array
     {
-        return $this->output;
+        return $this->testManifests;
     }
 
     /**
@@ -41,8 +41,8 @@ class SuccessOutput extends AbstractOutput
 
         $testPaths = [];
 
-        foreach ($this->getOutput() as $generatedTestOutput) {
-            $testPaths[] = $targetDirectory . '/' . $generatedTestOutput->getTarget();
+        foreach ($this->getTestManifests() as $testManifest) {
+            $testPaths[] = $targetDirectory . '/' . $testManifest->getTarget();
         }
 
         return $testPaths;
@@ -53,13 +53,13 @@ class SuccessOutput extends AbstractOutput
      */
     public function getData(): array
     {
-        $generatedTestData = [];
-        foreach ($this->output as $generatedTestOutput) {
-            $generatedTestData[] = $generatedTestOutput->getData();
+        $manifestDataCollection = [];
+        foreach ($this->testManifests as $testManifest) {
+            $manifestDataCollection[] = $testManifest->getData();
         }
 
         $serializedData = parent::getData();
-        $serializedData['output'] = $generatedTestData;
+        $serializedData['output'] = $manifestDataCollection;
 
         return $serializedData;
     }
@@ -72,12 +72,12 @@ class SuccessOutput extends AbstractOutput
     public static function fromArray(array $data): SuccessOutput
     {
         $configData = $data['config'] ?? [];
-        $outputData = $data['output'] ?? [];
+        $manifestDataCollection = $data['output'] ?? [];
 
         $output = [];
 
-        foreach ($outputData as $generatedTestOutput) {
-            $output[] = GeneratedTestOutput::fromArray($generatedTestOutput);
+        foreach ($manifestDataCollection as $manifestData) {
+            $output[] = TestManifest::fromArray($manifestData);
         }
 
         return new SuccessOutput(
