@@ -12,9 +12,7 @@ script:
   - composer ci
   - composer phar-build
   - composer phar-test
-  - ./build/build.sh
-  - ./build/build_tagged_with_travis_branch_exists.sh
-  - ./build/test.sh
+  - ./build/ci.sh
 
 cache:
   directories:

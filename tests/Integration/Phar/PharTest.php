@@ -8,7 +8,7 @@ use Symfony\Component\Process\Process;
 use Symfony\Component\Yaml\Yaml;
 use webignition\BasilCliCompiler\Model\ErrorOutput;
 use webignition\BasilCliCompiler\Model\OutputInterface;
-use webignition\BasilCliCompiler\Model\SuccessOutput;
+use webignition\BasilCliCompiler\Model\SuiteManifest;
 use webignition\BasilCliCompiler\Tests\DataProvider\RunFailure\CircularStepImportDataProviderTrait;
 use webignition\BasilCliCompiler\Tests\DataProvider\RunFailure\EmptyTestDataProviderTrait;
 use webignition\BasilCliCompiler\Tests\DataProvider\RunFailure\InvalidPageDataProviderTrait;
@@ -90,12 +90,12 @@ class PharTest extends \PHPUnit\Framework\TestCase
         $processOutputData = (array) Yaml::parse($pharProcess->getOutput());
 
         $commandOutput = 0 === $exitCode
-            ? SuccessOutput::fromArray($processOutputData)
+            ? SuiteManifest::fromArray($processOutputData)
             : ErrorOutput::fromArray($processOutputData);
 
         $this->assertEquals($expectedCommandOutput, $commandOutput);
 
-        if ($commandOutput instanceof SuccessOutput) {
+        if ($commandOutput instanceof SuiteManifest) {
             $generatedTestsToRemove = array_unique($commandOutput->getTestPaths());
 
             foreach ($generatedTestsToRemove as $path) {

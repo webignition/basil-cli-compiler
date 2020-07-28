@@ -12,7 +12,7 @@ use webignition\BasilCliCompiler\Command\GenerateCommand;
 use webignition\BasilCliCompiler\Model\Configuration;
 use webignition\BasilCliCompiler\Model\ErrorOutput;
 use webignition\BasilCliCompiler\Model\ExternalVariableIdentifiers;
-use webignition\BasilCliCompiler\Model\SuccessOutput;
+use webignition\BasilCliCompiler\Model\SuiteManifest;
 use webignition\BasilCliCompiler\Services\CommandFactory;
 use webignition\BasilCliCompiler\Services\CompiledClassResolver;
 use webignition\BasilCliCompiler\Services\Compiler;
@@ -66,7 +66,7 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
     /**
      * @param array<string, string> $input
      * @param int $expectedExitCode
-     * @param SuccessOutput $expectedCommandOutput
+     * @param SuiteManifest $expectedCommandOutput
      * @param array<string, string> $expectedGeneratedCode
      *
      * @dataProvider successDataProvider
@@ -74,7 +74,7 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
     public function testRunSuccess(
         array $input,
         int $expectedExitCode,
-        SuccessOutput $expectedCommandOutput,
+        SuiteManifest $expectedCommandOutput,
         array $expectedGeneratedCode
     ) {
         $output = new BufferedOutput();
@@ -82,22 +82,22 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
         $exitCode = $this->command->run(new ArrayInput($input), $output);
         self::assertSame($expectedExitCode, $exitCode);
 
-        $commandOutput = SuccessOutput::fromArray((array) Yaml::parse($output->fetch()));
+        $commandOutput = SuiteManifest::fromArray((array) Yaml::parse($output->fetch()));
         $this->assertEquals($expectedCommandOutput, $commandOutput);
 
-        $outputData = $commandOutput->getOutput();
+        $manifestCollectionData = $commandOutput->getTestManifests();
         $generatedTestsToRemove = [];
-        foreach ($outputData as $generatedTestOutput) {
+        foreach ($manifestCollectionData as $manifestData) {
             $commandOutputConfiguration = $commandOutput->getConfiguration();
             $commandOutputTarget = $commandOutputConfiguration->getTarget();
 
-            $expectedCodePath = $commandOutputTarget . '/' . $generatedTestOutput->getTarget();
+            $expectedCodePath = $commandOutputTarget . '/' . $manifestData->getTarget();
 
             self::assertFileExists($expectedCodePath);
             self::assertFileIsReadable($expectedCodePath);
 
             self::assertEquals(
-                $expectedGeneratedCode[$generatedTestOutput->getSource()],
+                $expectedGeneratedCode[ObjectReflector::getProperty($manifestData, 'source')],
                 file_get_contents($expectedCodePath)
             );
 

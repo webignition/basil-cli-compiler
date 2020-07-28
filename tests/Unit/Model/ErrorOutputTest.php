@@ -38,7 +38,6 @@ class ErrorOutputTest extends AbstractBaseTest
         self::assertSame(
             [
                 'config' => $this->configuration->getData(),
-                'status' => 'failure',
                 'error' => [
                     'message' => $this->message,
                     'code' => $this->code,

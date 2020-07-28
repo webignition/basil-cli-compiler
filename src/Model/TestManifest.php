@@ -7,7 +7,7 @@ namespace webignition\BasilCliCompiler\Model;
 use webignition\BasilModels\Test\Configuration as TestConfiguration;
 use webignition\BasilModels\Test\ConfigurationInterface;
 
-class GeneratedTestOutput
+class TestManifest
 {
     private string $source;
     private string $target;
@@ -18,16 +18,6 @@ class GeneratedTestOutput
         $this->configuration = $configuration;
         $this->source = $source;
         $this->target = $target;
-    }
-
-    public function getConfiguration(): ConfigurationInterface
-    {
-        return $this->configuration;
-    }
-
-    public function getSource(): string
-    {
-        return $this->source;
     }
 
     public function getTarget(): string
@@ -41,7 +31,7 @@ class GeneratedTestOutput
     public function getData(): array
     {
         return [
-            'configuration' => [
+            'config' => [
                 'browser' => $this->configuration->getBrowser(),
                 'url' => $this->configuration->getUrl(),
             ],
@@ -53,14 +43,14 @@ class GeneratedTestOutput
     /**
      * @param array<string, mixed> $data
      *
-     * @return GeneratedTestOutput
+     * @return TestManifest
      */
-    public static function fromArray(array $data): GeneratedTestOutput
+    public static function fromArray(array $data): TestManifest
     {
-        return new GeneratedTestOutput(
+        return new TestManifest(
             new TestConfiguration(
-                $data['configuration']['browser'],
-                $data['configuration']['url']
+                $data['config']['browser'],
+                $data['config']['url']
             ),
             $data['source'],
             $data['target']
