@@ -8,6 +8,7 @@ use webignition\BasilCliCompiler\Model\Configuration;
 use webignition\BasilCliCompiler\Model\GeneratedTestOutput;
 use webignition\BasilCliCompiler\Model\SuccessOutput;
 use webignition\BasilCliCompiler\Tests\Unit\AbstractBaseTest;
+use webignition\BasilModels\Test\Configuration as TestModelConfiguration;
 
 class SuccessOutputTest extends AbstractBaseTest
 {
@@ -35,8 +36,16 @@ class SuccessOutputTest extends AbstractBaseTest
     public function testGetOutput()
     {
         $generatedTestOutputCollection = [
-            new GeneratedTestOutput('test1.yml', 'GeneratedTest1.php'),
-            new GeneratedTestOutput('test2.yml', 'GeneratedTest2.php'),
+            new GeneratedTestOutput(
+                new TestModelConfiguration('chrome', 'http://example.com'),
+                'test1.yml',
+                'GeneratedTest1.php'
+            ),
+            new GeneratedTestOutput(
+                new TestModelConfiguration('firefox', 'http://example.com'),
+                'test2.yml',
+                'GeneratedTest2.php'
+            ),
         ];
 
         $output = new SuccessOutput($this->configuration, $generatedTestOutputCollection);
@@ -58,8 +67,16 @@ class SuccessOutputTest extends AbstractBaseTest
     {
         $configuration = new Configuration('test.yml', 'build', AbstractBaseTest::class);
         $generatedTestOutputCollection = [
-            new GeneratedTestOutput('test1.yml', 'GeneratedTest1.php'),
-            new GeneratedTestOutput('test2.yml', 'GeneratedTest2.php'),
+            new GeneratedTestOutput(
+                new TestModelConfiguration('chrome', 'http://example.com'),
+                'test1.yml',
+                'GeneratedTest1.php'
+            ),
+            new GeneratedTestOutput(
+                new TestModelConfiguration('firefox', 'http://example.com'),
+                'test2.yml',
+                'GeneratedTest2.php'
+            ),
         ];
 
         return [
@@ -78,10 +95,18 @@ class SuccessOutputTest extends AbstractBaseTest
                     'status' => 'success',
                     'output' => [
                         [
+                            'configuration' => [
+                                'browser' => 'chrome',
+                                'url' => 'http://example.com',
+                            ],
                             'source' => 'test1.yml',
                             'target' => 'GeneratedTest1.php',
                         ],
                         [
+                            'configuration' => [
+                                'browser' => 'firefox',
+                                'url' => 'http://example.com',
+                            ],
                             'source' => 'test2.yml',
                             'target' => 'GeneratedTest2.php',
                         ],
@@ -104,18 +129,19 @@ class SuccessOutputTest extends AbstractBaseTest
 
     public function getTestPathsDataProvider(): array
     {
-        $configuration = new Configuration('test.yml', 'build', AbstractBaseTest::class);
+        $compilerConfiguration = new Configuration('test.yml', 'build', AbstractBaseTest::class);
+        $testConfiguration = new TestModelConfiguration('chrome', 'http://example.com');
 
         return [
             'empty generated test output collection' => [
-                'successOutput' => new SuccessOutput($configuration, []),
+                'successOutput' => new SuccessOutput($compilerConfiguration, []),
                 'expectedTestPaths' => [],
             ],
             'populated generated test output collection' => [
-                'successOutput' => new SuccessOutput($configuration, [
-                    new GeneratedTestOutput('test1.yml', 'GeneratedTest1.php'),
-                    new GeneratedTestOutput('test2.yml', 'GeneratedTest2.php'),
-                    new GeneratedTestOutput('test3.yml', 'GeneratedTest3.php'),
+                'successOutput' => new SuccessOutput($compilerConfiguration, [
+                    new GeneratedTestOutput($testConfiguration, 'test1.yml', 'GeneratedTest1.php'),
+                    new GeneratedTestOutput($testConfiguration, 'test2.yml', 'GeneratedTest2.php'),
+                    new GeneratedTestOutput($testConfiguration, 'test3.yml', 'GeneratedTest3.php'),
                 ]),
                 'expectedTestPaths' => [
                     'build/GeneratedTest1.php',
@@ -139,17 +165,18 @@ class SuccessOutputTest extends AbstractBaseTest
 
     public function jsonSerializedFromJsonDataProvider(): array
     {
-        $configuration = new Configuration('test.yml', 'build', AbstractBaseTest::class);
+        $compilerConfiguration = new Configuration('test.yml', 'build', AbstractBaseTest::class);
+        $testConfiguration = new TestModelConfiguration('chrome', 'http://example.com');
 
         return [
             'empty generated test output collection' => [
-                'successOutput' => new SuccessOutput($configuration, []),
+                'successOutput' => new SuccessOutput($compilerConfiguration, []),
             ],
             'populated generated test output collection' => [
-                'successOutput' => new SuccessOutput($configuration, [
-                    new GeneratedTestOutput('test1.yml', 'GeneratedTest1.php'),
-                    new GeneratedTestOutput('test2.yml', 'GeneratedTest2.php'),
-                    new GeneratedTestOutput('test3.yml', 'GeneratedTest3.php'),
+                'successOutput' => new SuccessOutput($compilerConfiguration, [
+                    new GeneratedTestOutput($testConfiguration, 'test1.yml', 'GeneratedTest1.php'),
+                    new GeneratedTestOutput($testConfiguration, 'test2.yml', 'GeneratedTest2.php'),
+                    new GeneratedTestOutput($testConfiguration, 'test3.yml', 'GeneratedTest3.php'),
                 ]),
             ],
         ];
