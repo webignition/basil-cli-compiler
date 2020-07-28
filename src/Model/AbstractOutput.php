@@ -6,17 +6,12 @@ namespace webignition\BasilCliCompiler\Model;
 
 abstract class AbstractOutput implements OutputInterface
 {
-    protected const STATUS_SUCCESS = 'success';
-    protected const STATUS_FAILURE = 'failure';
-
     private Configuration $configuration;
-    private string $status;
     private int $code;
 
-    public function __construct(Configuration $configuration, string $status, int $code)
+    public function __construct(Configuration $configuration, int $code)
     {
         $this->configuration = $configuration;
-        $this->status = $status;
         $this->code = $code;
     }
 
@@ -34,7 +29,6 @@ abstract class AbstractOutput implements OutputInterface
     {
         return [
             'config' => $this->configuration->getData(),
-            'status' => $this->status,
         ];
     }
 }

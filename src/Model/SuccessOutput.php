@@ -19,7 +19,7 @@ class SuccessOutput extends AbstractOutput
      */
     public function __construct(Configuration $configuration, array $output)
     {
-        parent::__construct($configuration, self::STATUS_SUCCESS, self::CODE);
+        parent::__construct($configuration, self::CODE);
 
         $this->output = $output;
     }

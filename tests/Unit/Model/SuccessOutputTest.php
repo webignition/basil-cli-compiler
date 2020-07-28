@@ -84,7 +84,6 @@ class SuccessOutputTest extends AbstractBaseTest
                 'output' => new SuccessOutput($configuration, []),
                 'expectedData' => [
                     'config' => $configuration->getData(),
-                    'status' => 'success',
                     'output' => [],
                 ],
             ],
@@ -92,7 +91,6 @@ class SuccessOutputTest extends AbstractBaseTest
                 'output' => new SuccessOutput($configuration, $generatedTestOutputCollection),
                 'expectedData' => [
                     'config' => $configuration->getData(),
-                    'status' => 'success',
                     'output' => [
                         [
                             'configuration' => [
