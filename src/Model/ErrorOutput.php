@@ -47,7 +47,7 @@ class ErrorOutput extends AbstractOutput
         int $code,
         array $context = []
     ) {
-        parent::__construct($configuration, self::STATUS_FAILURE, $code);
+        parent::__construct($configuration, $code);
 
         $this->message = $message;
         $this->context = $context;
