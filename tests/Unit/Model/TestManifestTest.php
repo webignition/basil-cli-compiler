@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace webignition\BasilCliCompiler\Tests\Unit\Model;
 
-use webignition\BasilCliCompiler\Model\GeneratedTestOutput;
+use webignition\BasilCliCompiler\Model\TestManifest;
 use webignition\BasilCliCompiler\Tests\Unit\AbstractBaseTest;
 use webignition\BasilModels\Test\Configuration;
 use webignition\BasilModels\Test\ConfigurationInterface;
 
-class GeneratedTestOutputTest extends AbstractBaseTest
+class TestManifestTest extends AbstractBaseTest
 {
     private const SOURCE = 'test.yml';
     private const TARGET = 'GeneratedTest.php';
 
-    private GeneratedTestOutput $output;
+    private TestManifest $manifest;
     private ConfigurationInterface $configuration;
 
     protected function setUp(): void
@@ -22,22 +22,12 @@ class GeneratedTestOutputTest extends AbstractBaseTest
         parent::setUp();
 
         $this->configuration = new Configuration('chrome', 'http://example.com');
-        $this->output = new GeneratedTestOutput($this->configuration, self::SOURCE, self::TARGET);
-    }
-
-    public function testGetConfiguration()
-    {
-        self::assertSame($this->configuration, $this->output->getConfiguration());
-    }
-
-    public function testGetSource()
-    {
-        self::assertSame(self::SOURCE, $this->output->getSource());
+        $this->manifest = new TestManifest($this->configuration, self::SOURCE, self::TARGET);
     }
 
     public function testGetTarget()
     {
-        self::assertSame(self::TARGET, $this->output->getTarget());
+        self::assertSame(self::TARGET, $this->manifest->getTarget());
     }
 
     public function testGetData()
@@ -51,15 +41,15 @@ class GeneratedTestOutputTest extends AbstractBaseTest
                 'source' => self::SOURCE,
                 'target' => self::TARGET,
             ],
-            $this->output->getData()
+            $this->manifest->getData()
         );
     }
 
     public function testFromArray()
     {
         self::assertEquals(
-            new GeneratedTestOutput($this->configuration, self::SOURCE, self::TARGET),
-            GeneratedTestOutput::fromArray([
+            new TestManifest($this->configuration, self::SOURCE, self::TARGET),
+            TestManifest::fromArray([
                 'configuration' => [
                     'browser' => 'chrome',
                     'url' => 'http://example.com',

@@ -29,8 +29,8 @@ class TestWriterTest extends \PHPUnit\Framework\TestCase
         string $outputDirectory,
         string $expectedGeneratedCode
     ) {
-        $generatedTestOutput = $this->testWriter->write($compiledTest, $outputDirectory);
-        $expectedCodePath = $outputDirectory . '/' . $generatedTestOutput->getTarget();
+        $testManifest = $this->testWriter->write($compiledTest, $outputDirectory);
+        $expectedCodePath = $outputDirectory . '/' . $testManifest->getTarget();
 
         self::assertFileExists($expectedCodePath);
         self::assertFileIsReadable($expectedCodePath);

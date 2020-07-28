@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace webignition\BasilCliCompiler\Services;
 
 use webignition\BasilCliCompiler\Model\CompiledTest;
-use webignition\BasilCliCompiler\Model\GeneratedTestOutput;
+use webignition\BasilCliCompiler\Model\TestManifest;
 
 class TestWriter
 {
@@ -27,10 +27,10 @@ class TestWriter
      * @param CompiledTest $compiledTest
      * @param string $outputDirectory
      *
-     * @return GeneratedTestOutput
+     * @return TestManifest
      *
      */
-    public function write(CompiledTest $compiledTest, string $outputDirectory): GeneratedTestOutput
+    public function write(CompiledTest $compiledTest, string $outputDirectory): TestManifest
     {
         $sourceTest = $compiledTest->getTest();
         $testPath = $sourceTest->getPath() ?? '';
@@ -38,6 +38,6 @@ class TestWriter
         $this->phpFileCreator->setOutputDirectory($outputDirectory);
         $filename = $this->phpFileCreator->create($compiledTest->getClassName(), $compiledTest->getCode());
 
-        return new GeneratedTestOutput($sourceTest->getConfiguration(), $testPath, $filename);
+        return new TestManifest($sourceTest->getConfiguration(), $testPath, $filename);
     }
 }
