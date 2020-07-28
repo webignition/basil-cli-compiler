@@ -36,7 +36,7 @@ class GeneratedTestOutput
     }
 
     /**
-     * @return array<string, string|array<string, string>>
+     * @return array<string, mixed>
      */
     public function getData(): array
     {
@@ -51,7 +51,7 @@ class GeneratedTestOutput
     }
 
     /**
-     * @param array<string, string> $data
+     * @param array<string, mixed> $data
      *
      * @return GeneratedTestOutput
      */
