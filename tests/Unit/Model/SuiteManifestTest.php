@@ -79,14 +79,14 @@ class SuiteManifestTest extends AbstractBaseTest
                 'output' => new SuiteManifest($configuration, []),
                 'expectedData' => [
                     'config' => $configuration->getData(),
-                    'output' => [],
+                    'manifests' => [],
                 ],
             ],
             'populated generated test output collection' => [
                 'output' => new SuiteManifest($configuration, $testManifests),
                 'expectedData' => [
                     'config' => $configuration->getData(),
-                    'output' => [
+                    'manifests' => [
                         [
                             'configuration' => [
                                 'browser' => 'chrome',

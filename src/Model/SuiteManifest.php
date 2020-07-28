@@ -13,13 +13,13 @@ class SuiteManifest extends AbstractOutput
 
     /**
      * @param Configuration $configuration
-     * @param TestManifest[] $output
+     * @param TestManifest[] $manifests
      */
-    public function __construct(Configuration $configuration, array $output)
+    public function __construct(Configuration $configuration, array $manifests)
     {
         parent::__construct($configuration);
 
-        $this->testManifests = $output;
+        $this->testManifests = $manifests;
     }
 
     /**
@@ -51,13 +51,13 @@ class SuiteManifest extends AbstractOutput
      */
     public function getData(): array
     {
-        $manifestDataCollection = [];
+        $manifests = [];
         foreach ($this->testManifests as $testManifest) {
-            $manifestDataCollection[] = $testManifest->getData();
+            $manifests[] = $testManifest->getData();
         }
 
         $serializedData = parent::getData();
-        $serializedData['output'] = $manifestDataCollection;
+        $serializedData['manifests'] = $manifests;
 
         return $serializedData;
     }
@@ -70,17 +70,14 @@ class SuiteManifest extends AbstractOutput
     public static function fromArray(array $data): SuiteManifest
     {
         $configData = $data['config'] ?? [];
-        $manifestDataCollection = $data['output'] ?? [];
+        $manifestsData = $data['manifests'] ?? [];
 
-        $output = [];
+        $manifests = [];
 
-        foreach ($manifestDataCollection as $manifestData) {
-            $output[] = TestManifest::fromArray($manifestData);
+        foreach ($manifestsData as $manifestData) {
+            $manifests[] = TestManifest::fromArray($manifestData);
         }
 
-        return new SuiteManifest(
-            Configuration::fromArray($configData),
-            $output
-        );
+        return new SuiteManifest(Configuration::fromArray($configData), $manifests);
     }
 }
