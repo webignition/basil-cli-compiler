@@ -88,7 +88,7 @@ class SuiteManifestTest extends AbstractBaseTest
                     'config' => $configuration->getData(),
                     'manifests' => [
                         [
-                            'configuration' => [
+                            'config' => [
                                 'browser' => 'chrome',
                                 'url' => 'http://example.com',
                             ],
@@ -96,7 +96,7 @@ class SuiteManifestTest extends AbstractBaseTest
                             'target' => 'GeneratedTest1.php',
                         ],
                         [
-                            'configuration' => [
+                            'config' => [
                                 'browser' => 'firefox',
                                 'url' => 'http://example.com',
                             ],
