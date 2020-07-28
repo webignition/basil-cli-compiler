@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace webignition\BasilCliCompiler\Model;
 
-class SuccessOutput extends AbstractOutput
+class SuiteManifest extends AbstractOutput
 {
-    public const CODE = 0;
-
     /**
      * @var TestManifest[]
      */
@@ -19,7 +17,7 @@ class SuccessOutput extends AbstractOutput
      */
     public function __construct(Configuration $configuration, array $output)
     {
-        parent::__construct($configuration, self::CODE);
+        parent::__construct($configuration);
 
         $this->testManifests = $output;
     }
@@ -67,9 +65,9 @@ class SuccessOutput extends AbstractOutput
     /**
      * @param array<mixed> $data
      *
-     * @return SuccessOutput
+     * @return SuiteManifest
      */
-    public static function fromArray(array $data): SuccessOutput
+    public static function fromArray(array $data): SuiteManifest
     {
         $configData = $data['config'] ?? [];
         $manifestDataCollection = $data['output'] ?? [];
@@ -80,7 +78,7 @@ class SuccessOutput extends AbstractOutput
             $output[] = TestManifest::fromArray($manifestData);
         }
 
-        return new SuccessOutput(
+        return new SuiteManifest(
             Configuration::fromArray($configData),
             $output
         );

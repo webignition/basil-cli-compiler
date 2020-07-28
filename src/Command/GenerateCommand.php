@@ -11,8 +11,9 @@ use Symfony\Component\Console\Output\OutputInterface as ConsoleOutputInterface;
 use Symfony\Component\Yaml\Yaml;
 use webignition\BaseBasilTestCase\AbstractBaseTest;
 use webignition\BasilCliCompiler\Exception\UnresolvedPlaceholderException;
+use webignition\BasilCliCompiler\Model\ErrorOutputInterface;
 use webignition\BasilCliCompiler\Model\OutputInterface;
-use webignition\BasilCliCompiler\Model\SuccessOutput;
+use webignition\BasilCliCompiler\Model\SuiteManifest;
 use webignition\BasilCliCompiler\Services\Compiler;
 use webignition\BasilCliCompiler\Services\ConfigurationFactory;
 use webignition\BasilCliCompiler\Services\ConfigurationValidator;
@@ -116,16 +117,24 @@ class GenerateCommand extends Command
 
         $configuration = $this->configurationFactory->create($rawSource, $rawTarget, $baseClass);
 
+        $commandOutput = null;
+
         if ('' === $rawSource) {
-            return $this->render($output, $this->errorOutputFactory->createForEmptySource($configuration));
+            $commandOutput = $this->errorOutputFactory->createForEmptySource($configuration);
         }
 
-        if ('' === $rawTarget) {
-            return $this->render($output, $this->errorOutputFactory->createForEmptyTarget($configuration));
+        if (null === $commandOutput && '' === $rawTarget) {
+            $commandOutput = $this->errorOutputFactory->createForEmptyTarget($configuration);
         }
 
-        if (false === $this->configurationValidator->isValid($configuration)) {
-            return $this->render($output, $this->errorOutputFactory->createFromInvalidConfiguration($configuration));
+        if (null === $commandOutput && false === $this->configurationValidator->isValid($configuration)) {
+            $commandOutput = $this->errorOutputFactory->createFromInvalidConfiguration($configuration);
+        }
+
+        if ($commandOutput instanceof ErrorOutputInterface) {
+            $this->render($output, $commandOutput);
+
+            return $commandOutput->getCode();
         }
 
         $sourcePaths = $this->createSourcePaths($configuration->getSource());
@@ -148,8 +157,9 @@ class GenerateCommand extends Command
                 YamlLoaderException $exception
             ) {
                 $commandOutput = $this->errorOutputFactory->createForException($exception, $configuration);
+                $this->render($output, $commandOutput);
 
-                return $this->render($output, $commandOutput);
+                return $commandOutput->getCode();
             }
 
             try {
@@ -164,15 +174,15 @@ class GenerateCommand extends Command
                 UnsupportedStepException $exception
             ) {
                 $commandOutput = $this->errorOutputFactory->createForException($exception, $configuration);
+                $this->render($output, $commandOutput);
 
-                return $this->render($output, $commandOutput);
+                return $commandOutput->getCode();
             }
         }
 
-        return $this->render(
-            $output,
-            new SuccessOutput($configuration, $generatedFiles)
-        );
+        $this->render($output, new SuiteManifest($configuration, $generatedFiles));
+
+        return 0;
     }
 
     /**
@@ -224,7 +234,7 @@ class GenerateCommand extends Command
             4
         ));
 
-        return $commandOutput->getCode();
+        return $commandOutput instanceof ErrorOutputInterface ? $commandOutput->getCode() : 0;
     }
 
     private function removeProjectRootPathFromTestPath(TestInterface $test): TestInterface

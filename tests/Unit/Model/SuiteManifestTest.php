@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace webignition\BasilCliCompiler\Tests\Unit\Model;
 
 use webignition\BasilCliCompiler\Model\Configuration;
-use webignition\BasilCliCompiler\Model\SuccessOutput;
+use webignition\BasilCliCompiler\Model\SuiteManifest;
 use webignition\BasilCliCompiler\Model\TestManifest;
 use webignition\BasilCliCompiler\Tests\Unit\AbstractBaseTest;
 use webignition\BasilModels\Test\Configuration as TestModelConfiguration;
 
-class SuccessOutputTest extends AbstractBaseTest
+class SuiteManifestTest extends AbstractBaseTest
 {
-    private SuccessOutput $output;
+    private SuiteManifest $output;
     private Configuration $configuration;
 
     protected function setUp(): void
@@ -20,17 +20,12 @@ class SuccessOutputTest extends AbstractBaseTest
         parent::setUp();
 
         $this->configuration = new Configuration('test.yml', 'build', AbstractBaseTest::class);
-        $this->output = new SuccessOutput($this->configuration, []);
+        $this->output = new SuiteManifest($this->configuration, []);
     }
 
     public function testGetConfiguration()
     {
         self::assertSame($this->configuration, $this->output->getConfiguration());
-    }
-
-    public function testGetCode()
-    {
-        self::assertSame(SuccessOutput::CODE, $this->output->getCode());
     }
 
     public function testGetOutput()
@@ -48,17 +43,17 @@ class SuccessOutputTest extends AbstractBaseTest
             ),
         ];
 
-        $output = new SuccessOutput($this->configuration, $testManifests);
+        $output = new SuiteManifest($this->configuration, $testManifests);
         self::assertSame($testManifests, $output->getTestManifests());
     }
 
     /**
      * @dataProvider getDataDataProvider
      *
-     * @param SuccessOutput $output
+     * @param SuiteManifest $output
      * @param array<mixed> $expectedData
      */
-    public function testGetData(SuccessOutput $output, array $expectedData)
+    public function testGetData(SuiteManifest $output, array $expectedData)
     {
         self::assertSame($expectedData, $output->getData());
     }
@@ -81,14 +76,14 @@ class SuccessOutputTest extends AbstractBaseTest
 
         return [
             'empty generated test output collection' => [
-                'output' => new SuccessOutput($configuration, []),
+                'output' => new SuiteManifest($configuration, []),
                 'expectedData' => [
                     'config' => $configuration->getData(),
                     'output' => [],
                 ],
             ],
             'populated generated test output collection' => [
-                'output' => new SuccessOutput($configuration, $testManifests),
+                'output' => new SuiteManifest($configuration, $testManifests),
                 'expectedData' => [
                     'config' => $configuration->getData(),
                     'output' => [
@@ -117,12 +112,12 @@ class SuccessOutputTest extends AbstractBaseTest
     /**
      * @dataProvider getTestPathsDataProvider
      *
-     * @param SuccessOutput $successOutput
+     * @param SuiteManifest $suiteManifest
      * @param array<string> $expectedTestPaths
      */
-    public function testGetTestPaths(SuccessOutput $successOutput, array $expectedTestPaths)
+    public function testGetTestPaths(SuiteManifest $suiteManifest, array $expectedTestPaths)
     {
-        self::assertSame($expectedTestPaths, $successOutput->getTestPaths());
+        self::assertSame($expectedTestPaths, $suiteManifest->getTestPaths());
     }
 
     public function getTestPathsDataProvider(): array
@@ -132,11 +127,11 @@ class SuccessOutputTest extends AbstractBaseTest
 
         return [
             'empty generated test output collection' => [
-                'successOutput' => new SuccessOutput($compilerConfiguration, []),
+                'suiteManifest' => new SuiteManifest($compilerConfiguration, []),
                 'expectedTestPaths' => [],
             ],
             'populated generated test output collection' => [
-                'successOutput' => new SuccessOutput($compilerConfiguration, [
+                'suiteManifest' => new SuiteManifest($compilerConfiguration, [
                     new TestManifest($testConfiguration, 'test1.yml', 'GeneratedTest1.php'),
                     new TestManifest($testConfiguration, 'test2.yml', 'GeneratedTest2.php'),
                     new TestManifest($testConfiguration, 'test3.yml', 'GeneratedTest3.php'),
@@ -153,11 +148,11 @@ class SuccessOutputTest extends AbstractBaseTest
     /**
      * @dataProvider jsonSerializedFromJsonDataProvider
      */
-    public function testGetDataFromArray(SuccessOutput $output)
+    public function testGetDataFromArray(SuiteManifest $output)
     {
         self::assertEquals(
             $output,
-            SuccessOutput::fromArray($output->getData())
+            SuiteManifest::fromArray($output->getData())
         );
     }
 
@@ -168,10 +163,10 @@ class SuccessOutputTest extends AbstractBaseTest
 
         return [
             'empty generated test output collection' => [
-                'successOutput' => new SuccessOutput($compilerConfiguration, []),
+                'suiteManifest' => new SuiteManifest($compilerConfiguration, []),
             ],
             'populated generated test output collection' => [
-                'successOutput' => new SuccessOutput($compilerConfiguration, [
+                'suiteManifest' => new SuiteManifest($compilerConfiguration, [
                     new TestManifest($testConfiguration, 'test1.yml', 'GeneratedTest1.php'),
                     new TestManifest($testConfiguration, 'test2.yml', 'GeneratedTest2.php'),
                     new TestManifest($testConfiguration, 'test3.yml', 'GeneratedTest3.php'),
