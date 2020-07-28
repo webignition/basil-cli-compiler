@@ -32,9 +32,12 @@ class TestWriter
      */
     public function write(CompiledTest $compiledTest, string $outputDirectory): GeneratedTestOutput
     {
+        $sourceTest = $compiledTest->getTest();
+        $testPath = $sourceTest->getPath() ?? '';
+
         $this->phpFileCreator->setOutputDirectory($outputDirectory);
         $filename = $this->phpFileCreator->create($compiledTest->getClassName(), $compiledTest->getCode());
 
-        return new GeneratedTestOutput($compiledTest->getTestPath() ?? '', $filename);
+        return new GeneratedTestOutput($sourceTest->getConfiguration(), $testPath, $filename);
     }
 }
