@@ -7,7 +7,6 @@ namespace webignition\BasilCliCompiler\Model;
 interface OutputInterface
 {
     public function getConfiguration(): Configuration;
-    public function getCode(): int;
 
     /**
      * @return array<mixed>

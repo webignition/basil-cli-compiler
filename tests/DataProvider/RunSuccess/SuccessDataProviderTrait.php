@@ -6,7 +6,7 @@ namespace webignition\BasilCliCompiler\Tests\DataProvider\RunSuccess;
 
 use webignition\BaseBasilTestCase\AbstractBaseTest;
 use webignition\BasilCliCompiler\Model\Configuration;
-use webignition\BasilCliCompiler\Model\SuccessOutput;
+use webignition\BasilCliCompiler\Model\SuiteManifest;
 use webignition\BasilCliCompiler\Model\TestManifest;
 use webignition\BasilCliCompiler\Tests\Services\ProjectRootPathProvider;
 use webignition\BasilModels\Test\Configuration as TestModelConfiguration;
@@ -24,7 +24,7 @@ trait SuccessDataProviderTrait
                     '--target' => 'tests/build/target',
                 ],
                 'expectedExitCode' => 0,
-                'expectedCommandOutput' => new SuccessOutput(
+                'expectedCommandOutput' => new SuiteManifest(
                     new Configuration(
                         $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
                         $root . '/tests/build/target',
@@ -49,7 +49,7 @@ trait SuccessDataProviderTrait
                     '--target' => 'tests/build/target',
                 ],
                 'expectedExitCode' => 0,
-                'expectedCommandOutput' => new SuccessOutput(
+                'expectedCommandOutput' => new SuiteManifest(
                     new Configuration(
                         $root . '/tests/Fixtures/basil/TestSuite/example.com-all.yml',
                         $root . '/tests/build/target',
@@ -88,7 +88,7 @@ trait SuccessDataProviderTrait
                     '--target' => 'tests/build/target',
                 ],
                 'expectedExitCode' => 0,
-                'expectedCommandOutput' => new SuccessOutput(
+                'expectedCommandOutput' => new SuiteManifest(
                     new Configuration(
                         $root . '/tests/Fixtures/basil/Test',
                         $root . '/tests/build/target',
@@ -134,7 +134,7 @@ trait SuccessDataProviderTrait
                     '--target' => 'tests/build/target',
                 ],
                 'expectedExitCode' => 0,
-                'expectedCommandOutput' => new SuccessOutput(
+                'expectedCommandOutput' => new SuiteManifest(
                     new Configuration(
                         $root . '/tests/Fixtures/basil/TestSuite',
                         $root . '/tests/build/target',

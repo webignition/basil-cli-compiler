@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace webignition\BasilCliCompiler\Model;
 
-class ErrorOutput extends AbstractOutput
+class ErrorOutput extends AbstractOutput implements ErrorOutputInterface
 {
     public const CODE_UNKNOWN = 99;
     public const CODE_COMMAND_CONFIG_SOURCE_EMPTY = 100;
@@ -28,6 +28,7 @@ class ErrorOutput extends AbstractOutput
     public const CODE_GENERATOR_UNRESOLVED_PLACEHOLDER = 211;
     public const CODE_GENERATOR_UNSUPPORTED_STEP = 212;
 
+    private int $code;
     private string $message;
 
     /**
@@ -47,10 +48,17 @@ class ErrorOutput extends AbstractOutput
         int $code,
         array $context = []
     ) {
-        parent::__construct($configuration, $code);
+        parent::__construct($configuration);
 
+        $this->code = $code;
         $this->message = $message;
         $this->context = $context;
+    }
+
+
+    public function getCode(): int
+    {
+        return $this->code;
     }
 
     public function getData(): array
