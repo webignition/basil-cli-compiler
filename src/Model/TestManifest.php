@@ -31,7 +31,7 @@ class TestManifest
     public function getData(): array
     {
         return [
-            'configuration' => [
+            'config' => [
                 'browser' => $this->configuration->getBrowser(),
                 'url' => $this->configuration->getUrl(),
             ],
@@ -49,8 +49,8 @@ class TestManifest
     {
         return new TestManifest(
             new TestConfiguration(
-                $data['configuration']['browser'],
-                $data['configuration']['url']
+                $data['config']['browser'],
+                $data['config']['url']
             ),
             $data['source'],
             $data['target']

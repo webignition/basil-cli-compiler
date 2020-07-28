@@ -34,7 +34,7 @@ class TestManifestTest extends AbstractBaseTest
     {
         self::assertSame(
             [
-                'configuration' => [
+                'config' => [
                     'browser' => 'chrome',
                     'url' => 'http://example.com',
                 ],
@@ -50,7 +50,7 @@ class TestManifestTest extends AbstractBaseTest
         self::assertEquals(
             new TestManifest($this->configuration, self::SOURCE, self::TARGET),
             TestManifest::fromArray([
-                'configuration' => [
+                'config' => [
                     'browser' => 'chrome',
                     'url' => 'http://example.com',
                 ],
