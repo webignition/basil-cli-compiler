@@ -14,6 +14,7 @@ use webignition\BasilCliCompiler\Services\Compiler;
 use webignition\BasilCliCompiler\Services\ConfigurationFactory;
 use webignition\BasilCliCompiler\Services\ConfigurationValidator;
 use webignition\BasilCliCompiler\Services\ErrorOutputFactory;
+use webignition\BasilCliCompiler\Services\OutputRenderer;
 use webignition\BasilCliCompiler\Services\TestWriter;
 use webignition\BasilCliCompiler\Services\ValidatorInvalidResultSerializer;
 use webignition\BasilCliCompiler\Tests\Services\ProjectRootPathProvider;
@@ -128,6 +129,7 @@ class GenerateCommandTest extends AbstractBaseTest
             $configurationFactory,
             $configurationValidator,
             new ErrorOutputFactory($configurationValidator, new ValidatorInvalidResultSerializer()),
+            new OutputRenderer(),
             (new ProjectRootPathProvider())->get()
         );
     }

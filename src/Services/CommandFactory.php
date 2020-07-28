@@ -20,6 +20,7 @@ class CommandFactory
             new ConfigurationFactory($projectRootPath),
             $configurationValidator,
             new ErrorOutputFactory($configurationValidator, new ValidatorInvalidResultSerializer()),
+            new OutputRenderer(),
             $projectRootPath
         );
     }
