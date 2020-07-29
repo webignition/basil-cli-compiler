@@ -10,7 +10,6 @@ use webignition\BaseBasilTestCase\AbstractBaseTest as BasilBaseTest;
 use webignition\BasilCliCompiler\Command\GenerateCommand;
 use webignition\BasilCliCompiler\Services\Compiler;
 use webignition\BasilCliCompiler\Services\ConfigurationFactory;
-use webignition\BasilCliCompiler\Services\ConfigurationValidator;
 use webignition\BasilCliCompiler\Services\ErrorOutputFactory;
 use webignition\BasilCliCompiler\Services\OutputRenderer;
 use webignition\BasilCliCompiler\Services\TestWriter;
@@ -18,6 +17,7 @@ use webignition\BasilCliCompiler\Services\ValidatorInvalidResultSerializer;
 use webignition\BasilCliCompiler\Tests\Services\ProjectRootPathProvider;
 use webignition\BasilCliCompiler\Tests\Unit\AbstractBaseTest;
 use webignition\BasilCompilerModels\Configuration;
+use webignition\BasilCompilerModels\ConfigurationInterface;
 use webignition\BasilCompilerModels\ErrorOutput;
 use webignition\BasilCompilerModels\ErrorOutputInterface;
 use webignition\BasilLoader\SourceLoader;
@@ -34,13 +34,11 @@ class GenerateCommandTest extends AbstractBaseTest
     public function testRunFailure(
         array $input,
         ConfigurationFactory $configurationFactory,
-        ConfigurationValidator $configurationValidator,
         int $validationErrorCode,
         ErrorOutputInterface $expectedCommandOutput
     ): void {
         $command = $this->createCommand(
             $configurationFactory,
-            $configurationValidator,
             \Mockery::mock(Compiler::class),
             \Mockery::mock(TestWriter::class)
         );
@@ -72,7 +70,7 @@ class GenerateCommandTest extends AbstractBaseTest
         );
 
         return [
-            'source empty' => [
+            'source not readable' => [
                 'input' => [
                     '--source' => '',
                     '--target' => 'tests/build/target',
@@ -85,7 +83,6 @@ class GenerateCommandTest extends AbstractBaseTest
                     ],
                     $emptySourceConfiguration
                 ),
-                'configurationValidator' => \Mockery::mock(ConfigurationValidator::class),
                 'validationErrorCode' => ErrorOutput::CODE_COMMAND_CONFIG_SOURCE_EMPTY,
                 'expectedCommandOutput' => new ErrorOutput(
                     $emptySourceConfiguration,
@@ -106,7 +103,6 @@ class GenerateCommandTest extends AbstractBaseTest
                     ],
                     $emptyTargetConfiguration
                 ),
-                'configurationValidator' => \Mockery::mock(ConfigurationValidator::class),
                 'validationErrorCode' => ErrorOutput::CODE_COMMAND_CONFIG_TARGET_EMPTY,
                 'expectedCommandOutput' => new ErrorOutput(
                     $emptyTargetConfiguration,
@@ -119,7 +115,6 @@ class GenerateCommandTest extends AbstractBaseTest
 
     private function createCommand(
         ConfigurationFactory $configurationFactory,
-        ConfigurationValidator $configurationValidator,
         Compiler $compiler,
         TestWriter $testWriter
     ): GenerateCommand {
@@ -128,7 +123,7 @@ class GenerateCommandTest extends AbstractBaseTest
             $compiler,
             $testWriter,
             $configurationFactory,
-            new ErrorOutputFactory($configurationValidator, new ValidatorInvalidResultSerializer()),
+            new ErrorOutputFactory(new ValidatorInvalidResultSerializer()),
             new OutputRenderer(),
             (new ProjectRootPathProvider())->get()
         );
@@ -140,8 +135,10 @@ class GenerateCommandTest extends AbstractBaseTest
      *
      * @return ConfigurationFactory
      */
-    private function createConfigurationFactory(array $args, Configuration $configuration): ConfigurationFactory
-    {
+    private function createConfigurationFactory(
+        array $args,
+        ConfigurationInterface $configuration
+    ): ConfigurationFactory {
         $factory = \Mockery::mock(ConfigurationFactory::class);
 
         $factory

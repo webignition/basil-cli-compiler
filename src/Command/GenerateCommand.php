@@ -16,6 +16,7 @@ use webignition\BasilCliCompiler\Services\ErrorOutputFactory;
 use webignition\BasilCliCompiler\Services\OutputRenderer;
 use webignition\BasilCliCompiler\Services\TestWriter;
 use webignition\BasilCompilableSourceFactory\Exception\UnsupportedStepException;
+use webignition\BasilCompilerModels\Configuration;
 use webignition\BasilCompilerModels\SuiteManifest;
 use webignition\BasilLoader\Exception\EmptyTestException;
 use webignition\BasilLoader\Exception\InvalidPageException;
@@ -124,9 +125,10 @@ class GenerateCommand extends Command
             return $this->outputRenderer->render($this->errorOutputFactory->createForEmptyTarget($configuration));
         }
 
-        if (false === $configuration->isValid()) {
+        $configurationValidationState = $configuration->validate();
+        if (Configuration::VALIDATION_STATE_VALID !== $configurationValidationState) {
             return $this->outputRenderer->render(
-                $this->errorOutputFactory->createFromInvalidConfiguration($configuration)
+                $this->errorOutputFactory->createFromInvalidConfiguration($configuration, $configurationValidationState)
             );
         }
 
