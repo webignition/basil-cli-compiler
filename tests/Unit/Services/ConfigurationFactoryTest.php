@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace webignition\BasilCliCompiler\Tests\Unit\Services;
 
-use webignition\BasilCliCompiler\Model\Configuration;
 use webignition\BasilCliCompiler\Services\ConfigurationFactory;
 use webignition\BasilCliCompiler\Tests\Services\ProjectRootPathProvider;
 use webignition\BasilCliCompiler\Tests\Unit\AbstractBaseTest;
+use webignition\BasilCompilerModels\Configuration;
+use webignition\BasilCompilerModels\ConfigurationInterface;
 
 class ConfigurationFactoryTest extends AbstractBaseTest
 {
@@ -29,7 +30,7 @@ class ConfigurationFactoryTest extends AbstractBaseTest
         string $rawSource,
         string $rawTarget,
         string $baseClass,
-        Configuration $expectedConfiguration
+        ConfigurationInterface $expectedConfiguration
     ) {
         self::assertEquals($expectedConfiguration, $this->factory->create($rawSource, $rawTarget, $baseClass));
     }

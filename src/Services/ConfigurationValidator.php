@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace webignition\BasilCliCompiler\Services;
 
-use webignition\BasilCliCompiler\Model\Configuration;
-use webignition\BasilCliCompiler\Model\ErrorOutput;
+use webignition\BasilCompilerModels\ConfigurationInterface;
+use webignition\BasilCompilerModels\ErrorOutput;
 
 class ConfigurationValidator
 {
-    public function isValid(Configuration $configuration): bool
+    public function isValid(ConfigurationInterface $configuration): bool
     {
         $source = $configuration->getSource();
         $target = $configuration->getTarget();
@@ -37,7 +37,7 @@ class ConfigurationValidator
         return true;
     }
 
-    public function deriveInvalidConfigurationErrorCode(Configuration $configuration): int
+    public function deriveInvalidConfigurationErrorCode(ConfigurationInterface $configuration): int
     {
         $source = $configuration->getSource();
         if ('' === $source) {

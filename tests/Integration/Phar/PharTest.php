@@ -6,9 +6,6 @@ namespace webignition\BasilCliCompiler\Tests\Integration\Phar;
 
 use Symfony\Component\Process\Process;
 use Symfony\Component\Yaml\Yaml;
-use webignition\BasilCliCompiler\Model\ErrorOutput;
-use webignition\BasilCliCompiler\Model\OutputInterface;
-use webignition\BasilCliCompiler\Model\SuiteManifest;
 use webignition\BasilCliCompiler\Tests\DataProvider\RunFailure\CircularStepImportDataProviderTrait;
 use webignition\BasilCliCompiler\Tests\DataProvider\RunFailure\EmptyTestDataProviderTrait;
 use webignition\BasilCliCompiler\Tests\DataProvider\RunFailure\InvalidPageDataProviderTrait;
@@ -22,6 +19,9 @@ use webignition\BasilCliCompiler\Tests\DataProvider\RunFailure\UnknownPageElemen
 use webignition\BasilCliCompiler\Tests\DataProvider\RunFailure\UnknownTestDataProviderTrait;
 use webignition\BasilCliCompiler\Tests\DataProvider\RunSuccess\SuccessDataProviderTrait;
 use webignition\BasilCliCompiler\Tests\Services\ProjectRootPathProvider;
+use webignition\BasilCompilerModels\ErrorOutput;
+use webignition\BasilCompilerModels\OutputInterface;
+use webignition\BasilCompilerModels\SuiteManifest;
 
 class PharTest extends \PHPUnit\Framework\TestCase
 {

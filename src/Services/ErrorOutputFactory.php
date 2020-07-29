@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace webignition\BasilCliCompiler\Services;
 
 use webignition\BasilCliCompiler\Exception\UnresolvedPlaceholderException;
-use webignition\BasilCliCompiler\Model\Configuration;
-use webignition\BasilCliCompiler\Model\ErrorOutput;
-use webignition\BasilCliCompiler\Model\ErrorOutputInterface;
 use webignition\BasilCompilableSourceFactory\Exception\UnsupportedContentException;
 use webignition\BasilCompilableSourceFactory\Exception\UnsupportedStepException;
+use webignition\BasilCompilerModels\ConfigurationInterface;
+use webignition\BasilCompilerModels\ErrorOutput;
+use webignition\BasilCompilerModels\ErrorOutputInterface;
 use webignition\BasilContextAwareException\ExceptionContext\ExceptionContextInterface;
 use webignition\BasilLoader\Exception\EmptyTestException;
 use webignition\BasilLoader\Exception\InvalidPageException;
@@ -90,7 +90,7 @@ class ErrorOutputFactory
         $this->validatorInvalidResultSerializer = $validatorInvalidResultSerializer;
     }
 
-    public function createFromInvalidConfiguration(Configuration $configuration): ErrorOutputInterface
+    public function createFromInvalidConfiguration(ConfigurationInterface $configuration): ErrorOutputInterface
     {
         return $this->createForConfigurationErrorCode(
             $configuration,
@@ -98,18 +98,20 @@ class ErrorOutputFactory
         );
     }
 
-    public function createForEmptySource(Configuration $configuration): ErrorOutputInterface
+    public function createForEmptySource(ConfigurationInterface $configuration): ErrorOutputInterface
     {
         return $this->createForConfigurationErrorCode($configuration, ErrorOutput::CODE_COMMAND_CONFIG_SOURCE_EMPTY);
     }
 
-    public function createForEmptyTarget(Configuration $configuration): ErrorOutputInterface
+    public function createForEmptyTarget(ConfigurationInterface $configuration): ErrorOutputInterface
     {
         return $this->createForConfigurationErrorCode($configuration, ErrorOutput::CODE_COMMAND_CONFIG_TARGET_EMPTY);
     }
 
-    public function createForException(\Exception $exception, Configuration $configuration): ErrorOutputInterface
-    {
+    public function createForException(
+        \Exception $exception,
+        ConfigurationInterface $configuration
+    ): ErrorOutputInterface {
         if ($exception instanceof YamlLoaderException) {
             return $this->createForYamlLoaderException($exception, $configuration);
         }
@@ -167,7 +169,7 @@ class ErrorOutputFactory
 
     public function createForYamlLoaderException(
         YamlLoaderException $yamlLoaderException,
-        Configuration $configuration
+        ConfigurationInterface $configuration
     ): ErrorOutputInterface {
         $message = $yamlLoaderException->getMessage();
         $previousException = $yamlLoaderException->getPrevious();
@@ -188,7 +190,7 @@ class ErrorOutputFactory
 
     public function createForCircularStepImportException(
         CircularStepImportException $circularStepImportException,
-        Configuration $configuration
+        ConfigurationInterface $configuration
     ): ErrorOutputInterface {
         return new ErrorOutput(
             $configuration,
@@ -202,7 +204,7 @@ class ErrorOutputFactory
 
     public function createForEmptyTestException(
         EmptyTestException $emptyTestException,
-        Configuration $configuration
+        ConfigurationInterface $configuration
     ): ErrorOutputInterface {
         return new ErrorOutput(
             $configuration,
@@ -216,7 +218,7 @@ class ErrorOutputFactory
 
     public function createForInvalidPageException(
         InvalidPageException $invalidPageException,
-        Configuration $configuration
+        ConfigurationInterface $configuration
     ): ErrorOutputInterface {
         return new ErrorOutput(
             $configuration,
@@ -235,7 +237,7 @@ class ErrorOutputFactory
 
     public function createForInvalidTestException(
         InvalidTestException $invalidTestException,
-        Configuration $configuration
+        ConfigurationInterface $configuration
     ): ErrorOutputInterface {
         return new ErrorOutput(
             $configuration,
@@ -252,7 +254,7 @@ class ErrorOutputFactory
 
     public function createForNonRetrievableImportException(
         NonRetrievableImportException $nonRetrievableImportException,
-        Configuration $configuration
+        ConfigurationInterface $configuration
     ): ErrorOutputInterface {
         $yamlLoaderException = $nonRetrievableImportException->getYamlLoaderException();
 
@@ -282,7 +284,7 @@ class ErrorOutputFactory
 
     public function createForParseException(
         ParseException $parseException,
-        Configuration $configuration
+        ConfigurationInterface $configuration
     ): ErrorOutputInterface {
         $unparseableDataException = $parseException->getUnparseableDataException();
         $unparseableStatementException = $this->findUnparseableStatementException($unparseableDataException);
@@ -330,7 +332,7 @@ class ErrorOutputFactory
 
     public function createForUnknownElementException(
         UnknownElementException $unknownElementException,
-        Configuration $configuration
+        ConfigurationInterface $configuration
     ): ErrorOutputInterface {
         return new ErrorOutput(
             $configuration,
@@ -347,7 +349,7 @@ class ErrorOutputFactory
 
     public function createForUnknownItemException(
         UnknownItemException $unknownItemException,
-        Configuration $configuration
+        ConfigurationInterface $configuration
     ): ErrorOutputInterface {
         return new ErrorOutput(
             $configuration,
@@ -365,7 +367,7 @@ class ErrorOutputFactory
 
     public function createForUnknownPageElementException(
         UnknownPageElementException $unknownPageElementException,
-        Configuration $configuration
+        ConfigurationInterface $configuration
     ): ErrorOutputInterface {
         return new ErrorOutput(
             $configuration,
@@ -383,7 +385,7 @@ class ErrorOutputFactory
 
     public function createForUnknownTestException(
         UnknownTestException $unknownTestException,
-        Configuration $configuration
+        ConfigurationInterface $configuration
     ): ErrorOutputInterface {
         return new ErrorOutput(
             $configuration,
@@ -397,7 +399,7 @@ class ErrorOutputFactory
 
     public function createForUnresolvedPlaceholderException(
         UnresolvedPlaceholderException $unresolvedPlaceholderException,
-        Configuration $configuration
+        ConfigurationInterface $configuration
     ): ErrorOutputInterface {
         return new ErrorOutput(
             $configuration,
@@ -412,7 +414,7 @@ class ErrorOutputFactory
 
     public function createForUnsupportedStepException(
         UnsupportedStepException $unsupportedStepException,
-        Configuration $configuration
+        ConfigurationInterface $configuration
     ): ErrorOutputInterface {
         return new ErrorOutput(
             $configuration,
@@ -481,8 +483,10 @@ class ErrorOutputFactory
         return $unparseableStatementException;
     }
 
-    private function createForConfigurationErrorCode(Configuration $configuration, int $errorCode): ErrorOutputInterface
-    {
+    private function createForConfigurationErrorCode(
+        ConfigurationInterface $configuration,
+        int $errorCode
+    ): ErrorOutputInterface {
         $errorMessage = $this->configurationErrorMessages[$errorCode] ?? self::REASON_UNKNOWN;
 
         return new ErrorOutput(
@@ -492,7 +496,7 @@ class ErrorOutputFactory
         );
     }
 
-    private function createUnknownErrorOutput(Configuration $configuration): ErrorOutputInterface
+    private function createUnknownErrorOutput(ConfigurationInterface $configuration): ErrorOutputInterface
     {
         return new ErrorOutput(
             $configuration,

@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace webignition\BasilCliCompiler\Tests\Unit\Services;
 
 use PHPUnit\Framework\TestCase;
-use webignition\BasilCliCompiler\Model\Configuration;
-use webignition\BasilCliCompiler\Model\ErrorOutput;
 use webignition\BasilCliCompiler\Services\ConfigurationValidator;
 use webignition\BasilCliCompiler\Services\ErrorOutputFactory;
 use webignition\BasilCliCompiler\Services\ValidatorInvalidResultSerializer;
 use webignition\BasilCliCompiler\Tests\Services\ProjectRootPathProvider;
 use webignition\BasilCliCompiler\Tests\Unit\AbstractBaseTest;
+use webignition\BasilCompilerModels\Configuration;
+use webignition\BasilCompilerModels\ConfigurationInterface;
+use webignition\BasilCompilerModels\ErrorOutput;
 
 class ErrorOutputFactoryTest extends AbstractBaseTest
 {
@@ -19,7 +20,7 @@ class ErrorOutputFactoryTest extends AbstractBaseTest
      * @dataProvider createFromInvalidConfigurationDataProvider
      */
     public function testCreateFromInvalidConfiguration(
-        Configuration $configuration,
+        ConfigurationInterface $configuration,
         ConfigurationValidator $generateCommandConfigurationValidator,
         ErrorOutput $expectedOutput
     ) {

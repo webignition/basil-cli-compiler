@@ -6,8 +6,8 @@ namespace webignition\BasilCliCompiler\Services;
 
 use Symfony\Component\Console\Output\OutputInterface as ConsoleOutputInterface;
 use Symfony\Component\Yaml\Yaml;
-use webignition\BasilCliCompiler\Model\ErrorOutputInterface;
-use webignition\BasilCliCompiler\Model\OutputInterface;
+use webignition\BasilCompilerModels\ErrorOutputInterface;
+use webignition\BasilCompilerModels\OutputInterface;
 
 class OutputRenderer
 {

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace webignition\BasilCliCompiler\Services;
 
 use webignition\BasilCliCompiler\Model\CompiledTest;
-use webignition\BasilCliCompiler\Model\TestManifest;
+use webignition\BasilCompilerModels\TestManifest;
 
 class TestWriter
 {

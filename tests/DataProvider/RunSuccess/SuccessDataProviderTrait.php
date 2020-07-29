@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace webignition\BasilCliCompiler\Tests\DataProvider\RunSuccess;
 
 use webignition\BaseBasilTestCase\AbstractBaseTest;
-use webignition\BasilCliCompiler\Model\Configuration;
-use webignition\BasilCliCompiler\Model\SuiteManifest;
-use webignition\BasilCliCompiler\Model\TestManifest;
 use webignition\BasilCliCompiler\Tests\Services\ProjectRootPathProvider;
+use webignition\BasilCompilerModels\Configuration;
+use webignition\BasilCompilerModels\SuiteManifest;
+use webignition\BasilCompilerModels\TestManifest;
 use webignition\BasilModels\Test\Configuration as TestModelConfiguration;
 
 trait SuccessDataProviderTrait
