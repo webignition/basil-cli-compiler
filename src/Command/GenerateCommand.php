@@ -12,7 +12,6 @@ use webignition\BaseBasilTestCase\AbstractBaseTest;
 use webignition\BasilCliCompiler\Exception\UnresolvedPlaceholderException;
 use webignition\BasilCliCompiler\Services\Compiler;
 use webignition\BasilCliCompiler\Services\ConfigurationFactory;
-use webignition\BasilCliCompiler\Services\ConfigurationValidator;
 use webignition\BasilCliCompiler\Services\ErrorOutputFactory;
 use webignition\BasilCliCompiler\Services\OutputRenderer;
 use webignition\BasilCliCompiler\Services\TestWriter;
@@ -45,7 +44,6 @@ class GenerateCommand extends Command
     private Compiler $compiler;
     private TestWriter $testWriter;
     private ConfigurationFactory $configurationFactory;
-    private ConfigurationValidator $configurationValidator;
     private ErrorOutputFactory $errorOutputFactory;
     private OutputRenderer $outputRenderer;
     private string $projectRootPath;
@@ -55,7 +53,6 @@ class GenerateCommand extends Command
         Compiler $compiler,
         TestWriter $testWriter,
         ConfigurationFactory $configurationFactory,
-        ConfigurationValidator $configurationValidator,
         ErrorOutputFactory $errorOutputFactory,
         OutputRenderer $outputRenderer,
         string $projectRootPath
@@ -66,7 +63,6 @@ class GenerateCommand extends Command
         $this->compiler = $compiler;
         $this->testWriter = $testWriter;
         $this->configurationFactory = $configurationFactory;
-        $this->configurationValidator = $configurationValidator;
         $this->errorOutputFactory = $errorOutputFactory;
         $this->outputRenderer = $outputRenderer;
         $this->projectRootPath = $projectRootPath;
@@ -128,7 +124,7 @@ class GenerateCommand extends Command
             return $this->outputRenderer->render($this->errorOutputFactory->createForEmptyTarget($configuration));
         }
 
-        if (false === $this->configurationValidator->isValid($configuration)) {
+        if (false === $configuration->isValid()) {
             return $this->outputRenderer->render(
                 $this->errorOutputFactory->createFromInvalidConfiguration($configuration)
             );

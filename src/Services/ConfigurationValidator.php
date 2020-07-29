@@ -9,34 +9,6 @@ use webignition\BasilCompilerModels\ErrorOutput;
 
 class ConfigurationValidator
 {
-    public function isValid(ConfigurationInterface $configuration): bool
-    {
-        $source = $configuration->getSource();
-        $target = $configuration->getTarget();
-
-        if ('' === $source) {
-            return false;
-        }
-
-        if (!is_readable($source)) {
-            return false;
-        }
-
-        if ('' === $target) {
-            return false;
-        }
-
-        if (!is_dir($target)) {
-            return false;
-        }
-
-        if (!is_writable($target)) {
-            return false;
-        }
-
-        return true;
-    }
-
     public function deriveInvalidConfigurationErrorCode(ConfigurationInterface $configuration): int
     {
         $source = $configuration->getSource();

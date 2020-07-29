@@ -18,7 +18,6 @@ class CommandFactory
             Compiler::createCompiler(),
             TestWriter::createWriter(),
             new ConfigurationFactory($projectRootPath),
-            $configurationValidator,
             new ErrorOutputFactory($configurationValidator, new ValidatorInvalidResultSerializer()),
             new OutputRenderer(),
             $projectRootPath

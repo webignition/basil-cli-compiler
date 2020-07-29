@@ -128,7 +128,6 @@ class GenerateCommandTest extends AbstractBaseTest
             $compiler,
             $testWriter,
             $configurationFactory,
-            $configurationValidator,
             new ErrorOutputFactory($configurationValidator, new ValidatorInvalidResultSerializer()),
             new OutputRenderer(),
             (new ProjectRootPathProvider())->get()
