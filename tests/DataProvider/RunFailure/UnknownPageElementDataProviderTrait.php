@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace webignition\BasilCliCompiler\Tests\DataProvider\RunFailure;
 
 use webignition\BaseBasilTestCase\AbstractBaseTest;
-use webignition\BasilCliCompiler\Model\Configuration;
-use webignition\BasilCliCompiler\Model\ErrorOutput;
 use webignition\BasilCliCompiler\Tests\Services\ProjectRootPathProvider;
+use webignition\BasilCompilerModels\Configuration;
+use webignition\BasilCompilerModels\ErrorOutput;
 
 trait UnknownPageElementDataProviderTrait
 {

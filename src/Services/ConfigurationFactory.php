@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace webignition\BasilCliCompiler\Services;
 
-use webignition\BasilCliCompiler\Model\Configuration;
+use webignition\BasilCompilerModels\Configuration;
+use webignition\BasilCompilerModels\ConfigurationInterface;
 
 class ConfigurationFactory
 {
@@ -15,7 +16,7 @@ class ConfigurationFactory
         $this->projectRootPath = $projectRootPath;
     }
 
-    public function create(string $rawSource, string $rawTarget, string $baseClass): Configuration
+    public function create(string $rawSource, string $rawTarget, string $baseClass): ConfigurationInterface
     {
         return new Configuration(
             (string) $this->getAbsolutePath($rawSource),

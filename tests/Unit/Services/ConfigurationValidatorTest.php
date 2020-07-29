@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace webignition\BasilCliCompiler\Tests\Unit\Services;
 
 use phpmock\mockery\PHPMockery;
-use webignition\BasilCliCompiler\Model\Configuration;
-use webignition\BasilCliCompiler\Model\ErrorOutput;
 use webignition\BasilCliCompiler\Services\ConfigurationValidator;
 use webignition\BasilCliCompiler\Tests\Services\ProjectRootPathProvider;
 use webignition\BasilCliCompiler\Tests\Unit\AbstractBaseTest;
+use webignition\BasilCompilerModels\Configuration;
+use webignition\BasilCompilerModels\ErrorOutput;
 
 class ConfigurationValidatorTest extends AbstractBaseTest
 {

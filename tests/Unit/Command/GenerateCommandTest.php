@@ -8,8 +8,6 @@ use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Yaml\Yaml;
 use webignition\BaseBasilTestCase\AbstractBaseTest as BasilBaseTest;
 use webignition\BasilCliCompiler\Command\GenerateCommand;
-use webignition\BasilCliCompiler\Model\Configuration;
-use webignition\BasilCliCompiler\Model\ErrorOutput;
 use webignition\BasilCliCompiler\Services\Compiler;
 use webignition\BasilCliCompiler\Services\ConfigurationFactory;
 use webignition\BasilCliCompiler\Services\ConfigurationValidator;
@@ -19,6 +17,9 @@ use webignition\BasilCliCompiler\Services\TestWriter;
 use webignition\BasilCliCompiler\Services\ValidatorInvalidResultSerializer;
 use webignition\BasilCliCompiler\Tests\Services\ProjectRootPathProvider;
 use webignition\BasilCliCompiler\Tests\Unit\AbstractBaseTest;
+use webignition\BasilCompilerModels\Configuration;
+use webignition\BasilCompilerModels\ErrorOutput;
+use webignition\BasilCompilerModels\ErrorOutputInterface;
 use webignition\BasilLoader\SourceLoader;
 
 class GenerateCommandTest extends AbstractBaseTest
@@ -26,7 +27,7 @@ class GenerateCommandTest extends AbstractBaseTest
     /**
      * @param array<string, string> $input
      * @param int $validationErrorCode
-     * @param ErrorOutput $expectedCommandOutput
+     * @param ErrorOutputInterface $expectedCommandOutput
      *
      * @dataProvider runFailureDataProvider
      */
@@ -35,7 +36,7 @@ class GenerateCommandTest extends AbstractBaseTest
         ConfigurationFactory $configurationFactory,
         ConfigurationValidator $configurationValidator,
         int $validationErrorCode,
-        ErrorOutput $expectedCommandOutput
+        ErrorOutputInterface $expectedCommandOutput
     ): void {
         $command = $this->createCommand(
             $configurationFactory,

@@ -9,10 +9,7 @@ use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Yaml\Yaml;
 use webignition\BaseBasilTestCase\AbstractBaseTest;
 use webignition\BasilCliCompiler\Command\GenerateCommand;
-use webignition\BasilCliCompiler\Model\Configuration;
-use webignition\BasilCliCompiler\Model\ErrorOutput;
 use webignition\BasilCliCompiler\Model\ExternalVariableIdentifiers;
-use webignition\BasilCliCompiler\Model\SuiteManifest;
 use webignition\BasilCliCompiler\Services\CommandFactory;
 use webignition\BasilCliCompiler\Services\CompiledClassResolver;
 use webignition\BasilCliCompiler\Services\Compiler;
@@ -32,6 +29,10 @@ use webignition\BasilCliCompiler\Tests\Services\ProjectRootPathProvider;
 use webignition\BasilCompilableSourceFactory\Exception\UnsupportedContentException;
 use webignition\BasilCompilableSourceFactory\Exception\UnsupportedStatementException;
 use webignition\BasilCompilableSourceFactory\Exception\UnsupportedStepException;
+use webignition\BasilCompilerModels\Configuration;
+use webignition\BasilCompilerModels\ErrorOutput;
+use webignition\BasilCompilerModels\ErrorOutputInterface;
+use webignition\BasilCompilerModels\SuiteManifest;
 use webignition\BasilModels\Step\Step;
 use webignition\BasilParser\ActionParser;
 use webignition\BasilParser\AssertionParser;
@@ -117,7 +118,7 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
     /**
      * @param array<mixed> $input
      * @param int $expectedExitCode
-     * @param ErrorOutput $expectedCommandOutput
+     * @param ErrorOutputInterface $expectedCommandOutput
      *
      * @dataProvider nonLoadableDataDataProvider
      * @dataProvider circularStepImportDataProvider
@@ -135,7 +136,7 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
     public function testRunFailure(
         array $input,
         int $expectedExitCode,
-        ErrorOutput $expectedCommandOutput,
+        ErrorOutputInterface $expectedCommandOutput,
         ?callable $initializer = null
     ) {
         if (null !== $initializer) {
