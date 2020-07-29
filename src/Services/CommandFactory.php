@@ -11,15 +11,12 @@ class CommandFactory
 {
     public static function createGenerateCommand(string $projectRootPath): GenerateCommand
     {
-        $configurationValidator = new ConfigurationValidator();
-
         return new GenerateCommand(
             SourceLoader::createLoader(),
             Compiler::createCompiler(),
             TestWriter::createWriter(),
             new ConfigurationFactory($projectRootPath),
-            $configurationValidator,
-            new ErrorOutputFactory($configurationValidator, new ValidatorInvalidResultSerializer()),
+            new ErrorOutputFactory(new ValidatorInvalidResultSerializer()),
             new OutputRenderer(),
             $projectRootPath
         );

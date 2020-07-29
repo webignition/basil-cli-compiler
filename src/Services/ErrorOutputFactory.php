@@ -7,6 +7,7 @@ namespace webignition\BasilCliCompiler\Services;
 use webignition\BasilCliCompiler\Exception\UnresolvedPlaceholderException;
 use webignition\BasilCompilableSourceFactory\Exception\UnsupportedContentException;
 use webignition\BasilCompilableSourceFactory\Exception\UnsupportedStepException;
+use webignition\BasilCompilerModels\Configuration;
 use webignition\BasilCompilerModels\ConfigurationInterface;
 use webignition\BasilCompilerModels\ErrorOutput;
 use webignition\BasilCompilerModels\ErrorOutputInterface;
@@ -79,23 +80,28 @@ class ErrorOutputFactory
             'target invalid; directory is not writable',
     ];
 
-    private ConfigurationValidator $generateCommandConfigurationValidator;
     private ValidatorInvalidResultSerializer $validatorInvalidResultSerializer;
 
-    public function __construct(
-        ConfigurationValidator $generateCommandConfigurationValidator,
-        ValidatorInvalidResultSerializer $validatorInvalidResultSerializer
-    ) {
-        $this->generateCommandConfigurationValidator = $generateCommandConfigurationValidator;
+    public function __construct(ValidatorInvalidResultSerializer $validatorInvalidResultSerializer)
+    {
         $this->validatorInvalidResultSerializer = $validatorInvalidResultSerializer;
     }
 
-    public function createFromInvalidConfiguration(ConfigurationInterface $configuration): ErrorOutputInterface
-    {
-        return $this->createForConfigurationErrorCode(
-            $configuration,
-            $this->generateCommandConfigurationValidator->deriveInvalidConfigurationErrorCode($configuration)
-        );
+    public function createFromInvalidConfiguration(
+        ConfigurationInterface $configuration,
+        int $configurationValidationState
+    ): ErrorOutputInterface {
+        $errorCode = ErrorOutput::CODE_COMMAND_CONFIG_SOURCE_INVALID_NOT_READABLE;
+
+        if (Configuration::VALIDATION_STATE_TARGET_NOT_DIRECTORY === $configurationValidationState) {
+            $errorCode = ErrorOutput::CODE_COMMAND_CONFIG_TARGET_INVALID_NOT_A_DIRECTORY;
+        }
+
+        if (Configuration::VALIDATION_STATE_TARGET_NOT_WRITABLE === $configurationValidationState) {
+            $errorCode = ErrorOutput::CODE_COMMAND_CONFIG_TARGET_INVALID_NOT_WRITABLE;
+        }
+
+        return $this->createForConfigurationErrorCode($configuration, $errorCode);
     }
 
     public function createForEmptySource(ConfigurationInterface $configuration): ErrorOutputInterface

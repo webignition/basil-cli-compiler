@@ -4,11 +4,8 @@ declare(strict_types=1);
 
 namespace webignition\BasilCliCompiler\Tests\Unit\Services;
 
-use PHPUnit\Framework\TestCase;
-use webignition\BasilCliCompiler\Services\ConfigurationValidator;
 use webignition\BasilCliCompiler\Services\ErrorOutputFactory;
 use webignition\BasilCliCompiler\Services\ValidatorInvalidResultSerializer;
-use webignition\BasilCliCompiler\Tests\Services\ProjectRootPathProvider;
 use webignition\BasilCliCompiler\Tests\Unit\AbstractBaseTest;
 use webignition\BasilCompilerModels\Configuration;
 use webignition\BasilCompilerModels\ConfigurationInterface;
@@ -16,109 +13,79 @@ use webignition\BasilCompilerModels\ErrorOutput;
 
 class ErrorOutputFactoryTest extends AbstractBaseTest
 {
+    private ErrorOutputFactory $factory;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->factory = new ErrorOutputFactory(
+            new ValidatorInvalidResultSerializer()
+        );
+    }
+
     /**
      * @dataProvider createFromInvalidConfigurationDataProvider
      */
     public function testCreateFromInvalidConfiguration(
         ConfigurationInterface $configuration,
-        ConfigurationValidator $generateCommandConfigurationValidator,
+        int $configurationValidationState,
         ErrorOutput $expectedOutput
     ) {
-        $factory = new ErrorOutputFactory(
-            $generateCommandConfigurationValidator,
-            new ValidatorInvalidResultSerializer()
+        self::assertEquals(
+            $expectedOutput,
+            $this->factory->createFromInvalidConfiguration(
+                $configuration,
+                $configurationValidationState
+            )
         );
-
-        self::assertEquals($expectedOutput, $factory->createFromInvalidConfiguration($configuration));
     }
 
     public function createFromInvalidConfigurationDataProvider(): array
     {
-        $root = (new ProjectRootPathProvider())->get();
+        $configurationSourceNotReadable = \Mockery::mock(ConfigurationInterface::class);
+        $configurationSourceNotReadable
+            ->shouldReceive('validate')
+            ->andReturn(Configuration::VALIDATION_STATE_SOURCE_NOT_READABLE);
 
-        $source = $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml';
-        $target = $root . '/tests/build/target';
-        $baseClass = TestCase::class;
+        $configurationTargetNotWritable = \Mockery::mock(ConfigurationInterface::class);
+        $configurationTargetNotWritable
+            ->shouldReceive('validate')
+            ->andReturn(Configuration::VALIDATION_STATE_TARGET_NOT_WRITABLE);
+
+        $configurationTargetNotDirectory = \Mockery::mock(ConfigurationInterface::class);
+        $configurationTargetNotDirectory
+            ->shouldReceive('validate')
+            ->andReturn(Configuration::VALIDATION_STATE_TARGET_NOT_DIRECTORY);
 
         return [
-            'source does not exist' => [
-                'configuration' => new Configuration('', $target, $baseClass),
-                'generateCommandConfigurationValidator' => $this->createConfigurationValidator(
-                    new Configuration('', $target, $baseClass),
-                    ErrorOutput::CODE_COMMAND_CONFIG_SOURCE_INVALID_DOES_NOT_EXIST
-                ),
-                'expectedOutput' => new ErrorOutput(
-                    new Configuration('', $target, $baseClass),
-                    'source invalid; does not exist',
-                    ErrorOutput::CODE_COMMAND_CONFIG_SOURCE_INVALID_DOES_NOT_EXIST
-                ),
-            ],
             'source not readable' => [
-                'configuration' => new Configuration('', $target, $baseClass),
-                'generateCommandConfigurationValidator' => $this->createConfigurationValidator(
-                    new Configuration('', $target, $baseClass),
-                    ErrorOutput::CODE_COMMAND_CONFIG_SOURCE_INVALID_NOT_READABLE
-                ),
+                'configuration' => $configurationSourceNotReadable,
+                'configurationValidationState' => Configuration::VALIDATION_STATE_SOURCE_NOT_READABLE,
                 'expectedOutput' => new ErrorOutput(
-                    new Configuration('', $target, $baseClass),
+                    $configurationSourceNotReadable,
                     'source invalid; file is not readable',
                     ErrorOutput::CODE_COMMAND_CONFIG_SOURCE_INVALID_NOT_READABLE
                 ),
             ],
-            'target does not exist' => [
-                'configuration' => new Configuration($source, '', $baseClass),
-                'generateCommandConfigurationValidator' => $this->createConfigurationValidator(
-                    new Configuration($source, '', $baseClass),
-                    ErrorOutput::CODE_COMMAND_CONFIG_TARGET_INVALID_DOES_NOT_EXIST
-                ),
-                'expectedOutput' => new ErrorOutput(
-                    new Configuration($source, '', $baseClass),
-                    'target invalid; does not exist',
-                    ErrorOutput::CODE_COMMAND_CONFIG_TARGET_INVALID_DOES_NOT_EXIST
-                ),
-            ],
             'target not writable' => [
-                'configuration' => new Configuration($source, '', $baseClass),
-                'generateCommandConfigurationValidator' => $this->createConfigurationValidator(
-                    new Configuration($source, '', $baseClass),
-                    ErrorOutput::CODE_COMMAND_CONFIG_TARGET_INVALID_NOT_WRITABLE
-                ),
+                'configuration' => $configurationTargetNotWritable,
+                'configurationValidationState' => Configuration::VALIDATION_STATE_TARGET_NOT_WRITABLE,
                 'expectedOutput' => new ErrorOutput(
-                    new Configuration($source, '', $baseClass),
+                    $configurationTargetNotWritable,
                     'target invalid; directory is not writable',
                     ErrorOutput::CODE_COMMAND_CONFIG_TARGET_INVALID_NOT_WRITABLE
                 ),
             ],
             'target not a directory' => [
-                'configuration' => new Configuration($source, $source, $baseClass),
-                'generateCommandConfigurationValidator' => $this->createConfigurationValidator(
-                    new Configuration($source, $source, $baseClass),
-                    ErrorOutput::CODE_COMMAND_CONFIG_TARGET_INVALID_NOT_A_DIRECTORY
-                ),
+                'configuration' => $configurationTargetNotDirectory,
+                'configurationValidationState' => Configuration::VALIDATION_STATE_TARGET_NOT_DIRECTORY,
                 'expectedOutput' => new ErrorOutput(
-                    new Configuration($source, $source, $baseClass),
+                    $configurationTargetNotDirectory,
                     'target invalid; is not a directory (is it a file?)',
                     ErrorOutput::CODE_COMMAND_CONFIG_TARGET_INVALID_NOT_A_DIRECTORY
                 ),
             ],
         ];
-    }
-
-    private function createConfigurationValidator(
-        Configuration $expectedConfiguration,
-        int $errorCode
-    ): ConfigurationValidator {
-        $validator = \Mockery::mock(ConfigurationValidator::class);
-
-        $validator
-            ->shouldReceive('deriveInvalidConfigurationErrorCode')
-            ->withArgs(function (Configuration $configuration) use ($expectedConfiguration) {
-                self::assertEquals($expectedConfiguration, $configuration);
-
-                return true;
-            })
-            ->andReturn($errorCode);
-
-        return $validator;
     }
 }
