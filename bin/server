@@ -22,18 +22,12 @@ $input = new ArgvInput(
             '',
             '8000'
         ),
-        new InputOption(
-            'compiler',
-            null,
-            InputOption::VALUE_REQUIRED,
-            '',
-            './compiler.phar'
-        ),
     ])
 );
 
-$compiler = (string) $input->getOption('compiler');
 $port = (int) $input->getOption('port');
+
+$compiler = './compiler.phar';
 
 $factory = new Factory();
 $listenSocket = $factory->createServer('tcp://localhost:' . $port);
