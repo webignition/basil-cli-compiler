@@ -8,7 +8,7 @@ COPY composer.lock /app
 
 RUN apt-get update \
     && apt-get install -y libzip-dev nano zip \
-    && docker-php-ext-install zip > /dev/null
+    && docker-php-ext-install sockets zip > /dev/null
 
 RUN apt-get autoremove -y \
     && apt-get clean \
