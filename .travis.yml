@@ -13,8 +13,6 @@ script:
   - composer phar-build
   - composer phar-test
   - ./bin/server &
-  - pwd
-  - ls -la
   - composer server-test
   - ./build/ci.sh
 

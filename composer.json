@@ -46,8 +46,7 @@
         ],
         "phar-test": [
             "@composer dump-autoload",
-            "./vendor/bin/phpunit --colors=always tests/Integration/Phar",
-            "rm compiler.phar"
+            "./vendor/bin/phpunit --colors=always tests/Integration/Phar"
         ],
         "server-test": "./vendor/bin/phpunit --colors=always tests/Integration/ServerTest.php"
     },
