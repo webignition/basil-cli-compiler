@@ -39,13 +39,14 @@
         "phar-build": [
             "rm -f build/compiler.phar",
             "@phar-dump-autoload",
-            "@phar-compile"
+            "@phar-compile",
+            "rm -f compiler.phar",
+            "cp build/compiler.phar .",
+            "chmod +x ./compiler.phar"
         ],
         "phar-test": [
             "@composer dump-autoload",
-            "cp ./build/compiler.phar .",
-            "./vendor/bin/phpunit --colors=always tests/Integration/Phar",
-            "rm compiler.phar"
+            "./vendor/bin/phpunit --colors=always tests/Integration/Phar"
         ],
         "server-test": "./vendor/bin/phpunit --colors=always tests/Integration/ServerTest.php"
     },

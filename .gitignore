@@ -1,2 +1,3 @@
+compiler.phar
 /vendor/
 .phpunit.result.cache
