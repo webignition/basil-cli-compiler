@@ -5,15 +5,27 @@ declare(strict_types=1);
 
 namespace webignition\BasilRunner\Bin;
 
-$pharPath = \Phar::running(false);
-
-if ('' === $pharPath) {
-    require 'vendor/autoload.php';
-} else {
-    require 'phar://compiler.phar/vendor/autoload.php';
-}
+require 'vendor/autoload.php';
 
 use Socket\Raw\Factory;
+use Symfony\Component\Console\Input\ArgvInput;
+use Symfony\Component\Console\Input\InputDefinition;
+use Symfony\Component\Console\Input\InputOption;
+
+$input = new ArgvInput(
+    $argv,
+    new InputDefinition([
+        new InputOption(
+            'compiler',
+            null,
+            InputOption::VALUE_REQUIRED,
+            '',
+            './compiler.phar'
+        )
+    ])
+);
+
+$compiler = (string) $input->getOption('compiler');
 
 $factory = new Factory();
 $listenSocket = $factory->createServer('tcp://localhost:10000');
@@ -33,7 +45,7 @@ do {
             break;
         }
 
-        $command = './bin/compiler ' . $buffer;
+        $command = $compiler . ' ' . $buffer;
         $commandOutput = [];
         $commandExitCode = null;
 
