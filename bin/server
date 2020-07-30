@@ -16,19 +16,27 @@ $input = new ArgvInput(
     $argv,
     new InputDefinition([
         new InputOption(
+            'port',
+            null,
+            InputOption::VALUE_REQUIRED,
+            '',
+            '8000'
+        ),
+        new InputOption(
             'compiler',
             null,
             InputOption::VALUE_REQUIRED,
             '',
             './compiler.phar'
-        )
+        ),
     ])
 );
 
 $compiler = (string) $input->getOption('compiler');
+$port = (int) $input->getOption('port');
 
 $factory = new Factory();
-$listenSocket = $factory->createServer('tcp://localhost:10000');
+$listenSocket = $factory->createServer('tcp://localhost:' . $port);
 
 do {
     $communicationSocket = $listenSocket->accept();

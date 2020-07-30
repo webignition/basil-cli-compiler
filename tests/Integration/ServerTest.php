@@ -11,7 +11,7 @@ class ServerTest extends \PHPUnit\Framework\TestCase
      */
     public function testQueryServer(string $remoteCommand, int $expectedRemoteCommandExitCode)
     {
-        $netcatCommand = '(echo "' . $remoteCommand . '"; sleep 1; echo "quit") | netcat localhost 10000';
+        $netcatCommand = '(echo "' . $remoteCommand . '"; sleep 1; echo "quit") | netcat localhost 8000';
 
         $output = [];
         $commandExitCode = null;
