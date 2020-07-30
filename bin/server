@@ -39,12 +39,10 @@ do {
 
         exec($command, $commandOutput, $commandExitCode);
 
-        $communicationSocket->write((string) $commandExitCode . "\n");
         $communicationSocket->write(implode("\n", $commandOutput) . "\n");
     } while (true);
     $communicationSocket->shutdown();
     $communicationSocket->close();
 } while (true);
-
 
 $listenSocket->close();
