@@ -33,7 +33,7 @@ do {
             break;
         }
 
-        $command = $buffer;
+        $command = './bin/compiler ' . $buffer;
         $commandOutput = [];
         $commandExitCode = null;
 

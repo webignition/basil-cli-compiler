@@ -27,15 +27,15 @@ class ServerTest extends \PHPUnit\Framework\TestCase
     {
         return [
             'get version' => [
-                'remoteCommand' => './bin/compiler --version',
+                'remoteCommand' => '--version',
                 'expectedRemoteCommandExitCode' => 0,
             ],
             'generate' => [
-                'remoteCommand' => './bin/compiler --source=tests/Fixtures/basil/Test --target=tests/build/target',
+                'remoteCommand' => '--source=tests/Fixtures/basil/Test --target=tests/build/target',
                 'expectedRemoteCommandExitCode' => 0,
             ],
             'generate failed; target missing' => [
-                'command' => './bin/compiler --source=tests/Fixtures/basil/Test',
+                'command' => '--source=tests/Fixtures/basil/Test',
                 'expectedRemoteCommandExitCode' => 103,
             ],
         ];
