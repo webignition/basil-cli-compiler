@@ -1,0 +1,50 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+namespace webignition\BasilRunner\Bin;
+
+$pharPath = \Phar::running(false);
+
+if ('' === $pharPath) {
+    require 'vendor/autoload.php';
+} else {
+    require 'phar://compiler.phar/vendor/autoload.php';
+}
+
+use Socket\Raw\Factory;
+
+$factory = new Factory();
+$listenSocket = $factory->createServer('tcp://localhost:10000');
+
+do {
+    $communicationSocket = $listenSocket->accept();
+
+    do {
+        $buffer = $communicationSocket->read(2048);
+        $buffer = trim($buffer);
+
+        if ('' === $buffer) {
+            continue;
+        }
+
+        if ($buffer == 'quit') {
+            break;
+        }
+
+        $command = $buffer;
+        $commandOutput = [];
+        $commandExitCode = null;
+
+        exec($command, $commandOutput, $commandExitCode);
+
+        $communicationSocket->write((string) $commandExitCode . "\n");
+        $communicationSocket->write(implode("\n", $commandOutput) . "\n");
+    } while (true);
+    $communicationSocket->shutdown();
+    $communicationSocket->close();
+} while (true);
+
+
+$listenSocket->close();
