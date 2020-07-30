@@ -13,6 +13,7 @@ script:
   - composer phar-build
   - composer phar-test
   - ./bin/server &
+  - ls -la
   - composer server-test
   - ./build/ci.sh
 
