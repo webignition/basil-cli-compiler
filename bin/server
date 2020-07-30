@@ -8,26 +8,9 @@ namespace webignition\BasilRunner\Bin;
 require 'vendor/autoload.php';
 
 use Socket\Raw\Factory;
-use Symfony\Component\Console\Input\ArgvInput;
-use Symfony\Component\Console\Input\InputDefinition;
-use Symfony\Component\Console\Input\InputOption;
-
-$input = new ArgvInput(
-    $argv,
-    new InputDefinition([
-        new InputOption(
-            'port',
-            null,
-            InputOption::VALUE_REQUIRED,
-            '',
-            '8000'
-        ),
-    ])
-);
-
-$port = (int) $input->getOption('port');
 
 $compiler = './compiler.phar';
+$port = 8000;
 
 $factory = new Factory();
 $listenSocket = $factory->createServer('tcp://localhost:' . $port);
