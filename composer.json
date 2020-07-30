@@ -46,7 +46,8 @@
             "cp ./build/compiler.phar .",
             "./vendor/bin/phpunit --colors=always tests/Integration/Phar",
             "rm compiler.phar"
-        ]
+        ],
+        "server-test": "./vendor/bin/phpunit --colors=always tests/Integration/ServerTest.php"
     },
     "require": {
         "php": ">=7.4",
