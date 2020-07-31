@@ -3,12 +3,13 @@ FROM php:7.4-cli-buster
 WORKDIR /app
 
 COPY build/compiler.phar /app/compiler
+COPY bin/server server
 COPY composer.json /app
 COPY composer.lock /app
 
 RUN apt-get update \
     && apt-get install -y libzip-dev nano zip \
-    && docker-php-ext-install zip > /dev/null
+    && docker-php-ext-install sockets zip > /dev/null
 
 RUN apt-get autoremove -y \
     && apt-get clean \
@@ -21,3 +22,5 @@ RUN rm composer.json
 RUN rm composer.lock
 
 RUN chmod +x compiler
+
+CMD ./server
