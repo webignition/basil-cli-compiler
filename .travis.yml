@@ -12,8 +12,6 @@ script:
   - composer ci
   - composer phar-build
   - composer phar-test
-  - ./bin/server &
-  - composer server-test
   - ./build/ci.sh
 
 cache:
