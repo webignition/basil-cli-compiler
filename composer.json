@@ -39,21 +39,18 @@
         "phar-build": [
             "rm -f build/compiler.phar",
             "@phar-dump-autoload",
-            "@phar-compile",
-            "rm -f compiler",
-            "cp build/compiler.phar compiler",
-            "chmod +x ./compiler"
+            "@phar-compile"
         ],
         "phar-test": [
             "@composer dump-autoload",
-            "./vendor/bin/phpunit --colors=always tests/Integration/Phar"
-        ],
-        "server-test": "./vendor/bin/phpunit --colors=always tests/Integration/ServerTest.php"
+            "cp ./build/compiler.phar .",
+            "./vendor/bin/phpunit --colors=always tests/Integration/Phar",
+            "rm compiler.phar"
+        ]
     },
     "require": {
         "php": ">=7.4",
         "ext-json": "*",
-        "ext-sockets": "*",
         "symfony/console": "^5.1",
         "symfony/yaml": "^5.1",
         "webignition/base-basil-test-case": "^0.30.0",
