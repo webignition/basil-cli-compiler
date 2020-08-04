@@ -3,6 +3,7 @@ FROM php:7.4-cli-buster
 WORKDIR /app
 
 COPY build/compiler.phar /app/compiler
+COPY bin/server server
 COPY composer.json /app
 COPY composer.lock /app
 
@@ -21,3 +22,5 @@ RUN rm composer.json
 RUN rm composer.lock
 
 RUN chmod +x compiler
+
+CMD ./server
