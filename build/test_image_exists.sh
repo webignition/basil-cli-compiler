@@ -6,8 +6,8 @@ source ${CURRENT_DIRECTORY}/.image_data.sh
 OUTPUT=$(docker images | tail -n +2 | awk '{print $1":"$2}' | grep ${IMAGE_NAME} | wc -l)
 
 if [ ${OUTPUT} != "1" ]; then
-  echo "Tagged image \"${TRAVIS_BRANCH}\" generation failed"
+  echo "Tagged image \"${IMAGE_NAME}\" generation failed"
   exit 1
 else
-  echo "Tagged image \"${TRAVIS_BRANCH}\" generation successful"
+  echo "Tagged image \"${IMAGE_NAME}\" generation successful"
 fi
