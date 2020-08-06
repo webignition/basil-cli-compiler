@@ -18,7 +18,6 @@ use webignition\BasilCliCompiler\Tests\DataProvider\RunFailure\UnknownItemDataPr
 use webignition\BasilCliCompiler\Tests\DataProvider\RunFailure\UnknownPageElementDataProviderTrait;
 use webignition\BasilCliCompiler\Tests\DataProvider\RunFailure\UnknownTestDataProviderTrait;
 use webignition\BasilCliCompiler\Tests\DataProvider\RunSuccess\SuccessDataProviderTrait;
-use webignition\BasilCliCompiler\Tests\Services\ProjectRootPathProvider;
 use webignition\BasilCompilerModels\ErrorOutput;
 use webignition\BasilCompilerModels\OutputInterface;
 use webignition\BasilCompilerModels\SuiteManifest;
@@ -44,8 +43,7 @@ class PharTest extends \PHPUnit\Framework\TestCase
     {
         parent::setUp();
 
-        $projectRootPath = (new ProjectRootPathProvider())->get();
-        $this->expectedPharPath = $projectRootPath . '/compiler';
+        $this->expectedPharPath = getcwd() . '/compiler';
 
         $this->assertFileExists($this->expectedPharPath);
     }

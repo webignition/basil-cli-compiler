@@ -7,7 +7,6 @@ namespace webignition\BasilCliCompiler\Tests\Integration\Bin;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Yaml\Yaml;
 use webignition\BasilCliCompiler\Tests\Integration\AbstractGeneratedTestCase;
-use webignition\BasilCliCompiler\Tests\Services\ProjectRootPathProvider;
 use webignition\BasilCompilerModels\SuiteManifest;
 
 class CompilerTest extends \PHPUnit\Framework\TestCase
@@ -21,8 +20,6 @@ class CompilerTest extends \PHPUnit\Framework\TestCase
      */
     public function testGenerate(string $source, string $target, array $expectedGeneratedTestDataCollection)
     {
-        $projectRootPath = (new ProjectRootPathProvider())->get();
-
         $generateProcess = $this->createGenerateCommandProcess($source, $target);
         $exitCode = $generateProcess->run();
 
@@ -44,7 +41,7 @@ class CompilerTest extends \PHPUnit\Framework\TestCase
             $generatedTestContent = $this->replaceGeneratedTestClassName($generatedTestContent, $classNameReplacement);
             $generatedTestContent = $this->removeProjectRootPathInGeneratedTest($generatedTestContent);
 
-            $expectedTestContentPath = $projectRootPath . '/' . $expectedGeneratedTestData['expectedContentPath'];
+            $expectedTestContentPath = getcwd() . '/' . $expectedGeneratedTestData['expectedContentPath'];
             $expectedTestContent = (string) file_get_contents($expectedTestContentPath);
 
             $this->assertSame($expectedTestContent, $generatedTestContent);
@@ -57,10 +54,12 @@ class CompilerTest extends \PHPUnit\Framework\TestCase
 
     public function generateDataProvider(): array
     {
+        $root = getcwd();
+
         return [
             'single test' => [
-                'source' => './tests/Fixtures/basil-integration/Test/index-page-open.yml',
-                'target' => './tests/build/target',
+                'source' => $root . '/tests/Fixtures/basil-integration/Test/index-page-open.yml',
+                'target' => $root . '/tests/build/target',
                 'expectedGeneratedTestDataCollection' => [
                     [
                         'classNameReplacement' => 'IndexPageOpenTest',
@@ -98,10 +97,6 @@ class CompilerTest extends \PHPUnit\Framework\TestCase
 
     private function removeProjectRootPathInGeneratedTest(string $generatedTestContent): string
     {
-        return str_replace(
-            (new ProjectRootPathProvider())->get(),
-            '',
-            $generatedTestContent
-        );
+        return str_replace((string) getcwd(), '', $generatedTestContent);
     }
 }

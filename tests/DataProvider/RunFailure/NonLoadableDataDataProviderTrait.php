@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace webignition\BasilCliCompiler\Tests\DataProvider\RunFailure;
 
 use webignition\BaseBasilTestCase\AbstractBaseTest;
-use webignition\BasilCliCompiler\Tests\Services\ProjectRootPathProvider;
 use webignition\BasilCompilerModels\Configuration;
 use webignition\BasilCompilerModels\ErrorOutput;
 
@@ -13,13 +12,13 @@ trait NonLoadableDataDataProviderTrait
 {
     public function nonLoadableDataDataProvider(): array
     {
-        $root = (new ProjectRootPathProvider())->get();
+        $root = getcwd();
 
         return [
             'test contains invalid yaml' => [
                 'input' => [
-                    '--source' => 'tests/Fixtures/basil/InvalidTest/invalid.unparseable.yml',
-                    '--target' => 'tests/build/target',
+                    '--source' => $root . '/tests/Fixtures/basil/InvalidTest/invalid.unparseable.yml',
+                    '--target' => $root . '/tests/build/target',
                 ],
                 'expectedExitCode' => ErrorOutput::CODE_LOADER_INVALID_YAML,
                 'expectedCommandOutput' => new ErrorOutput(
@@ -37,8 +36,8 @@ trait NonLoadableDataDataProviderTrait
             ],
             'test suite imports test containing invalid yaml' => [
                 'input' => [
-                    '--source' => 'tests/Fixtures/basil/InvalidTestSuite/imports-unparseable.yml',
-                    '--target' => 'tests/build/target',
+                    '--source' => $root . '/tests/Fixtures/basil/InvalidTestSuite/imports-unparseable.yml',
+                    '--target' => $root . '/tests/build/target',
                 ],
                 'expectedExitCode' => ErrorOutput::CODE_LOADER_INVALID_YAML,
                 'expectedCommandOutput' => new ErrorOutput(
@@ -56,8 +55,8 @@ trait NonLoadableDataDataProviderTrait
             ],
             'test file contains non-array data' => [
                 'input' => [
-                    '--source' => 'tests/Fixtures/basil/InvalidTest/invalid.not-an-array.yml',
-                    '--target' => 'tests/build/target',
+                    '--source' => $root . '/tests/Fixtures/basil/InvalidTest/invalid.not-an-array.yml',
+                    '--target' => $root . '/tests/build/target',
                 ],
                 'expectedExitCode' => ErrorOutput::CODE_LOADER_INVALID_YAML,
                 'expectedCommandOutput' => new ErrorOutput(
@@ -75,8 +74,8 @@ trait NonLoadableDataDataProviderTrait
             ],
             'test suite imports test containing non-array data' => [
                 'input' => [
-                    '--source' => 'tests/Fixtures/basil/InvalidTestSuite/imports-not-an-array.yml',
-                    '--target' => 'tests/build/target',
+                    '--source' => $root . '/tests/Fixtures/basil/InvalidTestSuite/imports-not-an-array.yml',
+                    '--target' => $root . '/tests/build/target',
                 ],
                 'expectedExitCode' => ErrorOutput::CODE_LOADER_INVALID_YAML,
                 'expectedCommandOutput' => new ErrorOutput(
@@ -94,8 +93,8 @@ trait NonLoadableDataDataProviderTrait
             ],
             'test suite contains unparseable yaml' => [
                 'input' => [
-                    '--source' => 'tests/Fixtures/basil/InvalidTestSuite/unparseable-yaml.yml',
-                    '--target' => 'tests/build/target',
+                    '--source' => $root . '/tests/Fixtures/basil/InvalidTestSuite/unparseable-yaml.yml',
+                    '--target' => $root . '/tests/build/target',
                 ],
                 'expectedExitCode' => ErrorOutput::CODE_LOADER_INVALID_YAML,
                 'expectedCommandOutput' => new ErrorOutput(

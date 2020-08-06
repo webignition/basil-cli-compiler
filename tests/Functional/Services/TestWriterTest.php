@@ -6,7 +6,6 @@ namespace webignition\BasilCliCompiler\Tests\Functional\Services;
 
 use webignition\BasilCliCompiler\Model\CompiledTest;
 use webignition\BasilCliCompiler\Services\TestWriter;
-use webignition\BasilCliCompiler\Tests\Services\ProjectRootPathProvider;
 use webignition\BasilModels\Test\ConfigurationInterface;
 use webignition\BasilModels\Test\TestInterface;
 
@@ -44,7 +43,7 @@ class TestWriterTest extends \PHPUnit\Framework\TestCase
 
     public function generateDataProvider(): array
     {
-        $root = (new ProjectRootPathProvider())->get();
+        $root = getcwd();
 
         $testConfiguration = \Mockery::mock(ConfigurationInterface::class);
 

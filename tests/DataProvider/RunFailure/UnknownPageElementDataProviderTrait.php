@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace webignition\BasilCliCompiler\Tests\DataProvider\RunFailure;
 
 use webignition\BaseBasilTestCase\AbstractBaseTest;
-use webignition\BasilCliCompiler\Tests\Services\ProjectRootPathProvider;
 use webignition\BasilCompilerModels\Configuration;
 use webignition\BasilCompilerModels\ErrorOutput;
 
@@ -13,13 +12,13 @@ trait UnknownPageElementDataProviderTrait
 {
     public function unknownPageElementDataProvider(): array
     {
-        $root = (new ProjectRootPathProvider())->get();
+        $root = getcwd();
 
         return [
             'test declares step, step contains action using unknown page element' => [
                 'input' => [
-                    '--source' => 'tests/Fixtures/basil/InvalidTest/action-contains-unknown-page-element.yml',
-                    '--target' => 'tests/build/target',
+                    '--source' => $root . '/tests/Fixtures/basil/InvalidTest/action-contains-unknown-page-element.yml',
+                    '--target' => $root . '/tests/build/target',
                 ],
                 'expectedExitCode' => ErrorOutput::CODE_LOADER_UNKNOWN_PAGE_ELEMENT,
                 'expectedCommandOutput' => new ErrorOutput(
@@ -42,8 +41,8 @@ trait UnknownPageElementDataProviderTrait
             ],
             'test imports step, test passes step unknown page element' => [
                 'input' => [
-                    '--source' => 'tests/Fixtures/basil/InvalidTest/imports-test-passes-unknown-element.yml',
-                    '--target' => 'tests/build/target',
+                    '--source' => $root . '/tests/Fixtures/basil/InvalidTest/imports-test-passes-unknown-element.yml',
+                    '--target' => $root . '/tests/build/target',
                 ],
                 'expectedExitCode' => ErrorOutput::CODE_LOADER_UNKNOWN_PAGE_ELEMENT,
                 'expectedCommandOutput' => new ErrorOutput(
@@ -66,9 +65,9 @@ trait UnknownPageElementDataProviderTrait
             ],
             'test suite imports test declaring step, step contains action using unknown page element' => [
                 'input' => [
-                    '--source' => 'tests/Fixtures/basil/InvalidTestSuite/' .
+                    '--source' => $root . '/tests/Fixtures/basil/InvalidTestSuite/' .
                         'imports-test-declaring-action-containing-unknown-page-element.yml',
-                    '--target' => 'tests/build/target',
+                    '--target' => $root . '/tests/build/target',
                 ],
                 'expectedExitCode' => ErrorOutput::CODE_LOADER_UNKNOWN_PAGE_ELEMENT,
                 'expectedCommandOutput' => new ErrorOutput(

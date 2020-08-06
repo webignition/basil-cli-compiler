@@ -11,7 +11,6 @@ use Symfony\Component\Console\Output\OutputInterface as ConsoleOutputInterface;
 use webignition\BaseBasilTestCase\AbstractBaseTest;
 use webignition\BasilCliCompiler\Exception\UnresolvedPlaceholderException;
 use webignition\BasilCliCompiler\Services\Compiler;
-use webignition\BasilCliCompiler\Services\ConfigurationFactory;
 use webignition\BasilCliCompiler\Services\ErrorOutputFactory;
 use webignition\BasilCliCompiler\Services\OutputRenderer;
 use webignition\BasilCliCompiler\Services\TestWriter;
@@ -44,29 +43,23 @@ class GenerateCommand extends Command
     private SourceLoader $sourceLoader;
     private Compiler $compiler;
     private TestWriter $testWriter;
-    private ConfigurationFactory $configurationFactory;
     private ErrorOutputFactory $errorOutputFactory;
     private OutputRenderer $outputRenderer;
-    private string $projectRootPath;
 
     public function __construct(
         SourceLoader $sourceLoader,
         Compiler $compiler,
         TestWriter $testWriter,
-        ConfigurationFactory $configurationFactory,
         ErrorOutputFactory $errorOutputFactory,
-        OutputRenderer $outputRenderer,
-        string $projectRootPath
+        OutputRenderer $outputRenderer
     ) {
         parent::__construct();
 
         $this->sourceLoader = $sourceLoader;
         $this->compiler = $compiler;
         $this->testWriter = $testWriter;
-        $this->configurationFactory = $configurationFactory;
         $this->errorOutputFactory = $errorOutputFactory;
         $this->outputRenderer = $outputRenderer;
-        $this->projectRootPath = $projectRootPath;
     }
 
     protected function configure(): void
@@ -115,7 +108,10 @@ class GenerateCommand extends Command
         $rawTarget = trim((string) $typedInput->getStringOption(GenerateCommand::OPTION_TARGET));
         $baseClass = trim((string) $typedInput->getStringOption(GenerateCommand::OPTION_BASE_CLASS));
 
-        $configuration = $this->configurationFactory->create($rawSource, $rawTarget, $baseClass);
+        $configurationSource = is_file($rawSource) || is_dir($rawSource) ? $rawSource : '';
+        $configurationTarget = is_dir($rawTarget) ? $rawTarget : '';
+
+        $configuration = new Configuration($configurationSource, $configurationTarget, $baseClass);
 
         if ('' === $rawSource) {
             return $this->outputRenderer->render($this->errorOutputFactory->createForEmptySource($configuration));
@@ -158,7 +154,7 @@ class GenerateCommand extends Command
 
             try {
                 foreach ($testSuite->getTests() as $test) {
-                    $test = $this->removeProjectRootPathFromTestPath($test);
+                    $test = $this->removeRootPathFromTestPath($test);
                     $compiledTest = $this->compiler->compile($test, $configuration->getBaseClass());
 
                     $generatedFiles[] = $this->testWriter->write($compiledTest, $configuration->getTarget());
@@ -220,10 +216,12 @@ class GenerateCommand extends Command
         return $sourcePaths;
     }
 
-    private function removeProjectRootPathFromTestPath(TestInterface $test): TestInterface
+    private function removeRootPathFromTestPath(TestInterface $test): TestInterface
     {
+        $root = (string) getcwd();
+
         $path = (string) $test->getPath();
-        $path = (string) preg_replace('/^' . preg_quote($this->projectRootPath, '/') . '/', '', $path);
+        $path = (string) preg_replace('/^' . preg_quote($root, '/') . '/', '', $path);
         $path = ltrim($path, '/');
 
         return $test->withPath($path);
