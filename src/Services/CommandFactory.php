@@ -9,15 +9,14 @@ use webignition\BasilLoader\SourceLoader;
 
 class CommandFactory
 {
-    public static function createGenerateCommand(string $projectRootPath): GenerateCommand
+    public static function createGenerateCommand(): GenerateCommand
     {
         return new GenerateCommand(
             SourceLoader::createLoader(),
             Compiler::createCompiler(),
             TestWriter::createWriter(),
             new ErrorOutputFactory(new ValidatorInvalidResultSerializer()),
-            new OutputRenderer(),
-            $projectRootPath
+            new OutputRenderer()
         );
     }
 }

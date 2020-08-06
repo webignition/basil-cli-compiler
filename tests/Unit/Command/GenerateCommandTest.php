@@ -13,7 +13,6 @@ use webignition\BasilCliCompiler\Services\ErrorOutputFactory;
 use webignition\BasilCliCompiler\Services\OutputRenderer;
 use webignition\BasilCliCompiler\Services\TestWriter;
 use webignition\BasilCliCompiler\Services\ValidatorInvalidResultSerializer;
-use webignition\BasilCliCompiler\Tests\Services\ProjectRootPathProvider;
 use webignition\BasilCliCompiler\Tests\Unit\AbstractBaseTest;
 use webignition\BasilCompilerModels\Configuration;
 use webignition\BasilCompilerModels\ErrorOutput;
@@ -51,7 +50,7 @@ class GenerateCommandTest extends AbstractBaseTest
 
     public function runFailureDataProvider(): array
     {
-        $root = (new ProjectRootPathProvider())->get();
+        $root = getcwd();
 
         $emptySourceConfiguration = new Configuration(
             '',
@@ -102,8 +101,7 @@ class GenerateCommandTest extends AbstractBaseTest
             $compiler,
             $testWriter,
             new ErrorOutputFactory(new ValidatorInvalidResultSerializer()),
-            new OutputRenderer(),
-            (new ProjectRootPathProvider())->get()
+            new OutputRenderer()
         );
     }
 }

@@ -45,15 +45,13 @@ class GenerateCommand extends Command
     private TestWriter $testWriter;
     private ErrorOutputFactory $errorOutputFactory;
     private OutputRenderer $outputRenderer;
-    private string $projectRootPath;
 
     public function __construct(
         SourceLoader $sourceLoader,
         Compiler $compiler,
         TestWriter $testWriter,
         ErrorOutputFactory $errorOutputFactory,
-        OutputRenderer $outputRenderer,
-        string $projectRootPath
+        OutputRenderer $outputRenderer
     ) {
         parent::__construct();
 
@@ -62,7 +60,6 @@ class GenerateCommand extends Command
         $this->testWriter = $testWriter;
         $this->errorOutputFactory = $errorOutputFactory;
         $this->outputRenderer = $outputRenderer;
-        $this->projectRootPath = $projectRootPath;
     }
 
     protected function configure(): void
@@ -157,7 +154,7 @@ class GenerateCommand extends Command
 
             try {
                 foreach ($testSuite->getTests() as $test) {
-                    $test = $this->removeProjectRootPathFromTestPath($test);
+                    $test = $this->removeRootPathFromTestPath($test);
                     $compiledTest = $this->compiler->compile($test, $configuration->getBaseClass());
 
                     $generatedFiles[] = $this->testWriter->write($compiledTest, $configuration->getTarget());
@@ -219,10 +216,12 @@ class GenerateCommand extends Command
         return $sourcePaths;
     }
 
-    private function removeProjectRootPathFromTestPath(TestInterface $test): TestInterface
+    private function removeRootPathFromTestPath(TestInterface $test): TestInterface
     {
+        $root = (string) getcwd();
+
         $path = (string) $test->getPath();
-        $path = (string) preg_replace('/^' . preg_quote($this->projectRootPath, '/') . '/', '', $path);
+        $path = (string) preg_replace('/^' . preg_quote($root, '/') . '/', '', $path);
         $path = ltrim($path, '/');
 
         return $test->withPath($path);
