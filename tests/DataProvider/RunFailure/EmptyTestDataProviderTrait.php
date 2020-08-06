@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace webignition\BasilCliCompiler\Tests\DataProvider\RunFailure;
 
 use webignition\BaseBasilTestCase\AbstractBaseTest;
-use webignition\BasilCliCompiler\Tests\Services\ProjectRootPathProvider;
 use webignition\BasilCompilerModels\Configuration;
 use webignition\BasilCompilerModels\ErrorOutput;
 
@@ -13,7 +12,7 @@ trait EmptyTestDataProviderTrait
 {
     public function emptyTestDataProvider(): array
     {
-        $root = (new ProjectRootPathProvider())->get();
+        $root = getcwd();
 
         $emptyTestPath = $root . '/tests/Fixtures/basil/InvalidTest/empty.yml';
         $emptyTestAbsolutePath = '' . $emptyTestPath;
@@ -22,7 +21,7 @@ trait EmptyTestDataProviderTrait
             'test file is empty' => [
                 'input' => [
                     '--source' => $emptyTestPath,
-                    '--target' => 'tests/build/target',
+                    '--target' => $root . '/tests/build/target',
                 ],
                 'expectedExitCode' => ErrorOutput::CODE_LOADER_EMPTY_TEST,
                 'expectedCommandOutput' => new ErrorOutput(

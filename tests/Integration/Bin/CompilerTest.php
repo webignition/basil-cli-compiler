@@ -57,10 +57,12 @@ class CompilerTest extends \PHPUnit\Framework\TestCase
 
     public function generateDataProvider(): array
     {
+        $root = getcwd();
+
         return [
             'single test' => [
-                'source' => './tests/Fixtures/basil-integration/Test/index-page-open.yml',
-                'target' => './tests/build/target',
+                'source' => $root . '/tests/Fixtures/basil-integration/Test/index-page-open.yml',
+                'target' => $root . '/tests/build/target',
                 'expectedGeneratedTestDataCollection' => [
                     [
                         'classNameReplacement' => 'IndexPageOpenTest',

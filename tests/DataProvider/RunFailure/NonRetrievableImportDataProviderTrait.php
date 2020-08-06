@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace webignition\BasilCliCompiler\Tests\DataProvider\RunFailure;
 
 use webignition\BaseBasilTestCase\AbstractBaseTest;
-use webignition\BasilCliCompiler\Tests\Services\ProjectRootPathProvider;
 use webignition\BasilCompilerModels\Configuration;
 use webignition\BasilCompilerModels\ErrorOutput;
 
@@ -13,7 +12,7 @@ trait NonRetrievableImportDataProviderTrait
 {
     public function nonRetrievableImportDataProvider(): array
     {
-        $root = (new ProjectRootPathProvider())->get();
+        $root = getcwd();
 
         $pagePath = $root . '/tests/Fixtures/basil/InvalidPage/unparseable.yml';
         $pageAbsolutePath = '' . $pagePath;
@@ -28,7 +27,7 @@ trait NonRetrievableImportDataProviderTrait
             'test imports non-parsable page' => [
                 'input' => [
                     '--source' => $testPath,
-                    '--target' => 'tests/build/target',
+                    '--target' => $root . '/tests/build/target',
                 ],
                 'expectedExitCode' => ErrorOutput::CODE_LOADER_NON_RETRIEVABLE_IMPORT,
                 'expectedCommandOutput' => new ErrorOutput(
@@ -54,7 +53,7 @@ trait NonRetrievableImportDataProviderTrait
             'test suite imports test which imports non-parsable page' => [
                 'input' => [
                     '--source' => $testSuiteAbsolutePath,
-                    '--target' => 'tests/build/target',
+                    '--target' => $root . '/tests/build/target',
                 ],
                 'expectedExitCode' => ErrorOutput::CODE_LOADER_NON_RETRIEVABLE_IMPORT,
                 'expectedCommandOutput' => new ErrorOutput(

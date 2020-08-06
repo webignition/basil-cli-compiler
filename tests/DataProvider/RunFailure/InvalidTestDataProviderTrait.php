@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace webignition\BasilCliCompiler\Tests\DataProvider\RunFailure;
 
 use webignition\BaseBasilTestCase\AbstractBaseTest;
-use webignition\BasilCliCompiler\Tests\Services\ProjectRootPathProvider;
 use webignition\BasilCompilerModels\Configuration;
 use webignition\BasilCompilerModels\ErrorOutput;
 
@@ -13,7 +12,7 @@ trait InvalidTestDataProviderTrait
 {
     public function invalidTestDataProvider(): array
     {
-        $root = (new ProjectRootPathProvider())->get();
+        $root = getcwd();
 
         $testPath = $root . '/tests/Fixtures/basil/InvalidTest/invalid-configuration.yml';
         $testAbsolutePath = '' . $testPath;
@@ -25,7 +24,7 @@ trait InvalidTestDataProviderTrait
             'test has invalid configuration' => [
                 'input' => [
                     '--source' => $testPath,
-                    '--target' => 'tests/build/target',
+                    '--target' => $root . '/tests/build/target',
                 ],
                 'expectedExitCode' => ErrorOutput::CODE_LOADER_INVALID_TEST,
                 'expectedCommandOutput' => new ErrorOutput(
@@ -54,7 +53,7 @@ trait InvalidTestDataProviderTrait
             'test suite imports test with invalid configuration' => [
                 'input' => [
                     '--source' => $testSuitePath,
-                    '--target' => 'tests/build/target',
+                    '--target' => $root . '/tests/build/target',
                 ],
                 'expectedExitCode' => ErrorOutput::CODE_LOADER_INVALID_TEST,
                 'expectedCommandOutput' => new ErrorOutput(

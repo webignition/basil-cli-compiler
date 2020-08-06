@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace webignition\BasilCliCompiler\Tests\DataProvider\RunSuccess;
 
 use webignition\BaseBasilTestCase\AbstractBaseTest;
-use webignition\BasilCliCompiler\Tests\Services\ProjectRootPathProvider;
 use webignition\BasilCompilerModels\Configuration;
 use webignition\BasilCompilerModels\SuiteManifest;
 use webignition\BasilCompilerModels\TestManifest;
@@ -15,13 +14,13 @@ trait SuccessDataProviderTrait
 {
     public function successDataProvider(): array
     {
-        $root = (new ProjectRootPathProvider())->get();
+        $root = getcwd();
 
         return [
             'single test' => [
                 'input' => [
-                    '--source' => 'tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
-                    '--target' => 'tests/build/target',
+                    '--source' => $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
+                    '--target' => $root . '/tests/build/target',
                 ],
                 'expectedExitCode' => 0,
                 'expectedCommandOutput' => new SuiteManifest(
@@ -45,8 +44,8 @@ trait SuccessDataProviderTrait
             ],
             'test suite' => [
                 'input' => [
-                    '--source' => 'tests/Fixtures/basil/TestSuite/example.com-all.yml',
-                    '--target' => 'tests/build/target',
+                    '--source' => $root . '/tests/Fixtures/basil/TestSuite/example.com-all.yml',
+                    '--target' => $root . '/tests/build/target',
                 ],
                 'expectedExitCode' => 0,
                 'expectedCommandOutput' => new SuiteManifest(
@@ -84,8 +83,8 @@ trait SuccessDataProviderTrait
             ],
             'collection of tests by directory' => [
                 'input' => [
-                    '--source' => 'tests/Fixtures/basil/Test',
-                    '--target' => 'tests/build/target',
+                    '--source' => $root . '/tests/Fixtures/basil/Test',
+                    '--target' => $root . '/tests/build/target',
                 ],
                 'expectedExitCode' => 0,
                 'expectedCommandOutput' => new SuiteManifest(
@@ -130,8 +129,8 @@ trait SuccessDataProviderTrait
             ],
             'collection of test suites by directory' => [
                 'input' => [
-                    '--source' => 'tests/Fixtures/basil/TestSuite',
-                    '--target' => 'tests/build/target',
+                    '--source' => $root . '/tests/Fixtures/basil/TestSuite',
+                    '--target' => $root . '/tests/build/target',
                 ],
                 'expectedExitCode' => 0,
                 'expectedCommandOutput' => new SuiteManifest(

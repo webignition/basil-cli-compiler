@@ -15,7 +15,6 @@ class CommandFactory
             SourceLoader::createLoader(),
             Compiler::createCompiler(),
             TestWriter::createWriter(),
-            new ConfigurationFactory($projectRootPath),
             new ErrorOutputFactory(new ValidatorInvalidResultSerializer()),
             new OutputRenderer(),
             $projectRootPath

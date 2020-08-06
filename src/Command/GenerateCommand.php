@@ -11,7 +11,6 @@ use Symfony\Component\Console\Output\OutputInterface as ConsoleOutputInterface;
 use webignition\BaseBasilTestCase\AbstractBaseTest;
 use webignition\BasilCliCompiler\Exception\UnresolvedPlaceholderException;
 use webignition\BasilCliCompiler\Services\Compiler;
-use webignition\BasilCliCompiler\Services\ConfigurationFactory;
 use webignition\BasilCliCompiler\Services\ErrorOutputFactory;
 use webignition\BasilCliCompiler\Services\OutputRenderer;
 use webignition\BasilCliCompiler\Services\TestWriter;
@@ -44,7 +43,6 @@ class GenerateCommand extends Command
     private SourceLoader $sourceLoader;
     private Compiler $compiler;
     private TestWriter $testWriter;
-    private ConfigurationFactory $configurationFactory;
     private ErrorOutputFactory $errorOutputFactory;
     private OutputRenderer $outputRenderer;
     private string $projectRootPath;
@@ -53,7 +51,6 @@ class GenerateCommand extends Command
         SourceLoader $sourceLoader,
         Compiler $compiler,
         TestWriter $testWriter,
-        ConfigurationFactory $configurationFactory,
         ErrorOutputFactory $errorOutputFactory,
         OutputRenderer $outputRenderer,
         string $projectRootPath
@@ -63,7 +60,6 @@ class GenerateCommand extends Command
         $this->sourceLoader = $sourceLoader;
         $this->compiler = $compiler;
         $this->testWriter = $testWriter;
-        $this->configurationFactory = $configurationFactory;
         $this->errorOutputFactory = $errorOutputFactory;
         $this->outputRenderer = $outputRenderer;
         $this->projectRootPath = $projectRootPath;
@@ -115,7 +111,10 @@ class GenerateCommand extends Command
         $rawTarget = trim((string) $typedInput->getStringOption(GenerateCommand::OPTION_TARGET));
         $baseClass = trim((string) $typedInput->getStringOption(GenerateCommand::OPTION_BASE_CLASS));
 
-        $configuration = $this->configurationFactory->create($rawSource, $rawTarget, $baseClass);
+        $configurationSource = is_file($rawSource) || is_dir($rawSource) ? $rawSource : '';
+        $configurationTarget = is_dir($rawTarget) ? $rawTarget : '';
+
+        $configuration = new Configuration($configurationSource, $configurationTarget, $baseClass);
 
         if ('' === $rawSource) {
             return $this->outputRenderer->render($this->errorOutputFactory->createForEmptySource($configuration));

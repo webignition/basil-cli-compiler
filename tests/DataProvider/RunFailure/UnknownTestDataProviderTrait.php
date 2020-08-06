@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace webignition\BasilCliCompiler\Tests\DataProvider\RunFailure;
 
 use webignition\BaseBasilTestCase\AbstractBaseTest;
-use webignition\BasilCliCompiler\Tests\Services\ProjectRootPathProvider;
 use webignition\BasilCompilerModels\Configuration;
 use webignition\BasilCompilerModels\ErrorOutput;
 
@@ -13,13 +12,13 @@ trait UnknownTestDataProviderTrait
 {
     public function unknownTestDataProvider(): array
     {
-        $root = (new ProjectRootPathProvider())->get();
+        $root = getcwd();
 
         return [
             'test suite imports test that does not exist' => [
                 'input' => [
-                    '--source' => 'tests/Fixtures/basil/InvalidTestSuite/imports-non-existent-test.yml',
-                    '--target' => 'tests/build/target',
+                    '--source' => $root . '/tests/Fixtures/basil/InvalidTestSuite/imports-non-existent-test.yml',
+                    '--target' => $root . '/tests/build/target',
                 ],
                 'expectedExitCode' => ErrorOutput::CODE_LOADER_UNKNOWN_TEST,
                 'expectedCommandOutput' => new ErrorOutput(

@@ -25,7 +25,6 @@ use webignition\BasilCliCompiler\Tests\DataProvider\RunFailure\UnknownItemDataPr
 use webignition\BasilCliCompiler\Tests\DataProvider\RunFailure\UnknownPageElementDataProviderTrait;
 use webignition\BasilCliCompiler\Tests\DataProvider\RunFailure\UnknownTestDataProviderTrait;
 use webignition\BasilCliCompiler\Tests\DataProvider\RunSuccess\SuccessDataProviderTrait;
-use webignition\BasilCliCompiler\Tests\Services\ProjectRootPathProvider;
 use webignition\BasilCompilableSourceFactory\Exception\UnsupportedContentException;
 use webignition\BasilCompilableSourceFactory\Exception\UnsupportedStatementException;
 use webignition\BasilCompilableSourceFactory\Exception\UnsupportedStepException;
@@ -59,9 +58,7 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
     {
         parent::setUp();
 
-        $this->command = CommandFactory::createGenerateCommand(
-            (new ProjectRootPathProvider())->get()
-        );
+        $this->command = CommandFactory::createGenerateCommand((string) getcwd());
     }
 
     /**
@@ -155,13 +152,13 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
 
     public function unresolvedPlaceholderDataProvider(): array
     {
-        $root = (new ProjectRootPathProvider())->get();
+        $root = getcwd();
 
         return [
             'placeholder CLIENT is not defined' => [
                 'input' => [
-                    '--source' => 'tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
-                    '--target' => 'tests/build/target',
+                    '--source' => $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
+                    '--target' => $root . '/tests/build/target',
                 ],
                 'expectedExitCode' => ErrorOutput::CODE_GENERATOR_UNRESOLVED_PLACEHOLDER,
                 'expectedCommandOutput' => new ErrorOutput(
@@ -203,11 +200,11 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
         UnsupportedStepException $unsupportedStepException,
         array $expectedErrorOutputContext
     ) {
-        $root = (new ProjectRootPathProvider())->get();
+        $root = getcwd();
 
         $input = [
-            '--source' => 'tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
-            '--target' => 'tests/build/target',
+            '--source' => $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
+            '--target' => $root . '/tests/build/target',
         ];
 
         $compiler = \Mockery::mock(Compiler::class);

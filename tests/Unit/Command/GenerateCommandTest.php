@@ -9,7 +9,6 @@ use Symfony\Component\Yaml\Yaml;
 use webignition\BaseBasilTestCase\AbstractBaseTest as BasilBaseTest;
 use webignition\BasilCliCompiler\Command\GenerateCommand;
 use webignition\BasilCliCompiler\Services\Compiler;
-use webignition\BasilCliCompiler\Services\ConfigurationFactory;
 use webignition\BasilCliCompiler\Services\ErrorOutputFactory;
 use webignition\BasilCliCompiler\Services\OutputRenderer;
 use webignition\BasilCliCompiler\Services\TestWriter;
@@ -17,7 +16,6 @@ use webignition\BasilCliCompiler\Services\ValidatorInvalidResultSerializer;
 use webignition\BasilCliCompiler\Tests\Services\ProjectRootPathProvider;
 use webignition\BasilCliCompiler\Tests\Unit\AbstractBaseTest;
 use webignition\BasilCompilerModels\Configuration;
-use webignition\BasilCompilerModels\ConfigurationInterface;
 use webignition\BasilCompilerModels\ErrorOutput;
 use webignition\BasilCompilerModels\ErrorOutputInterface;
 use webignition\BasilLoader\SourceLoader;
@@ -33,12 +31,10 @@ class GenerateCommandTest extends AbstractBaseTest
      */
     public function testRunFailure(
         array $input,
-        ConfigurationFactory $configurationFactory,
         int $validationErrorCode,
         ErrorOutputInterface $expectedCommandOutput
     ): void {
         $command = $this->createCommand(
-            $configurationFactory,
             \Mockery::mock(Compiler::class),
             \Mockery::mock(TestWriter::class)
         );
@@ -70,19 +66,11 @@ class GenerateCommandTest extends AbstractBaseTest
         );
 
         return [
-            'source not readable' => [
+            'source empty' => [
                 'input' => [
                     '--source' => '',
-                    '--target' => 'tests/build/target',
+                    '--target' => getcwd() . '/tests/build/target',
                 ],
-                'configurationFactory' => $this->createConfigurationFactory(
-                    [
-                        '',
-                        'tests/build/target',
-                        BasilBaseTest::class,
-                    ],
-                    $emptySourceConfiguration
-                ),
                 'validationErrorCode' => ErrorOutput::CODE_COMMAND_CONFIG_SOURCE_EMPTY,
                 'expectedCommandOutput' => new ErrorOutput(
                     $emptySourceConfiguration,
@@ -92,17 +80,9 @@ class GenerateCommandTest extends AbstractBaseTest
             ],
             'target empty' => [
                 'input' => [
-                    '--source' => 'tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
+                    '--source' => getcwd() . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
                     '--target' => '',
                 ],
-                'configurationFactory' => $this->createConfigurationFactory(
-                    [
-                        'tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
-                        '',
-                        BasilBaseTest::class,
-                    ],
-                    $emptyTargetConfiguration
-                ),
                 'validationErrorCode' => ErrorOutput::CODE_COMMAND_CONFIG_TARGET_EMPTY,
                 'expectedCommandOutput' => new ErrorOutput(
                     $emptyTargetConfiguration,
@@ -114,7 +94,6 @@ class GenerateCommandTest extends AbstractBaseTest
     }
 
     private function createCommand(
-        ConfigurationFactory $configurationFactory,
         Compiler $compiler,
         TestWriter $testWriter
     ): GenerateCommand {
@@ -122,30 +101,9 @@ class GenerateCommandTest extends AbstractBaseTest
             SourceLoader::createLoader(),
             $compiler,
             $testWriter,
-            $configurationFactory,
             new ErrorOutputFactory(new ValidatorInvalidResultSerializer()),
             new OutputRenderer(),
             (new ProjectRootPathProvider())->get()
         );
-    }
-
-    /**
-     * @param array<mixed> $args
-     * @param Configuration $configuration
-     *
-     * @return ConfigurationFactory
-     */
-    private function createConfigurationFactory(
-        array $args,
-        ConfigurationInterface $configuration
-    ): ConfigurationFactory {
-        $factory = \Mockery::mock(ConfigurationFactory::class);
-
-        $factory
-            ->shouldReceive('create')
-            ->withArgs($args)
-            ->andReturn($configuration);
-
-        return $factory;
     }
 }

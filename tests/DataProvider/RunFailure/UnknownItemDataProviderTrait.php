@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace webignition\BasilCliCompiler\Tests\DataProvider\RunFailure;
 
 use webignition\BaseBasilTestCase\AbstractBaseTest;
-use webignition\BasilCliCompiler\Tests\Services\ProjectRootPathProvider;
 use webignition\BasilCompilerModels\Configuration;
 use webignition\BasilCompilerModels\ErrorOutput;
 
@@ -13,13 +12,13 @@ trait UnknownItemDataProviderTrait
 {
     public function unknownItemDataProvider(): array
     {
-        $root = (new ProjectRootPathProvider())->get();
+        $root = getcwd();
 
         return [
             'test declares step, step uses unknown dataset' => [
                 'input' => [
-                    '--source' => 'tests/Fixtures/basil/InvalidTest/step-uses-unknown-dataset.yml',
-                    '--target' => 'tests/build/target',
+                    '--source' => $root . '/tests/Fixtures/basil/InvalidTest/step-uses-unknown-dataset.yml',
+                    '--target' => $root . '/tests/build/target',
                 ],
                 'expectedExitCode' => ErrorOutput::CODE_LOADER_UNKNOWN_ITEM,
                 'expectedCommandOutput' => new ErrorOutput(
@@ -41,8 +40,8 @@ trait UnknownItemDataProviderTrait
             ],
             'test declares step, step uses unknown page' => [
                 'input' => [
-                    '--source' => 'tests/Fixtures/basil/InvalidTest/step-uses-unknown-page.yml',
-                    '--target' => 'tests/build/target',
+                    '--source' => $root . '/tests/Fixtures/basil/InvalidTest/step-uses-unknown-page.yml',
+                    '--target' => $root . '/tests/build/target',
                 ],
                 'expectedExitCode' => ErrorOutput::CODE_LOADER_UNKNOWN_ITEM,
                 'expectedCommandOutput' => new ErrorOutput(
@@ -64,8 +63,8 @@ trait UnknownItemDataProviderTrait
             ],
             'test declares step, step uses step' => [
                 'input' => [
-                    '--source' => 'tests/Fixtures/basil/InvalidTest/step-uses-unknown-step.yml',
-                    '--target' => 'tests/build/target',
+                    '--source' => $root . '/tests/Fixtures/basil/InvalidTest/step-uses-unknown-step.yml',
+                    '--target' => $root . '/tests/build/target',
                 ],
                 'expectedExitCode' => ErrorOutput::CODE_LOADER_UNKNOWN_ITEM,
                 'expectedCommandOutput' => new ErrorOutput(
@@ -87,9 +86,9 @@ trait UnknownItemDataProviderTrait
             ],
             'test suite imports test declaring step, step uses unknown dataset' => [
                 'input' => [
-                    '--source' =>
-                        'tests/Fixtures/basil/InvalidTestSuite/imports-test-declaring-step-using-unknown-dataset.yml',
-                    '--target' => 'tests/build/target',
+                    '--source' => $root .
+                        '/tests/Fixtures/basil/InvalidTestSuite/imports-test-declaring-step-using-unknown-dataset.yml',
+                    '--target' => $root . '/tests/build/target',
                 ],
                 'expectedExitCode' => ErrorOutput::CODE_LOADER_UNKNOWN_ITEM,
                 'expectedCommandOutput' => new ErrorOutput(
