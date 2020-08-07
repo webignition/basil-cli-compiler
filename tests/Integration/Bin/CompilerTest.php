@@ -25,12 +25,13 @@ class CompilerTest extends \PHPUnit\Framework\TestCase
 
         $this->assertSame(0, $exitCode);
 
-        $generateCommandOutput = SuiteManifest::fromArray((array) Yaml::parse($generateProcess->getOutput()));
+        $suiteManifest = SuiteManifest::fromArray((array) Yaml::parse($generateProcess->getOutput()));
 
-        $testPaths = $generateCommandOutput->getTestPaths();
-        self::assertNotEmpty($testPaths);
+        $testManifests = $suiteManifest->getTestManifests();
+        self::assertNotEmpty($testManifests);
 
-        foreach ($testPaths as $index => $testPath) {
+        foreach ($testManifests as $index => $testManifest) {
+            $testPath = $testManifest->getTarget();
             self::assertFileExists($testPath);
 
             $expectedGeneratedTestData = $expectedGeneratedTestDataCollection[$index];
@@ -47,8 +48,8 @@ class CompilerTest extends \PHPUnit\Framework\TestCase
             $this->assertSame($expectedTestContent, $generatedTestContent);
         }
 
-        foreach ($generateCommandOutput->getTestPaths() as $testPath) {
-            unlink($testPath);
+        foreach ($testManifests as $testManifest) {
+            unlink($testManifest->getTarget());
         }
     }
 

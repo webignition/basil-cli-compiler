@@ -29,7 +29,7 @@ class TestWriterTest extends \PHPUnit\Framework\TestCase
         string $expectedGeneratedCode
     ) {
         $testManifest = $this->testWriter->write($compiledTest, $outputDirectory);
-        $expectedCodePath = $outputDirectory . '/' . $testManifest->getTarget();
+        $expectedCodePath = $testManifest->getTarget();
 
         self::assertFileExists($expectedCodePath);
         self::assertFileIsReadable($expectedCodePath);

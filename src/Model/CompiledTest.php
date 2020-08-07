@@ -33,4 +33,12 @@ class CompiledTest
     {
         return $this->className;
     }
+
+    public function withTest(TestInterface $test): self
+    {
+        $new = clone $this;
+        $new->test = $test;
+
+        return $new;
+    }
 }
