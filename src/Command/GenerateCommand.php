@@ -130,7 +130,7 @@ class GenerateCommand extends Command
 
         $sourcePaths = $this->createSourcePaths($configuration->getSource());
 
-        $generatedFiles = [];
+        $testManifests = [];
         foreach ($sourcePaths as $sourcePath) {
             try {
                 $testSuite = $this->sourceLoader->load($sourcePath);
@@ -154,10 +154,16 @@ class GenerateCommand extends Command
 
             try {
                 foreach ($testSuite->getTests() as $test) {
-                    $test = $this->removeRootPathFromTestPath($test);
-                    $compiledTest = $this->compiler->compile($test, $configuration->getBaseClass());
+                    $relativePathTest = $this->removeRootPathFromTestPath($test);
+                    $relativePathCompiledTest = $this->compiler->compile(
+                        $relativePathTest,
+                        $configuration->getBaseClass()
+                    );
 
-                    $generatedFiles[] = $this->testWriter->write($compiledTest, $configuration->getTarget());
+                    $testManifests[] = $this->testWriter->write(
+                        $relativePathCompiledTest->withTest($test),
+                        $configuration->getTarget()
+                    );
                 }
             } catch (
                 UnresolvedPlaceholderException |
@@ -169,7 +175,7 @@ class GenerateCommand extends Command
             }
         }
 
-        $this->outputRenderer->render(new SuiteManifest($configuration, $generatedFiles));
+        $this->outputRenderer->render(new SuiteManifest($configuration, $testManifests));
 
         return 0;
     }

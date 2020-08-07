@@ -87,14 +87,19 @@ class PharTest extends \PHPUnit\Framework\TestCase
 
         $processOutputData = (array) Yaml::parse($pharProcess->getOutput());
 
-        $commandOutput = 0 === $exitCode
+        $suiteManifest = 0 === $exitCode
             ? SuiteManifest::fromArray($processOutputData)
             : ErrorOutput::fromArray($processOutputData);
 
-        $this->assertEquals($expectedCommandOutput, $commandOutput);
+        $this->assertEquals($expectedCommandOutput, $suiteManifest);
 
-        if ($commandOutput instanceof SuiteManifest) {
-            $generatedTestsToRemove = array_unique($commandOutput->getTestPaths());
+        if ($suiteManifest instanceof SuiteManifest) {
+            $generatedTestsToRemove = [];
+
+            foreach ($suiteManifest->getTestManifests() as $testManifest) {
+                $testPath = $testManifest->getTarget();
+                $generatedTestsToRemove[$testPath] = $testPath;
+            }
 
             foreach ($generatedTestsToRemove as $path) {
                 self::assertFileExists($path);

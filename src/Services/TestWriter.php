@@ -37,7 +37,8 @@ class TestWriter
 
         $this->phpFileCreator->setOutputDirectory($outputDirectory);
         $filename = $this->phpFileCreator->create($compiledTest->getClassName(), $compiledTest->getCode());
+        $target = $outputDirectory . '/' . $filename;
 
-        return new TestManifest($sourceTest->getConfiguration(), $testPath, $filename);
+        return new TestManifest($sourceTest->getConfiguration(), $testPath, $target);
     }
 }

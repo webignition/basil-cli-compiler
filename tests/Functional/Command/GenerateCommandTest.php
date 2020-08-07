@@ -80,22 +80,18 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
         $exitCode = $this->command->run(new ArrayInput($input), $output);
         self::assertSame($expectedExitCode, $exitCode);
 
-        $commandOutput = SuiteManifest::fromArray((array) Yaml::parse($output->fetch()));
-        $this->assertEquals($expectedCommandOutput, $commandOutput);
+        $suiteManifest = SuiteManifest::fromArray((array) Yaml::parse($output->fetch()));
+        $this->assertEquals($expectedCommandOutput, $suiteManifest);
 
-        $manifestCollectionData = $commandOutput->getTestManifests();
         $generatedTestsToRemove = [];
-        foreach ($manifestCollectionData as $manifestData) {
-            $commandOutputConfiguration = $commandOutput->getConfiguration();
-            $commandOutputTarget = $commandOutputConfiguration->getTarget();
-
-            $expectedCodePath = $commandOutputTarget . '/' . $manifestData->getTarget();
+        foreach ($suiteManifest->getTestManifests() as $testManifest) {
+            $expectedCodePath = $testManifest->getTarget();
 
             self::assertFileExists($expectedCodePath);
             self::assertFileIsReadable($expectedCodePath);
 
             self::assertEquals(
-                $expectedGeneratedCode[ObjectReflector::getProperty($manifestData, 'source')],
+                $expectedGeneratedCode[ObjectReflector::getProperty($testManifest, 'source')],
                 file_get_contents($expectedCodePath)
             );
 
