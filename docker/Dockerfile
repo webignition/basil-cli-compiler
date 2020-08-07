@@ -2,7 +2,7 @@ FROM php:7.4-cli-buster
 
 WORKDIR /app
 
-ARG proxy_server_version=0.2
+ARG proxy_server_version=0.4
 
 RUN apt-get update \
     && apt-get install -y libzip-dev nano zip \

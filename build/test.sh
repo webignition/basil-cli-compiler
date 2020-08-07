@@ -30,8 +30,10 @@ docker start ${CONTAINER_NAME}
 
 sleep 0.1
 
-( echo "./compiler --version"; echo "quit"; ) | nc localhost ${HOST_PORT}
-( echo "./compiler --source=${CONTAINER_SOURCE_PATH}/${CONTAINER_TEST_FILENAME} --target=${CONTAINER_TARGET_PATH}"; echo "quit"; ) | nc localhost ${HOST_PORT}
+( echo "./compiler --version"; ) | nc localhost ${HOST_PORT}
+printf "\n"
+( echo "./compiler --source=${CONTAINER_SOURCE_PATH}/${CONTAINER_TEST_FILENAME} --target=${CONTAINER_TARGET_PATH}"; ) | nc localhost ${HOST_PORT}
+printf "\n"
 
 EXPECTED_GENERATED_FILENAME="${HOST_TARGET_PATH}/Generated8a4077150b8e96cf57e90e6bf5dd6076Test.php"
 OUTPUT=$(ls ${EXPECTED_GENERATED_FILENAME} | wc -l)
