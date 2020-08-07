@@ -37,12 +37,14 @@
         "phar-dump-autoload": "@composer dump-autoload --classmap-authoritative --no-dev --no-scripts --optimize",
         "phar-compile": "@php -dphar.readonly=0 bin/compile.php",
         "phar-build": [
+            "@composer install --no-dev --prefer-dist",
             "rm -f build/compiler.phar",
             "@phar-dump-autoload",
             "@phar-compile",
             "rm -f compiler",
             "cp build/compiler.phar compiler",
-            "chmod +x ./compiler"
+            "chmod +x ./compiler",
+            "@composer install"
         ],
         "phar-test": [
             "@composer dump-autoload",
