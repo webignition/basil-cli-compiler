@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace webignition\BasilCliCompiler\Tests\DataProvider\RunFailure;
 
 use webignition\BaseBasilTestCase\AbstractBaseTest;
+use webignition\BasilCliCompiler\Services\ErrorOutputFactory;
 use webignition\BasilCompilerModels\Configuration;
 use webignition\BasilCompilerModels\ErrorOutput;
 
@@ -20,7 +21,7 @@ trait ParseExceptionDataProviderTrait
                     '--source' => $root . '/tests/Fixtures/basil/InvalidTest/unparseable-action.yml',
                     '--target' => $root . '/tests/build/target',
                 ],
-                'expectedExitCode' => ErrorOutput::CODE_LOADER_UNPARSEABLE_DATA,
+                'expectedExitCode' => ErrorOutputFactory::CODE_LOADER_UNPARSEABLE_DATA,
                 'expectedCommandOutput' => new ErrorOutput(
                     new Configuration(
                         $root . '/tests/Fixtures/basil/InvalidTest/unparseable-action.yml',
@@ -28,7 +29,7 @@ trait ParseExceptionDataProviderTrait
                         AbstractBaseTest::class
                     ),
                     'Unparseable test',
-                    ErrorOutput::CODE_LOADER_UNPARSEABLE_DATA,
+                    ErrorOutputFactory::CODE_LOADER_UNPARSEABLE_DATA,
                     [
                         'type' => 'test',
                         'test_path' => $root . '/tests/Fixtures/basil/InvalidTest/unparseable-action.yml',
@@ -45,7 +46,7 @@ trait ParseExceptionDataProviderTrait
                     '--source' => $root . '/tests/Fixtures/basil/InvalidTest/unparseable-assertion.yml',
                     '--target' => $root . '/tests/build/target',
                 ],
-                'expectedExitCode' => ErrorOutput::CODE_LOADER_UNPARSEABLE_DATA,
+                'expectedExitCode' => ErrorOutputFactory::CODE_LOADER_UNPARSEABLE_DATA,
                 'expectedCommandOutput' => new ErrorOutput(
                     new Configuration(
                         $root . '/tests/Fixtures/basil/InvalidTest/unparseable-assertion.yml',
@@ -53,7 +54,7 @@ trait ParseExceptionDataProviderTrait
                         AbstractBaseTest::class
                     ),
                     'Unparseable test',
-                    ErrorOutput::CODE_LOADER_UNPARSEABLE_DATA,
+                    ErrorOutputFactory::CODE_LOADER_UNPARSEABLE_DATA,
                     [
                         'type' => 'test',
                         'test_path' => $root . '/tests/Fixtures/basil/InvalidTest/unparseable-assertion.yml',
@@ -70,7 +71,7 @@ trait ParseExceptionDataProviderTrait
                     '--source' => $root . '/tests/Fixtures/basil/InvalidTest/import-unparseable-action.yml',
                     '--target' => $root . '/tests/build/target',
                 ],
-                'expectedExitCode' => ErrorOutput::CODE_LOADER_UNPARSEABLE_DATA,
+                'expectedExitCode' => ErrorOutputFactory::CODE_LOADER_UNPARSEABLE_DATA,
                 'expectedCommandOutput' => new ErrorOutput(
                     new Configuration(
                         $root . '/tests/Fixtures/basil/InvalidTest/import-unparseable-action.yml',
@@ -78,7 +79,7 @@ trait ParseExceptionDataProviderTrait
                         AbstractBaseTest::class
                     ),
                     'Unparseable step',
-                    ErrorOutput::CODE_LOADER_UNPARSEABLE_DATA,
+                    ErrorOutputFactory::CODE_LOADER_UNPARSEABLE_DATA,
                     [
                         'type' => 'step',
                         'test_path' => $root . '/tests/Fixtures/basil/InvalidTest/import-unparseable-action.yml',
@@ -95,7 +96,7 @@ trait ParseExceptionDataProviderTrait
                     '--source' => $root . '/tests/Fixtures/basil/InvalidTest/import-unparseable-assertion.yml',
                     '--target' => $root . '/tests/build/target',
                 ],
-                'expectedExitCode' => ErrorOutput::CODE_LOADER_UNPARSEABLE_DATA,
+                'expectedExitCode' => ErrorOutputFactory::CODE_LOADER_UNPARSEABLE_DATA,
                 'expectedCommandOutput' => new ErrorOutput(
                     new Configuration(
                         $root . '/tests/Fixtures/basil/InvalidTest/import-unparseable-assertion.yml',
@@ -103,7 +104,7 @@ trait ParseExceptionDataProviderTrait
                         AbstractBaseTest::class
                     ),
                     'Unparseable step',
-                    ErrorOutput::CODE_LOADER_UNPARSEABLE_DATA,
+                    ErrorOutputFactory::CODE_LOADER_UNPARSEABLE_DATA,
                     [
                         'type' => 'step',
                         'test_path' => $root . '/tests/Fixtures/basil/InvalidTest/import-unparseable-assertion.yml',
@@ -121,7 +122,7 @@ trait ParseExceptionDataProviderTrait
                         $root . '/tests/Fixtures/basil/InvalidTestSuite/imports-test-declaring-unparseable-action.yml',
                     '--target' => $root . '/tests/build/target',
                 ],
-                'expectedExitCode' => ErrorOutput::CODE_LOADER_UNPARSEABLE_DATA,
+                'expectedExitCode' => ErrorOutputFactory::CODE_LOADER_UNPARSEABLE_DATA,
                 'expectedCommandOutput' => new ErrorOutput(
                     new Configuration(
                         $root . '/tests/Fixtures/basil/InvalidTestSuite/imports-test-declaring-unparseable-action.yml',
@@ -129,7 +130,7 @@ trait ParseExceptionDataProviderTrait
                         AbstractBaseTest::class
                     ),
                     'Unparseable test',
-                    ErrorOutput::CODE_LOADER_UNPARSEABLE_DATA,
+                    ErrorOutputFactory::CODE_LOADER_UNPARSEABLE_DATA,
                     [
                         'type' => 'test',
                         'test_path' => $root . '/tests/Fixtures/basil/InvalidTest/unparseable-action.yml',
@@ -147,7 +148,7 @@ trait ParseExceptionDataProviderTrait
                         $root . '/tests/Fixtures/basil/InvalidTestSuite/imports-test-importing-unparseable-action.yml',
                     '--target' => $root . '/tests/build/target',
                 ],
-                'expectedExitCode' => ErrorOutput::CODE_LOADER_UNPARSEABLE_DATA,
+                'expectedExitCode' => ErrorOutputFactory::CODE_LOADER_UNPARSEABLE_DATA,
                 'expectedCommandOutput' => new ErrorOutput(
                     new Configuration(
                         $root . '/tests/Fixtures/basil/InvalidTestSuite/imports-test-importing-unparseable-action.yml',
@@ -155,7 +156,7 @@ trait ParseExceptionDataProviderTrait
                         AbstractBaseTest::class
                     ),
                     'Unparseable step',
-                    ErrorOutput::CODE_LOADER_UNPARSEABLE_DATA,
+                    ErrorOutputFactory::CODE_LOADER_UNPARSEABLE_DATA,
                     [
                         'type' => 'step',
                         'test_path' => $root . '/tests/Fixtures/basil/InvalidTest/import-unparseable-action.yml',
@@ -172,7 +173,7 @@ trait ParseExceptionDataProviderTrait
                     '--source' => $root . '/tests/Fixtures/basil/InvalidTest/non-array-actions-data.yml',
                     '--target' => $root . '/tests/build/target',
                 ],
-                'expectedExitCode' => ErrorOutput::CODE_LOADER_UNPARSEABLE_DATA,
+                'expectedExitCode' => ErrorOutputFactory::CODE_LOADER_UNPARSEABLE_DATA,
                 'expectedCommandOutput' => new ErrorOutput(
                     new Configuration(
                         $root . '/tests/Fixtures/basil/InvalidTest/non-array-actions-data.yml',
@@ -180,7 +181,7 @@ trait ParseExceptionDataProviderTrait
                         AbstractBaseTest::class
                     ),
                     'Unparseable test',
-                    ErrorOutput::CODE_LOADER_UNPARSEABLE_DATA,
+                    ErrorOutputFactory::CODE_LOADER_UNPARSEABLE_DATA,
                     [
                         'type' => 'test',
                         'test_path' => $root . '/tests/Fixtures/basil/InvalidTest/non-array-actions-data.yml',
@@ -195,7 +196,7 @@ trait ParseExceptionDataProviderTrait
                     '--source' => $root . '/tests/Fixtures/basil/InvalidTest/non-array-assertions-data.yml',
                     '--target' => $root . '/tests/build/target',
                 ],
-                'expectedExitCode' => ErrorOutput::CODE_LOADER_UNPARSEABLE_DATA,
+                'expectedExitCode' => ErrorOutputFactory::CODE_LOADER_UNPARSEABLE_DATA,
                 'expectedCommandOutput' => new ErrorOutput(
                     new Configuration(
                         $root . '/tests/Fixtures/basil/InvalidTest/non-array-assertions-data.yml',
@@ -203,7 +204,7 @@ trait ParseExceptionDataProviderTrait
                         AbstractBaseTest::class
                     ),
                     'Unparseable test',
-                    ErrorOutput::CODE_LOADER_UNPARSEABLE_DATA,
+                    ErrorOutputFactory::CODE_LOADER_UNPARSEABLE_DATA,
                     [
                         'type' => 'test',
                         'test_path' => $root . '/tests/Fixtures/basil/InvalidTest/non-array-assertions-data.yml',
@@ -218,7 +219,7 @@ trait ParseExceptionDataProviderTrait
                     '--source' => $root . '/tests/Fixtures/basil/InvalidTest/import-non-array-actions-data.yml',
                     '--target' => $root . '/tests/build/target',
                 ],
-                'expectedExitCode' => ErrorOutput::CODE_LOADER_UNPARSEABLE_DATA,
+                'expectedExitCode' => ErrorOutputFactory::CODE_LOADER_UNPARSEABLE_DATA,
                 'expectedCommandOutput' => new ErrorOutput(
                     new Configuration(
                         $root . '/tests/Fixtures/basil/InvalidTest/import-non-array-actions-data.yml',
@@ -226,7 +227,7 @@ trait ParseExceptionDataProviderTrait
                         AbstractBaseTest::class
                     ),
                     'Unparseable step',
-                    ErrorOutput::CODE_LOADER_UNPARSEABLE_DATA,
+                    ErrorOutputFactory::CODE_LOADER_UNPARSEABLE_DATA,
                     [
                         'type' => 'step',
                         'test_path' => $root . '/tests/Fixtures/basil/InvalidTest/import-non-array-actions-data.yml',
@@ -240,7 +241,7 @@ trait ParseExceptionDataProviderTrait
                     '--source' => $root . '/tests/Fixtures/basil/InvalidTest/import-non-array-assertions-data.yml',
                     '--target' => $root . '/tests/build/target',
                 ],
-                'expectedExitCode' => ErrorOutput::CODE_LOADER_UNPARSEABLE_DATA,
+                'expectedExitCode' => ErrorOutputFactory::CODE_LOADER_UNPARSEABLE_DATA,
                 'expectedCommandOutput' => new ErrorOutput(
                     new Configuration(
                         $root . '/tests/Fixtures/basil/InvalidTest/import-non-array-assertions-data.yml',
@@ -248,7 +249,7 @@ trait ParseExceptionDataProviderTrait
                         AbstractBaseTest::class
                     ),
                     'Unparseable step',
-                    ErrorOutput::CODE_LOADER_UNPARSEABLE_DATA,
+                    ErrorOutputFactory::CODE_LOADER_UNPARSEABLE_DATA,
                     [
                         'type' => 'step',
                         'test_path' => $root . '/tests/Fixtures/basil/InvalidTest/import-non-array-assertions-data.yml',

@@ -58,6 +58,16 @@ class ErrorOutputFactoryTest extends AbstractBaseTest
             ->shouldReceive('validate')
             ->andReturn(Configuration::VALIDATION_STATE_TARGET_NOT_DIRECTORY);
 
+        $configurationSourceNotAbsolute = \Mockery::mock(ConfigurationInterface::class);
+        $configurationSourceNotAbsolute
+            ->shouldReceive('validate')
+            ->andReturn(Configuration::VALIDATION_STATE_SOURCE_NOT_ABSOLUTE);
+
+        $configurationTargetNotAbsolute = \Mockery::mock(ConfigurationInterface::class);
+        $configurationTargetNotAbsolute
+            ->shouldReceive('validate')
+            ->andReturn(Configuration::VALIDATION_STATE_TARGET_NOT_ABSOLUTE);
+
         return [
             'source not readable' => [
                 'configuration' => $configurationSourceNotReadable,
@@ -65,7 +75,7 @@ class ErrorOutputFactoryTest extends AbstractBaseTest
                 'expectedOutput' => new ErrorOutput(
                     $configurationSourceNotReadable,
                     'source invalid; file is not readable',
-                    ErrorOutput::CODE_COMMAND_CONFIG_SOURCE_INVALID_NOT_READABLE
+                    ErrorOutputFactory::CODE_COMMAND_CONFIG_SOURCE_INVALID_NOT_READABLE
                 ),
             ],
             'target not writable' => [
@@ -74,7 +84,7 @@ class ErrorOutputFactoryTest extends AbstractBaseTest
                 'expectedOutput' => new ErrorOutput(
                     $configurationTargetNotWritable,
                     'target invalid; directory is not writable',
-                    ErrorOutput::CODE_COMMAND_CONFIG_TARGET_INVALID_NOT_WRITABLE
+                    ErrorOutputFactory::CODE_COMMAND_CONFIG_TARGET_INVALID_NOT_WRITABLE
                 ),
             ],
             'target not a directory' => [
@@ -83,7 +93,25 @@ class ErrorOutputFactoryTest extends AbstractBaseTest
                 'expectedOutput' => new ErrorOutput(
                     $configurationTargetNotDirectory,
                     'target invalid; is not a directory (is it a file?)',
-                    ErrorOutput::CODE_COMMAND_CONFIG_TARGET_INVALID_NOT_A_DIRECTORY
+                    ErrorOutputFactory::CODE_COMMAND_CONFIG_TARGET_INVALID_NOT_A_DIRECTORY
+                ),
+            ],
+            'source not absolute' => [
+                'configuration' => $configurationSourceNotAbsolute,
+                'configurationValidationState' => Configuration::VALIDATION_STATE_SOURCE_NOT_ABSOLUTE,
+                'expectedOutput' => new ErrorOutput(
+                    $configurationSourceNotAbsolute,
+                    'source invalid: path must be absolute',
+                    ErrorOutputFactory::CODE_COMMAND_CONFIG_SOURCE_INVALID_NOT_ABSOLUTE
+                ),
+            ],
+            'target not absolute' => [
+                'configuration' => $configurationTargetNotAbsolute,
+                'configurationValidationState' => Configuration::VALIDATION_STATE_TARGET_NOT_ABSOLUTE,
+                'expectedOutput' => new ErrorOutput(
+                    $configurationTargetNotAbsolute,
+                    'target invalid: path must be absolute',
+                    ErrorOutputFactory::CODE_COMMAND_CONFIG_TARGET_INVALID_NOT_ABSOLUTE
                 ),
             ],
         ];

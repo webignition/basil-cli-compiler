@@ -70,11 +70,11 @@ class GenerateCommandTest extends AbstractBaseTest
                     '--source' => '',
                     '--target' => getcwd() . '/tests/build/target',
                 ],
-                'validationErrorCode' => ErrorOutput::CODE_COMMAND_CONFIG_SOURCE_EMPTY,
+                'validationErrorCode' => ErrorOutputFactory::CODE_COMMAND_CONFIG_SOURCE_EMPTY,
                 'expectedCommandOutput' => new ErrorOutput(
                     $emptySourceConfiguration,
                     'source empty; call with --source=SOURCE',
-                    ErrorOutput::CODE_COMMAND_CONFIG_SOURCE_EMPTY
+                    ErrorOutputFactory::CODE_COMMAND_CONFIG_SOURCE_EMPTY
                 ),
             ],
             'target empty' => [
@@ -82,11 +82,11 @@ class GenerateCommandTest extends AbstractBaseTest
                     '--source' => getcwd() . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
                     '--target' => '',
                 ],
-                'validationErrorCode' => ErrorOutput::CODE_COMMAND_CONFIG_TARGET_EMPTY,
+                'validationErrorCode' => ErrorOutputFactory::CODE_COMMAND_CONFIG_TARGET_EMPTY,
                 'expectedCommandOutput' => new ErrorOutput(
                     $emptyTargetConfiguration,
                     'target empty; call with --target=TARGET',
-                    ErrorOutput::CODE_COMMAND_CONFIG_TARGET_EMPTY
+                    ErrorOutputFactory::CODE_COMMAND_CONFIG_TARGET_EMPTY
                 ),
             ],
         ];

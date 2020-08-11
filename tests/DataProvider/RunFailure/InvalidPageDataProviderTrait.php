@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace webignition\BasilCliCompiler\Tests\DataProvider\RunFailure;
 
 use webignition\BaseBasilTestCase\AbstractBaseTest;
+use webignition\BasilCliCompiler\Services\ErrorOutputFactory;
 use webignition\BasilCompilerModels\Configuration;
 use webignition\BasilCompilerModels\ErrorOutput;
 
@@ -29,7 +30,7 @@ trait InvalidPageDataProviderTrait
                     '--source' => $testPath,
                     '--target' => $root . '/tests/build/target',
                 ],
-                'expectedExitCode' => ErrorOutput::CODE_LOADER_INVALID_PAGE,
+                'expectedExitCode' => ErrorOutputFactory::CODE_LOADER_INVALID_PAGE,
                 'expectedCommandOutput' => new ErrorOutput(
                     new Configuration(
                         $testAbsolutePath,
@@ -37,7 +38,7 @@ trait InvalidPageDataProviderTrait
                         AbstractBaseTest::class
                     ),
                     'Invalid page "empty_url_page" at path "' . $pageAbsolutePath . '": page-url-empty',
-                    ErrorOutput::CODE_LOADER_INVALID_PAGE,
+                    ErrorOutputFactory::CODE_LOADER_INVALID_PAGE,
                     [
                         'test_path' => $testAbsolutePath,
                         'import_name' => 'empty_url_page',
@@ -54,7 +55,7 @@ trait InvalidPageDataProviderTrait
                     '--source' => $testSuitePath,
                     '--target' => $root . '/tests/build/target',
                 ],
-                'expectedExitCode' => ErrorOutput::CODE_LOADER_INVALID_PAGE,
+                'expectedExitCode' => ErrorOutputFactory::CODE_LOADER_INVALID_PAGE,
                 'expectedCommandOutput' => new ErrorOutput(
                     new Configuration(
                         $testSuiteAbsolutePath,
@@ -62,7 +63,7 @@ trait InvalidPageDataProviderTrait
                         AbstractBaseTest::class
                     ),
                     'Invalid page "empty_url_page" at path "' . $pageAbsolutePath . '": page-url-empty',
-                    ErrorOutput::CODE_LOADER_INVALID_PAGE,
+                    ErrorOutputFactory::CODE_LOADER_INVALID_PAGE,
                     [
                         'test_path' => $testAbsolutePath,
                         'import_name' => 'empty_url_page',

@@ -43,6 +43,29 @@ class ErrorOutputFactory
     public const UNPARSEABLE_STEP_INVALID_ASSERTIONS_DATA = 'invalid-assertions-data';
     public const REASON_UNKNOWN = 'unknown';
 
+    public const CODE_COMMAND_CONFIG_SOURCE_EMPTY = 100;
+    public const CODE_COMMAND_CONFIG_SOURCE_INVALID_DOES_NOT_EXIST = 101;
+    public const CODE_COMMAND_CONFIG_SOURCE_INVALID_NOT_READABLE = 102;
+    public const CODE_COMMAND_CONFIG_TARGET_EMPTY = 103;
+    public const CODE_COMMAND_CONFIG_TARGET_INVALID_DOES_NOT_EXIST = 104;
+    public const CODE_COMMAND_CONFIG_TARGET_INVALID_NOT_A_DIRECTORY = 105;
+    public const CODE_COMMAND_CONFIG_TARGET_INVALID_NOT_WRITABLE = 106;
+    public const CODE_COMMAND_CONFIG_SOURCE_INVALID_NOT_ABSOLUTE = 107;
+    public const CODE_COMMAND_CONFIG_TARGET_INVALID_NOT_ABSOLUTE = 108;
+    public const CODE_LOADER_INVALID_YAML = 200;
+    public const CODE_LOADER_CIRCULAR_STEP_IMPORT = 201;
+    public const CODE_LOADER_EMPTY_TEST = 202;
+    public const CODE_LOADER_INVALID_PAGE = 203;
+    public const CODE_LOADER_INVALID_TEST = 204;
+    public const CODE_LOADER_NON_RETRIEVABLE_IMPORT = 205;
+    public const CODE_LOADER_UNPARSEABLE_DATA = 206;
+    public const CODE_LOADER_UNKNOWN_ELEMENT = 207;
+    public const CODE_LOADER_UNKNOWN_ITEM = 208;
+    public const CODE_LOADER_UNKNOWN_PAGE_ELEMENT = 209;
+    public const CODE_LOADER_UNKNOWN_TEST = 210;
+    public const CODE_GENERATOR_UNRESOLVED_PLACEHOLDER = 211;
+    public const CODE_GENERATOR_UNSUPPORTED_STEP = 212;
+
     /**
      * @var array<mixed>
      */
@@ -64,20 +87,24 @@ class ErrorOutputFactory
      * @var array<int, string>
      */
     private array $configurationErrorMessages = [
-        ErrorOutput::CODE_COMMAND_CONFIG_SOURCE_EMPTY =>
+        self::CODE_COMMAND_CONFIG_SOURCE_EMPTY =>
             'source empty; call with --source=SOURCE',
-        ErrorOutput::CODE_COMMAND_CONFIG_SOURCE_INVALID_DOES_NOT_EXIST =>
+        self::CODE_COMMAND_CONFIG_SOURCE_INVALID_DOES_NOT_EXIST =>
             'source invalid; does not exist',
-        ErrorOutput::CODE_COMMAND_CONFIG_SOURCE_INVALID_NOT_READABLE =>
+        self::CODE_COMMAND_CONFIG_SOURCE_INVALID_NOT_READABLE =>
             'source invalid; file is not readable',
-        ErrorOutput::CODE_COMMAND_CONFIG_TARGET_EMPTY =>
+        self::CODE_COMMAND_CONFIG_TARGET_EMPTY =>
             'target empty; call with --target=TARGET',
-        ErrorOutput::CODE_COMMAND_CONFIG_TARGET_INVALID_DOES_NOT_EXIST =>
+        self::CODE_COMMAND_CONFIG_TARGET_INVALID_DOES_NOT_EXIST =>
             'target invalid; does not exist',
-        ErrorOutput::CODE_COMMAND_CONFIG_TARGET_INVALID_NOT_A_DIRECTORY =>
+        self::CODE_COMMAND_CONFIG_TARGET_INVALID_NOT_A_DIRECTORY =>
             'target invalid; is not a directory (is it a file?)',
-        ErrorOutput::CODE_COMMAND_CONFIG_TARGET_INVALID_NOT_WRITABLE =>
+        self::CODE_COMMAND_CONFIG_TARGET_INVALID_NOT_WRITABLE =>
             'target invalid; directory is not writable',
+        self::CODE_COMMAND_CONFIG_SOURCE_INVALID_NOT_ABSOLUTE =>
+            'source invalid: path must be absolute',
+        self::CODE_COMMAND_CONFIG_TARGET_INVALID_NOT_ABSOLUTE =>
+            'target invalid: path must be absolute'
     ];
 
     private ValidatorInvalidResultSerializer $validatorInvalidResultSerializer;
@@ -91,14 +118,22 @@ class ErrorOutputFactory
         ConfigurationInterface $configuration,
         int $configurationValidationState
     ): ErrorOutputInterface {
-        $errorCode = ErrorOutput::CODE_COMMAND_CONFIG_SOURCE_INVALID_NOT_READABLE;
+        $errorCode = self::CODE_COMMAND_CONFIG_SOURCE_INVALID_NOT_READABLE;
 
         if (Configuration::VALIDATION_STATE_TARGET_NOT_DIRECTORY === $configurationValidationState) {
-            $errorCode = ErrorOutput::CODE_COMMAND_CONFIG_TARGET_INVALID_NOT_A_DIRECTORY;
+            $errorCode = self::CODE_COMMAND_CONFIG_TARGET_INVALID_NOT_A_DIRECTORY;
         }
 
         if (Configuration::VALIDATION_STATE_TARGET_NOT_WRITABLE === $configurationValidationState) {
-            $errorCode = ErrorOutput::CODE_COMMAND_CONFIG_TARGET_INVALID_NOT_WRITABLE;
+            $errorCode = self::CODE_COMMAND_CONFIG_TARGET_INVALID_NOT_WRITABLE;
+        }
+
+        if (Configuration::VALIDATION_STATE_SOURCE_NOT_ABSOLUTE === $configurationValidationState) {
+            $errorCode = self::CODE_COMMAND_CONFIG_SOURCE_INVALID_NOT_ABSOLUTE;
+        }
+
+        if (Configuration::VALIDATION_STATE_TARGET_NOT_ABSOLUTE === $configurationValidationState) {
+            $errorCode = self::CODE_COMMAND_CONFIG_TARGET_INVALID_NOT_ABSOLUTE;
         }
 
         return $this->createForConfigurationErrorCode($configuration, $errorCode);
@@ -106,12 +141,12 @@ class ErrorOutputFactory
 
     public function createForEmptySource(ConfigurationInterface $configuration): ErrorOutputInterface
     {
-        return $this->createForConfigurationErrorCode($configuration, ErrorOutput::CODE_COMMAND_CONFIG_SOURCE_EMPTY);
+        return $this->createForConfigurationErrorCode($configuration, self::CODE_COMMAND_CONFIG_SOURCE_EMPTY);
     }
 
     public function createForEmptyTarget(ConfigurationInterface $configuration): ErrorOutputInterface
     {
-        return $this->createForConfigurationErrorCode($configuration, ErrorOutput::CODE_COMMAND_CONFIG_TARGET_EMPTY);
+        return $this->createForConfigurationErrorCode($configuration, self::CODE_COMMAND_CONFIG_TARGET_EMPTY);
     }
 
     public function createForException(
@@ -187,7 +222,7 @@ class ErrorOutputFactory
         return new ErrorOutput(
             $configuration,
             $message,
-            ErrorOutput::CODE_LOADER_INVALID_YAML,
+            self::CODE_LOADER_INVALID_YAML,
             [
                 'path' => $yamlLoaderException->getPath()
             ]
@@ -201,7 +236,7 @@ class ErrorOutputFactory
         return new ErrorOutput(
             $configuration,
             $circularStepImportException->getMessage(),
-            ErrorOutput::CODE_LOADER_CIRCULAR_STEP_IMPORT,
+            self::CODE_LOADER_CIRCULAR_STEP_IMPORT,
             [
                 'import_name' => $circularStepImportException->getImportName(),
             ]
@@ -215,7 +250,7 @@ class ErrorOutputFactory
         return new ErrorOutput(
             $configuration,
             $emptyTestException->getMessage(),
-            ErrorOutput::CODE_LOADER_EMPTY_TEST,
+            self::CODE_LOADER_EMPTY_TEST,
             [
                 'path' => $emptyTestException->getPath(),
             ]
@@ -229,7 +264,7 @@ class ErrorOutputFactory
         return new ErrorOutput(
             $configuration,
             $invalidPageException->getMessage(),
-            ErrorOutput::CODE_LOADER_INVALID_PAGE,
+            self::CODE_LOADER_INVALID_PAGE,
             [
                 'test_path' => $invalidPageException->getTestPath(),
                 'import_name' => $invalidPageException->getImportName(),
@@ -248,7 +283,7 @@ class ErrorOutputFactory
         return new ErrorOutput(
             $configuration,
             $invalidTestException->getMessage(),
-            ErrorOutput::CODE_LOADER_INVALID_TEST,
+            self::CODE_LOADER_INVALID_TEST,
             [
                 'test_path' => $invalidTestException->getPath(),
                 'validation_result' => $this->validatorInvalidResultSerializer->serializeToArray(
@@ -274,7 +309,7 @@ class ErrorOutputFactory
         return new ErrorOutput(
             $configuration,
             $nonRetrievableImportException->getMessage(),
-            ErrorOutput::CODE_LOADER_NON_RETRIEVABLE_IMPORT,
+            self::CODE_LOADER_NON_RETRIEVABLE_IMPORT,
             [
                 'test_path' => $nonRetrievableImportException->getTestPath(),
                 'type' => $nonRetrievableImportException->getType(),
@@ -331,7 +366,7 @@ class ErrorOutputFactory
         return new ErrorOutput(
             $configuration,
             $unparseableDataException->getMessage(),
-            ErrorOutput::CODE_LOADER_UNPARSEABLE_DATA,
+            self::CODE_LOADER_UNPARSEABLE_DATA,
             $context
         );
     }
@@ -343,7 +378,7 @@ class ErrorOutputFactory
         return new ErrorOutput(
             $configuration,
             $unknownElementException->getMessage(),
-            ErrorOutput::CODE_LOADER_UNKNOWN_ELEMENT,
+            self::CODE_LOADER_UNKNOWN_ELEMENT,
             array_merge(
                 [
                     'element_name' => $unknownElementException->getElementName(),
@@ -360,7 +395,7 @@ class ErrorOutputFactory
         return new ErrorOutput(
             $configuration,
             $unknownItemException->getMessage(),
-            ErrorOutput::CODE_LOADER_UNKNOWN_ITEM,
+            self::CODE_LOADER_UNKNOWN_ITEM,
             array_merge(
                 [
                     'type' => $unknownItemException->getType(),
@@ -378,7 +413,7 @@ class ErrorOutputFactory
         return new ErrorOutput(
             $configuration,
             $unknownPageElementException->getMessage(),
-            ErrorOutput::CODE_LOADER_UNKNOWN_PAGE_ELEMENT,
+            self::CODE_LOADER_UNKNOWN_PAGE_ELEMENT,
             array_merge(
                 [
                     'import_name' => $unknownPageElementException->getImportName(),
@@ -396,7 +431,7 @@ class ErrorOutputFactory
         return new ErrorOutput(
             $configuration,
             $unknownTestException->getMessage(),
-            ErrorOutput::CODE_LOADER_UNKNOWN_TEST,
+            self::CODE_LOADER_UNKNOWN_TEST,
             [
                 'import_name' => $unknownTestException->getImportName(),
             ]
@@ -410,7 +445,7 @@ class ErrorOutputFactory
         return new ErrorOutput(
             $configuration,
             $unresolvedPlaceholderException->getMessage(),
-            ErrorOutput::CODE_GENERATOR_UNRESOLVED_PLACEHOLDER,
+            self::CODE_GENERATOR_UNRESOLVED_PLACEHOLDER,
             [
                 'placeholder' => $unresolvedPlaceholderException->getPlaceholder(),
                 'content' => $unresolvedPlaceholderException->getContent(),
@@ -425,7 +460,7 @@ class ErrorOutputFactory
         return new ErrorOutput(
             $configuration,
             $unsupportedStepException->getMessage(),
-            ErrorOutput::CODE_GENERATOR_UNSUPPORTED_STEP,
+            self::CODE_GENERATOR_UNSUPPORTED_STEP,
             $this->createErrorOutputContextFromUnsupportedStepException($unsupportedStepException)
         );
     }
