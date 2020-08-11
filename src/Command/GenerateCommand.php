@@ -108,10 +108,7 @@ class GenerateCommand extends Command
         $rawTarget = trim((string) $typedInput->getStringOption(GenerateCommand::OPTION_TARGET));
         $baseClass = trim((string) $typedInput->getStringOption(GenerateCommand::OPTION_BASE_CLASS));
 
-        $configurationSource = is_file($rawSource) || is_dir($rawSource) ? $rawSource : '';
-        $configurationTarget = is_dir($rawTarget) ? $rawTarget : '';
-
-        $configuration = new Configuration($configurationSource, $configurationTarget, $baseClass);
+        $configuration = new Configuration($rawSource, $rawTarget, $baseClass);
 
         if ('' === $rawSource) {
             return $this->outputRenderer->render($this->errorOutputFactory->createForEmptySource($configuration));

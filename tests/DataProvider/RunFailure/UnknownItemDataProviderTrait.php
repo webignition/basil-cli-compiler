@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace webignition\BasilCliCompiler\Tests\DataProvider\RunFailure;
 
 use webignition\BaseBasilTestCase\AbstractBaseTest;
+use webignition\BasilCliCompiler\Services\ErrorOutputFactory;
 use webignition\BasilCompilerModels\Configuration;
 use webignition\BasilCompilerModels\ErrorOutput;
 
@@ -20,7 +21,7 @@ trait UnknownItemDataProviderTrait
                     '--source' => $root . '/tests/Fixtures/basil/InvalidTest/step-uses-unknown-dataset.yml',
                     '--target' => $root . '/tests/build/target',
                 ],
-                'expectedExitCode' => ErrorOutput::CODE_LOADER_UNKNOWN_ITEM,
+                'expectedExitCode' => ErrorOutputFactory::CODE_LOADER_UNKNOWN_ITEM,
                 'expectedCommandOutput' => new ErrorOutput(
                     new Configuration(
                         $root . '/tests/Fixtures/basil/InvalidTest/step-uses-unknown-dataset.yml',
@@ -28,7 +29,7 @@ trait UnknownItemDataProviderTrait
                         AbstractBaseTest::class
                     ),
                     'Unknown dataset "unknown_data_provider_name"',
-                    ErrorOutput::CODE_LOADER_UNKNOWN_ITEM,
+                    ErrorOutputFactory::CODE_LOADER_UNKNOWN_ITEM,
                     [
                         'type' => 'dataset',
                         'name' => 'unknown_data_provider_name',
@@ -43,7 +44,7 @@ trait UnknownItemDataProviderTrait
                     '--source' => $root . '/tests/Fixtures/basil/InvalidTest/step-uses-unknown-page.yml',
                     '--target' => $root . '/tests/build/target',
                 ],
-                'expectedExitCode' => ErrorOutput::CODE_LOADER_UNKNOWN_ITEM,
+                'expectedExitCode' => ErrorOutputFactory::CODE_LOADER_UNKNOWN_ITEM,
                 'expectedCommandOutput' => new ErrorOutput(
                     new Configuration(
                         $root . '/tests/Fixtures/basil/InvalidTest/step-uses-unknown-page.yml',
@@ -51,7 +52,7 @@ trait UnknownItemDataProviderTrait
                         AbstractBaseTest::class
                     ),
                     'Unknown page "unknown_page_import"',
-                    ErrorOutput::CODE_LOADER_UNKNOWN_ITEM,
+                    ErrorOutputFactory::CODE_LOADER_UNKNOWN_ITEM,
                     [
                         'type' => 'page',
                         'name' => 'unknown_page_import',
@@ -66,7 +67,7 @@ trait UnknownItemDataProviderTrait
                     '--source' => $root . '/tests/Fixtures/basil/InvalidTest/step-uses-unknown-step.yml',
                     '--target' => $root . '/tests/build/target',
                 ],
-                'expectedExitCode' => ErrorOutput::CODE_LOADER_UNKNOWN_ITEM,
+                'expectedExitCode' => ErrorOutputFactory::CODE_LOADER_UNKNOWN_ITEM,
                 'expectedCommandOutput' => new ErrorOutput(
                     new Configuration(
                         $root . '/tests/Fixtures/basil/InvalidTest/step-uses-unknown-step.yml',
@@ -74,7 +75,7 @@ trait UnknownItemDataProviderTrait
                         AbstractBaseTest::class
                     ),
                     'Unknown step "unknown_step"',
-                    ErrorOutput::CODE_LOADER_UNKNOWN_ITEM,
+                    ErrorOutputFactory::CODE_LOADER_UNKNOWN_ITEM,
                     [
                         'type' => 'step',
                         'name' => 'unknown_step',
@@ -90,7 +91,7 @@ trait UnknownItemDataProviderTrait
                         '/tests/Fixtures/basil/InvalidTestSuite/imports-test-declaring-step-using-unknown-dataset.yml',
                     '--target' => $root . '/tests/build/target',
                 ],
-                'expectedExitCode' => ErrorOutput::CODE_LOADER_UNKNOWN_ITEM,
+                'expectedExitCode' => ErrorOutputFactory::CODE_LOADER_UNKNOWN_ITEM,
                 'expectedCommandOutput' => new ErrorOutput(
                     new Configuration(
                         $root .
@@ -99,7 +100,7 @@ trait UnknownItemDataProviderTrait
                         AbstractBaseTest::class
                     ),
                     'Unknown dataset "unknown_data_provider_name"',
-                    ErrorOutput::CODE_LOADER_UNKNOWN_ITEM,
+                    ErrorOutputFactory::CODE_LOADER_UNKNOWN_ITEM,
                     [
                         'type' => 'dataset',
                         'name' => 'unknown_data_provider_name',

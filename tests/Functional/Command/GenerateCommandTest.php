@@ -13,6 +13,7 @@ use webignition\BasilCliCompiler\Model\ExternalVariableIdentifiers;
 use webignition\BasilCliCompiler\Services\CommandFactory;
 use webignition\BasilCliCompiler\Services\CompiledClassResolver;
 use webignition\BasilCliCompiler\Services\Compiler;
+use webignition\BasilCliCompiler\Services\ErrorOutputFactory;
 use webignition\BasilCliCompiler\Tests\DataProvider\RunFailure\CircularStepImportDataProviderTrait;
 use webignition\BasilCliCompiler\Tests\DataProvider\RunFailure\EmptyTestDataProviderTrait;
 use webignition\BasilCliCompiler\Tests\DataProvider\RunFailure\InvalidPageDataProviderTrait;
@@ -156,7 +157,7 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
                     '--source' => $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
                     '--target' => $root . '/tests/build/target',
                 ],
-                'expectedExitCode' => ErrorOutput::CODE_GENERATOR_UNRESOLVED_PLACEHOLDER,
+                'expectedExitCode' => ErrorOutputFactory::CODE_GENERATOR_UNRESOLVED_PLACEHOLDER,
                 'expectedCommandOutput' => new ErrorOutput(
                     new Configuration(
                         $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
@@ -165,7 +166,7 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
                     ),
                     'Unresolved placeholder "CLIENT" in content ' .
                     '"{{ CLIENT }}->request(\'GET\', \'https://example.com/\');"',
-                    ErrorOutput::CODE_GENERATOR_UNRESOLVED_PLACEHOLDER,
+                    ErrorOutputFactory::CODE_GENERATOR_UNRESOLVED_PLACEHOLDER,
                     [
                         'placeholder' => 'CLIENT',
                         'content' => '{{ CLIENT }}->request(\'GET\', \'https://example.com/\');',
@@ -218,7 +219,7 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
         $output = new BufferedOutput();
 
         $exitCode = $this->command->run(new ArrayInput($input), $output);
-        self::assertSame(ErrorOutput::CODE_GENERATOR_UNSUPPORTED_STEP, $exitCode);
+        self::assertSame(ErrorOutputFactory::CODE_GENERATOR_UNSUPPORTED_STEP, $exitCode);
 
         $expectedCommandOutput = new ErrorOutput(
             new Configuration(
@@ -227,7 +228,7 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
                 AbstractBaseTest::class
             ),
             'Unsupported step',
-            ErrorOutput::CODE_GENERATOR_UNSUPPORTED_STEP,
+            ErrorOutputFactory::CODE_GENERATOR_UNSUPPORTED_STEP,
             $expectedErrorOutputContext
         );
 

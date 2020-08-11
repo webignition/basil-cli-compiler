@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace webignition\BasilCliCompiler\Tests\DataProvider\RunFailure;
 
 use webignition\BaseBasilTestCase\AbstractBaseTest;
+use webignition\BasilCliCompiler\Services\ErrorOutputFactory;
 use webignition\BasilCompilerModels\Configuration;
 use webignition\BasilCompilerModels\ErrorOutput;
 
@@ -20,7 +21,7 @@ trait NonLoadableDataDataProviderTrait
                     '--source' => $root . '/tests/Fixtures/basil/InvalidTest/invalid.unparseable.yml',
                     '--target' => $root . '/tests/build/target',
                 ],
-                'expectedExitCode' => ErrorOutput::CODE_LOADER_INVALID_YAML,
+                'expectedExitCode' => ErrorOutputFactory::CODE_LOADER_INVALID_YAML,
                 'expectedCommandOutput' => new ErrorOutput(
                     new Configuration(
                         $root . '/tests/Fixtures/basil/InvalidTest/invalid.unparseable.yml',
@@ -28,7 +29,7 @@ trait NonLoadableDataDataProviderTrait
                         AbstractBaseTest::class
                     ),
                     'Unexpected characters near "https://example.com"" at line 3 (near "url: "https://example.com"").',
-                    ErrorOutput::CODE_LOADER_INVALID_YAML,
+                    ErrorOutputFactory::CODE_LOADER_INVALID_YAML,
                     [
                         'path' => $root . '/tests/Fixtures/basil/InvalidTest/invalid.unparseable.yml',
                     ]
@@ -39,7 +40,7 @@ trait NonLoadableDataDataProviderTrait
                     '--source' => $root . '/tests/Fixtures/basil/InvalidTestSuite/imports-unparseable.yml',
                     '--target' => $root . '/tests/build/target',
                 ],
-                'expectedExitCode' => ErrorOutput::CODE_LOADER_INVALID_YAML,
+                'expectedExitCode' => ErrorOutputFactory::CODE_LOADER_INVALID_YAML,
                 'expectedCommandOutput' => new ErrorOutput(
                     new Configuration(
                         $root . '/tests/Fixtures/basil/InvalidTestSuite/imports-unparseable.yml',
@@ -47,7 +48,7 @@ trait NonLoadableDataDataProviderTrait
                         AbstractBaseTest::class
                     ),
                     'Unexpected characters near "https://example.com"" at line 3 (near "url: "https://example.com"").',
-                    ErrorOutput::CODE_LOADER_INVALID_YAML,
+                    ErrorOutputFactory::CODE_LOADER_INVALID_YAML,
                     [
                         'path' => $root . '/tests/Fixtures/basil/InvalidTest/invalid.unparseable.yml',
                     ]
@@ -58,7 +59,7 @@ trait NonLoadableDataDataProviderTrait
                     '--source' => $root . '/tests/Fixtures/basil/InvalidTest/invalid.not-an-array.yml',
                     '--target' => $root . '/tests/build/target',
                 ],
-                'expectedExitCode' => ErrorOutput::CODE_LOADER_INVALID_YAML,
+                'expectedExitCode' => ErrorOutputFactory::CODE_LOADER_INVALID_YAML,
                 'expectedCommandOutput' => new ErrorOutput(
                     new Configuration(
                         $root . '/tests/Fixtures/basil/InvalidTest/invalid.not-an-array.yml',
@@ -66,7 +67,7 @@ trait NonLoadableDataDataProviderTrait
                         AbstractBaseTest::class
                     ),
                     'Data is not an array',
-                    ErrorOutput::CODE_LOADER_INVALID_YAML,
+                    ErrorOutputFactory::CODE_LOADER_INVALID_YAML,
                     [
                         'path' => $root . '/tests/Fixtures/basil/InvalidTest/invalid.not-an-array.yml',
                     ]
@@ -77,7 +78,7 @@ trait NonLoadableDataDataProviderTrait
                     '--source' => $root . '/tests/Fixtures/basil/InvalidTestSuite/imports-not-an-array.yml',
                     '--target' => $root . '/tests/build/target',
                 ],
-                'expectedExitCode' => ErrorOutput::CODE_LOADER_INVALID_YAML,
+                'expectedExitCode' => ErrorOutputFactory::CODE_LOADER_INVALID_YAML,
                 'expectedCommandOutput' => new ErrorOutput(
                     new Configuration(
                         $root . '/tests/Fixtures/basil/InvalidTestSuite/imports-not-an-array.yml',
@@ -85,7 +86,7 @@ trait NonLoadableDataDataProviderTrait
                         AbstractBaseTest::class
                     ),
                     'Data is not an array',
-                    ErrorOutput::CODE_LOADER_INVALID_YAML,
+                    ErrorOutputFactory::CODE_LOADER_INVALID_YAML,
                     [
                         'path' => $root . '/tests/Fixtures/basil/InvalidTest/invalid.not-an-array.yml',
                     ]
@@ -96,7 +97,7 @@ trait NonLoadableDataDataProviderTrait
                     '--source' => $root . '/tests/Fixtures/basil/InvalidTestSuite/unparseable-yaml.yml',
                     '--target' => $root . '/tests/build/target',
                 ],
-                'expectedExitCode' => ErrorOutput::CODE_LOADER_INVALID_YAML,
+                'expectedExitCode' => ErrorOutputFactory::CODE_LOADER_INVALID_YAML,
                 'expectedCommandOutput' => new ErrorOutput(
                     new Configuration(
                         $root . '/tests/Fixtures/basil/InvalidTestSuite/unparseable-yaml.yml',
@@ -104,7 +105,7 @@ trait NonLoadableDataDataProviderTrait
                         AbstractBaseTest::class
                     ),
                     'Malformed inline YAML string: ""../Test/lacking-closing-quote.yml" at line 2.',
-                    ErrorOutput::CODE_LOADER_INVALID_YAML,
+                    ErrorOutputFactory::CODE_LOADER_INVALID_YAML,
                     [
                         'path' => $root . '/tests/Fixtures/basil/InvalidTestSuite/unparseable-yaml.yml',
                     ]
