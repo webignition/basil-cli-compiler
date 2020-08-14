@@ -2,11 +2,11 @@ FROM php:7.4-cli-buster
 
 WORKDIR /app
 
-ARG proxy_server_version=0.4
+ARG proxy_server_version=0.5
 
 RUN apt-get update \
     && apt-get install -y libzip-dev nano zip \
-    && docker-php-ext-install pcntl sockets zip > /dev/null
+    && docker-php-ext-install pcntl zip > /dev/null
 
 RUN apt-get autoremove -y \
     && apt-get clean \
