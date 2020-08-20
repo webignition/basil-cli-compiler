@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace webignition\BasilCliCompiler\Tests\Unit\Command;
 
-use Symfony\Component\Console\Tester\CommandTester;
+use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Output\BufferedOutput;
+use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Yaml\Yaml;
 use webignition\BaseBasilTestCase\AbstractBaseTest as BasilBaseTest;
 use webignition\BasilCliCompiler\Command\GenerateCommand;
@@ -33,18 +35,22 @@ class GenerateCommandTest extends AbstractBaseTest
         int $validationErrorCode,
         ErrorOutputInterface $expectedCommandOutput
     ): void {
+        $output = new BufferedOutput();
+
         $command = $this->createCommand(
             \Mockery::mock(Compiler::class),
-            \Mockery::mock(TestWriter::class)
+            \Mockery::mock(TestWriter::class),
+            $output
         );
 
-        $commandTester = new CommandTester($command);
+        $exitCode = $command->run(
+            new ArrayInput($input),
+            $output
+        );
 
-        $exitCode = $commandTester->execute($input);
         self::assertSame($validationErrorCode, $exitCode);
 
-        $output = $commandTester->getDisplay();
-        $commandOutput = ErrorOutput::fromArray((array) Yaml::parse($output));
+        $commandOutput = ErrorOutput::fromArray((array) Yaml::parse($output->fetch()));
         self::assertEquals($expectedCommandOutput, $commandOutput);
     }
 
@@ -94,14 +100,15 @@ class GenerateCommandTest extends AbstractBaseTest
 
     private function createCommand(
         Compiler $compiler,
-        TestWriter $testWriter
+        TestWriter $testWriter,
+        OutputInterface $commandOutput
     ): GenerateCommand {
         return new GenerateCommand(
             SourceLoader::createLoader(),
             $compiler,
             $testWriter,
             new ErrorOutputFactory(new ValidatorInvalidResultSerializer()),
-            new OutputRenderer()
+            new OutputRenderer($commandOutput)
         );
     }
 }

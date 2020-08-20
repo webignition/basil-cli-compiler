@@ -100,8 +100,6 @@ class GenerateCommand extends Command
      */
     protected function execute(InputInterface $input, ConsoleOutputInterface $output)
     {
-        $this->outputRenderer->setConsoleOutput($output);
-
         $typedInput = new TypedInput($input);
 
         $rawSource = trim((string) $typedInput->getStringOption(GenerateCommand::OPTION_SOURCE));
