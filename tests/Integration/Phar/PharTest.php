@@ -85,7 +85,8 @@ class PharTest extends \PHPUnit\Framework\TestCase
 
         $this->assertSame($expectedExitCode, $exitCode);
 
-        $processOutputData = (array) Yaml::parse($pharProcess->getOutput());
+        $outputContent = 0 === $expectedExitCode ? $pharProcess->getOutput() : $pharProcess->getErrorOutput();
+        $processOutputData = (array) Yaml::parse($outputContent);
 
         $suiteManifest = 0 === $exitCode
             ? SuiteManifest::fromArray($processOutputData)
