@@ -15,10 +15,15 @@ if ('' === $pharPath) {
     require 'phar://compiler.phar/vendor/autoload.php';
 }
 
+use Symfony\Component\Console\Output\NullOutput;
+use Symfony\Component\Console\Output\StreamOutput;
 use webignition\BasilCliCompiler\Services\CommandFactory;
 use webignition\SingleCommandApplicationFactory\Factory;
 
-$command = CommandFactory::createGenerateCommand();
+$stdout = new StreamOutput(STDOUT);
+$stderr = new StreamOutput(STDERR);
+
+$command = CommandFactory::createGenerateCommand($stdout, $stderr);
 
 $application = (new Factory())->create($command, VERSION);
-$application->run();
+$application->run(null, new NullOutput());

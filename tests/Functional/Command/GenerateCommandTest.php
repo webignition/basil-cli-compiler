@@ -6,6 +6,7 @@ namespace webignition\BasilCliCompiler\Tests\Functional\Command;
 
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
+use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Yaml\Yaml;
 use webignition\BaseBasilTestCase\AbstractBaseTest;
 use webignition\BasilCliCompiler\Command\GenerateCommand;
@@ -53,15 +54,6 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
     use UnknownTestDataProviderTrait;
     use SuccessDataProviderTrait;
 
-    private GenerateCommand $command;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->command = CommandFactory::createGenerateCommand();
-    }
-
     /**
      * @param array<string, string> $input
      * @param int $expectedExitCode
@@ -76,12 +68,16 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
         SuiteManifest $expectedCommandOutput,
         array $expectedGeneratedCode
     ) {
-        $output = new BufferedOutput();
+        $stdout = new BufferedOutput();
+        $stderr = new BufferedOutput();
 
-        $exitCode = $this->command->run(new ArrayInput($input), $output);
+        $command = CommandFactory::createGenerateCommand($stdout, $stderr);
+
+        $exitCode = $command->run(new ArrayInput($input), new NullOutput());
         self::assertSame($expectedExitCode, $exitCode);
+        self::assertSame('', $stderr->fetch());
 
-        $suiteManifest = SuiteManifest::fromArray((array) Yaml::parse($output->fetch()));
+        $suiteManifest = SuiteManifest::fromArray((array) Yaml::parse($stdout->fetch()));
         $this->assertEquals($expectedCommandOutput, $suiteManifest);
 
         $generatedTestsToRemove = [];
@@ -133,16 +129,20 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
         ErrorOutputInterface $expectedCommandOutput,
         ?callable $initializer = null
     ) {
+        $stdout = new BufferedOutput();
+        $stderr = new BufferedOutput();
+
+        $command = CommandFactory::createGenerateCommand($stdout, $stderr);
+
         if (null !== $initializer) {
-            $initializer($this, $this->command);
+            $initializer($command);
         }
 
-        $output = new BufferedOutput();
-
-        $exitCode = $this->command->run(new ArrayInput($input), $output);
+        $exitCode = $command->run(new ArrayInput($input), new NullOutput());
         self::assertSame($expectedExitCode, $exitCode);
+        self::assertSame('', $stdout->fetch());
 
-        $commandOutput = ErrorOutput::fromArray((array) Yaml::parse($output->fetch()));
+        $commandOutput = ErrorOutput::fromArray((array) Yaml::parse($stderr->fetch()));
 
         self::assertEquals($expectedCommandOutput, $commandOutput);
     }
@@ -172,14 +172,14 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
                         'content' => '{{ CLIENT }}->request(\'GET\', \'https://example.com/\');',
                     ]
                 ),
-                'initializer' => function (GenerateCommandTest $generateCommandTest) {
+                'initializer' => function (GenerateCommand $command) {
                     $mockExternalVariableIdentifiers = \Mockery::mock(ExternalVariableIdentifiers::class);
                     $mockExternalVariableIdentifiers
                         ->shouldReceive('get')
                         ->andReturn([]);
 
                     $this->mockCompilerCompiledClassResolverExternalVariableIdentifiers(
-                        $generateCommandTest->command,
+                        $command,
                         $mockExternalVariableIdentifiers
                     );
                 }
@@ -209,17 +209,21 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
             ->shouldReceive('compile')
             ->andThrow($unsupportedStepException);
 
+        $stdout = new BufferedOutput();
+        $stderr = new BufferedOutput();
+
+        $command = CommandFactory::createGenerateCommand($stdout, $stderr);
+
         ObjectReflector::setProperty(
-            $this->command,
+            $command,
             GenerateCommand::class,
             'compiler',
             $compiler
         );
 
-        $output = new BufferedOutput();
-
-        $exitCode = $this->command->run(new ArrayInput($input), $output);
+        $exitCode = $command->run(new ArrayInput($input), new NullOutput());
         self::assertSame(ErrorOutputFactory::CODE_GENERATOR_UNSUPPORTED_STEP, $exitCode);
+        self::assertSame('', $stdout->fetch());
 
         $expectedCommandOutput = new ErrorOutput(
             new Configuration(
@@ -232,7 +236,7 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
             $expectedErrorOutputContext
         );
 
-        $commandOutput = ErrorOutput::fromArray((array) Yaml::parse($output->fetch()));
+        $commandOutput = ErrorOutput::fromArray((array) Yaml::parse($stderr->fetch()));
 
         self::assertEquals($expectedCommandOutput, $commandOutput);
     }

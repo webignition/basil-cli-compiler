@@ -13,24 +13,30 @@ class OutputRenderer
 {
     private const YAML_DUMP_INLINE_DEPTH = 4;
 
-    private ?ConsoleOutputInterface $consoleOutput;
+    private ConsoleOutputInterface $stdout;
+    private ConsoleOutputInterface $stderr;
 
-    public function setConsoleOutput(ConsoleOutputInterface $consoleOutput): void
+    public function __construct(ConsoleOutputInterface $stdout, ConsoleOutputInterface $stderr)
     {
-        $this->consoleOutput = $consoleOutput;
+        $this->stdout = $stdout;
+        $this->stderr = $stderr;
     }
 
     public function render(OutputInterface $commandOutput): int
     {
-        if ($this->consoleOutput instanceof ConsoleOutputInterface) {
-            $this->consoleOutput->writeln(Yaml::dump(
-                $commandOutput->getData(),
-                self::YAML_DUMP_INLINE_DEPTH
-            ));
+        $output = $this->stdout;
+        $exitCode = 0;
 
-            return $commandOutput instanceof ErrorOutputInterface ? $commandOutput->getCode() : 0;
+        if ($commandOutput instanceof ErrorOutputInterface) {
+            $output = $this->stderr;
+            $exitCode = $commandOutput->getCode();
         }
 
-        return -1;
+        $output->writeln(Yaml::dump(
+            $commandOutput->getData(),
+            self::YAML_DUMP_INLINE_DEPTH
+        ));
+
+        return $exitCode;
     }
 }

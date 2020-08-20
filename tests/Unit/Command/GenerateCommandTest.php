@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace webignition\BasilCliCompiler\Tests\Unit\Command;
 
-use Symfony\Component\Console\Tester\CommandTester;
+use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Output\BufferedOutput;
+use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Yaml\Yaml;
 use webignition\BaseBasilTestCase\AbstractBaseTest as BasilBaseTest;
 use webignition\BasilCliCompiler\Command\GenerateCommand;
@@ -33,18 +35,23 @@ class GenerateCommandTest extends AbstractBaseTest
         int $validationErrorCode,
         ErrorOutputInterface $expectedCommandOutput
     ): void {
-        $command = $this->createCommand(
+        $stdout = new BufferedOutput();
+        $stderr = new BufferedOutput();
+
+        $command = new GenerateCommand(
+            SourceLoader::createLoader(),
             \Mockery::mock(Compiler::class),
-            \Mockery::mock(TestWriter::class)
+            \Mockery::mock(TestWriter::class),
+            new ErrorOutputFactory(new ValidatorInvalidResultSerializer()),
+            new OutputRenderer($stdout, $stderr)
         );
 
-        $commandTester = new CommandTester($command);
+        $exitCode = $command->run(new ArrayInput($input), new NullOutput());
 
-        $exitCode = $commandTester->execute($input);
         self::assertSame($validationErrorCode, $exitCode);
+        self::assertSame('', $stdout->fetch());
 
-        $output = $commandTester->getDisplay();
-        $commandOutput = ErrorOutput::fromArray((array) Yaml::parse($output));
+        $commandOutput = ErrorOutput::fromArray((array) Yaml::parse($stderr->fetch()));
         self::assertEquals($expectedCommandOutput, $commandOutput);
     }
 
@@ -90,18 +97,5 @@ class GenerateCommandTest extends AbstractBaseTest
                 ),
             ],
         ];
-    }
-
-    private function createCommand(
-        Compiler $compiler,
-        TestWriter $testWriter
-    ): GenerateCommand {
-        return new GenerateCommand(
-            SourceLoader::createLoader(),
-            $compiler,
-            $testWriter,
-            new ErrorOutputFactory(new ValidatorInvalidResultSerializer()),
-            new OutputRenderer()
-        );
     }
 }
