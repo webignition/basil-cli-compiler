@@ -6,6 +6,7 @@ namespace webignition\BasilCliCompiler\Tests\Functional\Command;
 
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
+use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Yaml\Yaml;
 use webignition\BaseBasilTestCase\AbstractBaseTest;
 use webignition\BasilCliCompiler\Command\GenerateCommand;
@@ -67,13 +68,16 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
         SuiteManifest $expectedCommandOutput,
         array $expectedGeneratedCode
     ) {
-        $output = new BufferedOutput();
-        $command = CommandFactory::createGenerateCommand($output);
+        $stdout = new BufferedOutput();
+        $stderr = new BufferedOutput();
 
-        $exitCode = $command->run(new ArrayInput($input), $output);
+        $command = CommandFactory::createGenerateCommand($stdout, $stderr);
+
+        $exitCode = $command->run(new ArrayInput($input), new NullOutput());
         self::assertSame($expectedExitCode, $exitCode);
+        self::assertSame('', $stderr->fetch());
 
-        $suiteManifest = SuiteManifest::fromArray((array) Yaml::parse($output->fetch()));
+        $suiteManifest = SuiteManifest::fromArray((array) Yaml::parse($stdout->fetch()));
         $this->assertEquals($expectedCommandOutput, $suiteManifest);
 
         $generatedTestsToRemove = [];
@@ -125,17 +129,20 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
         ErrorOutputInterface $expectedCommandOutput,
         ?callable $initializer = null
     ) {
-        $output = new BufferedOutput();
-        $command = CommandFactory::createGenerateCommand($output);
+        $stdout = new BufferedOutput();
+        $stderr = new BufferedOutput();
+
+        $command = CommandFactory::createGenerateCommand($stdout, $stderr);
 
         if (null !== $initializer) {
             $initializer($command);
         }
 
-        $exitCode = $command->run(new ArrayInput($input), $output);
+        $exitCode = $command->run(new ArrayInput($input), new NullOutput());
         self::assertSame($expectedExitCode, $exitCode);
+        self::assertSame('', $stdout->fetch());
 
-        $commandOutput = ErrorOutput::fromArray((array) Yaml::parse($output->fetch()));
+        $commandOutput = ErrorOutput::fromArray((array) Yaml::parse($stderr->fetch()));
 
         self::assertEquals($expectedCommandOutput, $commandOutput);
     }
@@ -202,8 +209,10 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
             ->shouldReceive('compile')
             ->andThrow($unsupportedStepException);
 
-        $output = new BufferedOutput();
-        $command = CommandFactory::createGenerateCommand($output);
+        $stdout = new BufferedOutput();
+        $stderr = new BufferedOutput();
+
+        $command = CommandFactory::createGenerateCommand($stdout, $stderr);
 
         ObjectReflector::setProperty(
             $command,
@@ -212,8 +221,9 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
             $compiler
         );
 
-        $exitCode = $command->run(new ArrayInput($input), $output);
+        $exitCode = $command->run(new ArrayInput($input), new NullOutput());
         self::assertSame(ErrorOutputFactory::CODE_GENERATOR_UNSUPPORTED_STEP, $exitCode);
+        self::assertSame('', $stdout->fetch());
 
         $expectedCommandOutput = new ErrorOutput(
             new Configuration(
@@ -226,7 +236,7 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
             $expectedErrorOutputContext
         );
 
-        $commandOutput = ErrorOutput::fromArray((array) Yaml::parse($output->fetch()));
+        $commandOutput = ErrorOutput::fromArray((array) Yaml::parse($stderr->fetch()));
 
         self::assertEquals($expectedCommandOutput, $commandOutput);
     }
