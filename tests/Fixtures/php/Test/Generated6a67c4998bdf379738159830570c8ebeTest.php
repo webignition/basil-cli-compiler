@@ -3,6 +3,7 @@
 namespace webignition\BasilCliCompiler\Generated;
 
 use webignition\BaseBasilTestCase\AbstractBaseTest;
+use webignition\BaseBasilTestCase\ClientManager;
 use webignition\BasilModels\DataSet\DataSet;
 use webignition\BasilModels\Test\Configuration;
 
@@ -10,13 +11,20 @@ class Generated6a67c4998bdf379738159830570c8ebeTest extends AbstractBaseTest
 {
     public static function setUpBeforeClass(): void
     {
-        self::setBasilTestConfiguration(new Configuration(
-            'chrome',
-            'https://example.com/'
-        ));
-        parent::setUpBeforeClass();
-        self::$client->request('GET', 'https://example.com/');
-        self::setBasilTestPath('tests/Fixtures/basil/Test/example.com.verify-open-literal-data-sets.yml');
+        try {
+            self::setClientManager(new ClientManager(
+                new Configuration(
+                    'chrome',
+                    'https://example.com/'
+                )
+            ));
+            parent::setUpBeforeClass();
+            self::$client->request('GET', 'https://example.com/');
+            self::setBasilTestPath('tests/Fixtures/basil/Test/example.com.verify-open-literal-data-sets.yml');
+        } catch (\Throwable $exception) {
+            self::setLastException($exception);
+            self::fail('Exception raised during setUpBeforeClass()');
+        }
     }
 
     /**

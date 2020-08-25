@@ -3,6 +3,7 @@
 namespace webignition\BasilCliCompiler\Generated;
 
 use webignition\BaseBasilTestCase\AbstractBaseTest;
+use webignition\BaseBasilTestCase\ClientManager;
 use webignition\BasilModels\Test\Configuration;
 use webignition\DomElementIdentifier\ElementIdentifier;
 use webignition\SymfonyDomCrawlerNavigator\Exception\InvalidLocatorException;
@@ -11,13 +12,20 @@ class Generated1a8ee6813e6fc3bf6de1ddbb4aaf6115Test extends AbstractBaseTest
 {
     public static function setUpBeforeClass(): void
     {
-        self::setBasilTestConfiguration(new Configuration(
-            'chrome',
-            'https://example.com/'
-        ));
-        parent::setUpBeforeClass();
-        self::$client->request('GET', 'https://example.com/');
-        self::setBasilTestPath('tests/Fixtures/basil/Test/example.com.follow-more-information.yml');
+        try {
+            self::setClientManager(new ClientManager(
+                new Configuration(
+                    'chrome',
+                    'https://example.com/'
+                )
+            ));
+            parent::setUpBeforeClass();
+            self::$client->request('GET', 'https://example.com/');
+            self::setBasilTestPath('tests/Fixtures/basil/Test/example.com.follow-more-information.yml');
+        } catch (\Throwable $exception) {
+            self::setLastException($exception);
+            self::fail('Exception raised during setUpBeforeClass()');
+        }
     }
 
     public function test1()
@@ -48,8 +56,8 @@ class Generated1a8ee6813e6fc3bf6de1ddbb4aaf6115Test extends AbstractBaseTest
                 $this->navigator->hasOne($this->examinedElementIdentifier)
             );
         } catch (InvalidLocatorException $exception) {
-            $this->setLastException($exception);
-            $this->fail("Invalid locator");
+            self::setLastException($exception);
+            $this->fail('Invalid locator');
         }
         $this->assertTrue(
             $this->getBooleanExaminedValue()

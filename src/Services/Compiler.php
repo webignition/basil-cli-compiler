@@ -7,7 +7,7 @@ namespace webignition\BasilCliCompiler\Services;
 use webignition\BasilCliCompiler\Exception\UnresolvedPlaceholderException;
 use webignition\BasilCliCompiler\Model\CompiledTest;
 use webignition\BasilCompilableSource\ClassDefinition;
-use webignition\BasilCompilableSource\Expression\ClassDependency;
+use webignition\BasilCompilableSource\ClassName;
 use webignition\BasilCompilableSourceFactory\ClassDefinitionFactory;
 use webignition\BasilCompilableSourceFactory\Exception\UnsupportedStepException;
 use webignition\BasilModels\Test\TestInterface;
@@ -48,7 +48,7 @@ class Compiler
     {
         $classDefinition = $this->classDefinitionFactory->createClassDefinition($test);
         if ($classDefinition instanceof ClassDefinition) {
-            $classDefinition->setBaseClass(new ClassDependency($fullyQualifiedBaseClass));
+            $classDefinition->setBaseClass(new ClassName($fullyQualifiedBaseClass));
         }
 
         $code = $this->compiledClassResolver->resolve($classDefinition->render());
