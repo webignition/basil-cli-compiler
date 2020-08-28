@@ -11,6 +11,7 @@ class Generated641755df3ae8af9eb1cd971239e161fbTest extends AbstractBaseTest
     public static function setUpBeforeClass(): void
     {
         try {
+            self::setBasilTestPath('tests/Fixtures/basil/Test/example.com.import-step-verify-open-literal.yml');
             self::setClientManager(new ClientManager(
                 new Configuration(
                     'chrome',
@@ -19,7 +20,6 @@ class Generated641755df3ae8af9eb1cd971239e161fbTest extends AbstractBaseTest
             ));
             parent::setUpBeforeClass();
             self::$client->request('GET', 'https://example.com/');
-            self::setBasilTestPath('tests/Fixtures/basil/Test/example.com.import-step-verify-open-literal.yml');
         } catch (\Throwable $exception) {
             self::setLastException($exception);
             self::fail('Exception raised during setUpBeforeClass()');
