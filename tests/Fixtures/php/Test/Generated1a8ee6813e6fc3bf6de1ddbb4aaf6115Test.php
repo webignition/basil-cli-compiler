@@ -23,7 +23,7 @@ class Generated1a8ee6813e6fc3bf6de1ddbb4aaf6115Test extends AbstractBaseTest
             parent::setUpBeforeClass();
             self::$client->request('GET', 'https://example.com/');
         } catch (\Throwable $exception) {
-            self::setLastException($exception);
+            self::staticSetLastException($exception);
             self::fail('Exception raised during setUpBeforeClass()');
         }
     }
@@ -56,7 +56,7 @@ class Generated1a8ee6813e6fc3bf6de1ddbb4aaf6115Test extends AbstractBaseTest
                 $this->navigator->hasOne($this->examinedElementIdentifier)
             );
         } catch (InvalidLocatorException $exception) {
-            self::setLastException($exception);
+            self::staticSetLastException($exception);
             $this->fail('Invalid locator');
         }
         $this->assertTrue(
