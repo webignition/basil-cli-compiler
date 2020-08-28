@@ -12,6 +12,7 @@ class Generated6a67c4998bdf379738159830570c8ebeTest extends AbstractBaseTest
     public static function setUpBeforeClass(): void
     {
         try {
+            self::setBasilTestPath('tests/Fixtures/basil/Test/example.com.verify-open-literal-data-sets.yml');
             self::setClientManager(new ClientManager(
                 new Configuration(
                     'chrome',
@@ -20,7 +21,6 @@ class Generated6a67c4998bdf379738159830570c8ebeTest extends AbstractBaseTest
             ));
             parent::setUpBeforeClass();
             self::$client->request('GET', 'https://example.com/');
-            self::setBasilTestPath('tests/Fixtures/basil/Test/example.com.verify-open-literal-data-sets.yml');
         } catch (\Throwable $exception) {
             self::setLastException($exception);
             self::fail('Exception raised during setUpBeforeClass()');

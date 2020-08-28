@@ -9,13 +9,13 @@ class GeneratedF4f04d3d7255293acf2de5250e1df191Test extends AbstractBaseTest
 {
     public static function setUpBeforeClass(): void
     {
+        self::setBasilTestPath('build/source/Test/example.com.verify-open-literal.yml');
         self::setBasilTestConfiguration(new Configuration(
             'chrome',
             'https://example.com/'
         ));
         parent::setUpBeforeClass();
         self::$client->request('GET', 'https://example.com/');
-        self::setBasilTestPath('build/source/Test/example.com.verify-open-literal.yml');
     }
 
     public function test1()
