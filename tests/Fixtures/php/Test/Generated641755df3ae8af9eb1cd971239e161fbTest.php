@@ -21,7 +21,7 @@ class Generated641755df3ae8af9eb1cd971239e161fbTest extends AbstractBaseTest
             parent::setUpBeforeClass();
             self::$client->request('GET', 'https://example.com/');
         } catch (\Throwable $exception) {
-            self::setLastException($exception);
+            self::staticSetLastException($exception);
             self::fail('Exception raised during setUpBeforeClass()');
         }
     }
