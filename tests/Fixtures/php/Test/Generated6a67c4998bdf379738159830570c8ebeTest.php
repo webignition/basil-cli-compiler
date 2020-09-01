@@ -12,7 +12,6 @@ class Generated6a67c4998bdf379738159830570c8ebeTest extends AbstractBaseTest
     public static function setUpBeforeClass(): void
     {
         try {
-            self::setBasilTestPath('tests/Fixtures/basil/Test/example.com.verify-open-literal-data-sets.yml');
             self::setClientManager(new ClientManager(
                 new Configuration(
                     'chrome',
