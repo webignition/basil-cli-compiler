@@ -7,7 +7,7 @@ use webignition\BaseBasilTestCase\ClientManager;
 use webignition\BasilModels\DataSet\DataSet;
 use webignition\BasilModels\Test\Configuration;
 
-class Generated6a67c4998bdf379738159830570c8ebeTest extends AbstractBaseTest
+class GeneratedAe219ca93cea5924090e0b5a2d2eea22Test extends AbstractBaseTest
 {
     public static function setUpBeforeClass(): void
     {
