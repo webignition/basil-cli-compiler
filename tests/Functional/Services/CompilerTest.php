@@ -59,9 +59,9 @@ class CompilerTest extends \PHPUnit\Framework\TestCase
                 'expectedCompiledTest' => new CompiledTest(
                     $test,
                     $this->createExpectedCodeFromSource(
-                        'tests/Fixtures/php/Test/Generated0233b88be49ad918bec797dcba9b01afTest.php'
+                        'tests/Fixtures/php/Test/Generated4238ad333014be4c5d99e227b087cc9eTest.php'
                     ),
-                    'Generated0233b88be49ad918bec797dcba9b01afTest'
+                    'Generated4238ad333014be4c5d99e227b087cc9eTest'
                 ),
             ],
         ];

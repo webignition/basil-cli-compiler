@@ -8,7 +8,7 @@ use webignition\BasilModels\Test\Configuration;
 use webignition\DomElementIdentifier\ElementIdentifier;
 use webignition\SymfonyDomCrawlerNavigator\Exception\InvalidLocatorException;
 
-class Generated1a8ee6813e6fc3bf6de1ddbb4aaf6115Test extends AbstractBaseTest
+class Generated462f42149b07d13071c2620afb561b30Test extends AbstractBaseTest
 {
     public static function setUpBeforeClass(): void
     {

@@ -6,7 +6,7 @@ use webignition\BaseBasilTestCase\AbstractBaseTest;
 use webignition\BaseBasilTestCase\ClientManager;
 use webignition\BasilModels\Test\Configuration;
 
-class Generated641755df3ae8af9eb1cd971239e161fbTest extends AbstractBaseTest
+class Generated4238ad333014be4c5d99e227b087cc9eTest extends AbstractBaseTest
 {
     public static function setUpBeforeClass(): void
     {

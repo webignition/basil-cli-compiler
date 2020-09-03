@@ -33,13 +33,13 @@ trait SuccessDataProviderTrait
                         new TestManifest(
                             new TestModelConfiguration('chrome', 'https://example.com/'),
                             $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
-                            $root . '/tests/build/target/Generated0233b88be49ad918bec797dcba9b01afTest.php'
+                            $root . '/tests/build/target/Generated4238ad333014be4c5d99e227b087cc9eTest.php'
                         ),
                     ]
                 ),
                 'expectedGeneratedCode' => [
                     $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml' =>
-                        file_get_contents('tests/Fixtures/php/Test/Generated0233b88be49ad918bec797dcba9b01afTest.php')
+                        file_get_contents('tests/Fixtures/php/Test/Generated4238ad333014be4c5d99e227b087cc9eTest.php')
                 ],
             ],
             'test suite' => [
@@ -58,27 +58,27 @@ trait SuccessDataProviderTrait
                         new TestManifest(
                             new TestModelConfiguration('chrome', 'https://example.com/'),
                             $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
-                            $root . '/tests/build/target/Generated0233b88be49ad918bec797dcba9b01afTest.php'
+                            $root . '/tests/build/target/Generated4238ad333014be4c5d99e227b087cc9eTest.php'
                         ),
                         new TestManifest(
                             new TestModelConfiguration('chrome', 'https://example.com/'),
                             $root . '/tests/Fixtures/basil/Test/example.com.import-step-verify-open-literal.yml',
-                            $root . '/tests/build/target/Generated641755df3ae8af9eb1cd971239e161fbTest.php'
+                            $root . '/tests/build/target/Generated0c65b0d5e0e28f11ea3c8193ad9d162dTest.php'
                         ),
                         new TestManifest(
                             new TestModelConfiguration('chrome', 'https://example.com/'),
                             $root . '/tests/Fixtures/basil/Test/example.com.follow-more-information.yml',
-                            $root . '/tests/build/target/Generated1a8ee6813e6fc3bf6de1ddbb4aaf6115Test.php'
+                            $root . '/tests/build/target/Generated462f42149b07d13071c2620afb561b30Test.php'
                         ),
                     ]
                 ),
                 'expectedGeneratedCode' => [
                     $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml' =>
-                        file_get_contents('tests/Fixtures/php/Test/Generated0233b88be49ad918bec797dcba9b01afTest.php'),
+                        file_get_contents('tests/Fixtures/php/Test/Generated4238ad333014be4c5d99e227b087cc9eTest.php'),
                     $root . '/tests/Fixtures/basil/Test/example.com.import-step-verify-open-literal.yml' =>
-                        file_get_contents('tests/Fixtures/php/Test/Generated641755df3ae8af9eb1cd971239e161fbTest.php'),
+                        file_get_contents('tests/Fixtures/php/Test/Generated0c65b0d5e0e28f11ea3c8193ad9d162dTest.php'),
                     $root . '/tests/Fixtures/basil/Test/example.com.follow-more-information.yml' =>
-                        file_get_contents('tests/Fixtures/php/Test/Generated1a8ee6813e6fc3bf6de1ddbb4aaf6115Test.php')
+                        file_get_contents('tests/Fixtures/php/Test/Generated462f42149b07d13071c2620afb561b30Test.php')
                 ],
             ],
             'collection of tests by directory' => [
@@ -97,34 +97,34 @@ trait SuccessDataProviderTrait
                         new TestManifest(
                             new TestModelConfiguration('chrome', 'https://example.com/'),
                             $root . '/tests/Fixtures/basil/Test/example.com.follow-more-information.yml',
-                            $root . '/tests/build/target/Generated1a8ee6813e6fc3bf6de1ddbb4aaf6115Test.php'
+                            $root . '/tests/build/target/Generated462f42149b07d13071c2620afb561b30Test.php'
                         ),
                         new TestManifest(
                             new TestModelConfiguration('chrome', 'https://example.com/'),
                             $root . '/tests/Fixtures/basil/Test/example.com.import-step-verify-open-literal.yml',
-                            $root . '/tests/build/target/Generated641755df3ae8af9eb1cd971239e161fbTest.php'
+                            $root . '/tests/build/target/Generated0c65b0d5e0e28f11ea3c8193ad9d162dTest.php'
                         ),
                         new TestManifest(
                             new TestModelConfiguration('chrome', 'https://example.com/'),
                             $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal-data-sets.yml',
-                            $root . '/tests/build/target/Generated6a67c4998bdf379738159830570c8ebeTest.php'
+                            $root . '/tests/build/target/GeneratedAe219ca93cea5924090e0b5a2d2eea22Test.php'
                         ),
                         new TestManifest(
                             new TestModelConfiguration('chrome', 'https://example.com/'),
                             $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
-                            $root . '/tests/build/target/Generated0233b88be49ad918bec797dcba9b01afTest.php'
+                            $root . '/tests/build/target/Generated4238ad333014be4c5d99e227b087cc9eTest.php'
                         ),
                     ]
                 ),
                 'expectedGeneratedCode' => [
                     $root . '/tests/Fixtures/basil/Test/example.com.follow-more-information.yml' =>
-                        file_get_contents('tests/Fixtures/php/Test/Generated1a8ee6813e6fc3bf6de1ddbb4aaf6115Test.php'),
+                        file_get_contents('tests/Fixtures/php/Test/Generated462f42149b07d13071c2620afb561b30Test.php'),
                     $root . '/tests/Fixtures/basil/Test/example.com.import-step-verify-open-literal.yml' =>
-                        file_get_contents('tests/Fixtures/php/Test/Generated641755df3ae8af9eb1cd971239e161fbTest.php'),
+                        file_get_contents('tests/Fixtures/php/Test/Generated0c65b0d5e0e28f11ea3c8193ad9d162dTest.php'),
                     $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal-data-sets.yml' =>
-                        file_get_contents('tests/Fixtures/php/Test/Generated6a67c4998bdf379738159830570c8ebeTest.php'),
+                        file_get_contents('tests/Fixtures/php/Test/GeneratedAe219ca93cea5924090e0b5a2d2eea22Test.php'),
                     $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml' =>
-                        file_get_contents('tests/Fixtures/php/Test/Generated0233b88be49ad918bec797dcba9b01afTest.php'),
+                        file_get_contents('tests/Fixtures/php/Test/Generated4238ad333014be4c5d99e227b087cc9eTest.php'),
                 ],
             ],
             'collection of test suites by directory' => [
@@ -143,32 +143,32 @@ trait SuccessDataProviderTrait
                         new TestManifest(
                             new TestModelConfiguration('chrome', 'https://example.com/'),
                             $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
-                            $root . '/tests/build/target/Generated0233b88be49ad918bec797dcba9b01afTest.php'
+                            $root . '/tests/build/target/Generated4238ad333014be4c5d99e227b087cc9eTest.php'
                         ),
                         new TestManifest(
                             new TestModelConfiguration('chrome', 'https://example.com/'),
                             $root . '/tests/Fixtures/basil/Test/example.com.import-step-verify-open-literal.yml',
-                            $root . '/tests/build/target/Generated641755df3ae8af9eb1cd971239e161fbTest.php'
+                            $root . '/tests/build/target/Generated0c65b0d5e0e28f11ea3c8193ad9d162dTest.php'
                         ),
                         new TestManifest(
                             new TestModelConfiguration('chrome', 'https://example.com/'),
                             $root . '/tests/Fixtures/basil/Test/example.com.follow-more-information.yml',
-                            $root . '/tests/build/target/Generated1a8ee6813e6fc3bf6de1ddbb4aaf6115Test.php'
+                            $root . '/tests/build/target/Generated462f42149b07d13071c2620afb561b30Test.php'
                         ),
                         new TestManifest(
                             new TestModelConfiguration('chrome', 'https://example.com/'),
                             $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
-                            $root . '/tests/build/target/Generated0233b88be49ad918bec797dcba9b01afTest.php'
+                            $root . '/tests/build/target/Generated4238ad333014be4c5d99e227b087cc9eTest.php'
                         ),
                     ]
                 ),
                 'expectedGeneratedCode' => [
                     $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml' =>
-                        file_get_contents('tests/Fixtures/php/Test/Generated0233b88be49ad918bec797dcba9b01afTest.php'),
+                        file_get_contents('tests/Fixtures/php/Test/Generated4238ad333014be4c5d99e227b087cc9eTest.php'),
                     $root . '/tests/Fixtures/basil/Test/example.com.import-step-verify-open-literal.yml' =>
-                        file_get_contents('tests/Fixtures/php/Test/Generated641755df3ae8af9eb1cd971239e161fbTest.php'),
+                        file_get_contents('tests/Fixtures/php/Test/Generated0c65b0d5e0e28f11ea3c8193ad9d162dTest.php'),
                     $root . '/tests/Fixtures/basil/Test/example.com.follow-more-information.yml' =>
-                        file_get_contents('tests/Fixtures/php/Test/Generated1a8ee6813e6fc3bf6de1ddbb4aaf6115Test.php'),
+                        file_get_contents('tests/Fixtures/php/Test/Generated462f42149b07d13071c2620afb561b30Test.php'),
                 ],
             ],
         ];
