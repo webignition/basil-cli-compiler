@@ -37,9 +37,8 @@ trait SuccessDataProviderTrait
                         ),
                     ]
                 ),
-                'expectedGeneratedCode' => [
-                    $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml' =>
-                        file_get_contents('tests/Fixtures/php/Test/Generated4238ad333014be4c5d99e227b087cc9eTest.php')
+                'expectedGeneratedCodePaths' => [
+                    'tests/Fixtures/php/Test/Generated4238ad333014be4c5d99e227b087cc9eTest.php',
                 ],
             ],
             'test suite' => [
@@ -72,13 +71,10 @@ trait SuccessDataProviderTrait
                         ),
                     ]
                 ),
-                'expectedGeneratedCode' => [
-                    $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml' =>
-                        file_get_contents('tests/Fixtures/php/Test/Generated4238ad333014be4c5d99e227b087cc9eTest.php'),
-                    $root . '/tests/Fixtures/basil/Test/example.com.import-step-verify-open-literal.yml' =>
-                        file_get_contents('tests/Fixtures/php/Test/Generated0c65b0d5e0e28f11ea3c8193ad9d162dTest.php'),
-                    $root . '/tests/Fixtures/basil/Test/example.com.follow-more-information.yml' =>
-                        file_get_contents('tests/Fixtures/php/Test/Generated462f42149b07d13071c2620afb561b30Test.php')
+                'expectedGeneratedCodePaths' => [
+                    'tests/Fixtures/php/Test/Generated4238ad333014be4c5d99e227b087cc9eTest.php',
+                    'tests/Fixtures/php/Test/Generated0c65b0d5e0e28f11ea3c8193ad9d162dTest.php',
+                    'tests/Fixtures/php/Test/Generated462f42149b07d13071c2620afb561b30Test.php',
                 ],
             ],
             'collection of tests by directory' => [
@@ -116,15 +112,11 @@ trait SuccessDataProviderTrait
                         ),
                     ]
                 ),
-                'expectedGeneratedCode' => [
-                    $root . '/tests/Fixtures/basil/Test/example.com.follow-more-information.yml' =>
-                        file_get_contents('tests/Fixtures/php/Test/Generated462f42149b07d13071c2620afb561b30Test.php'),
-                    $root . '/tests/Fixtures/basil/Test/example.com.import-step-verify-open-literal.yml' =>
-                        file_get_contents('tests/Fixtures/php/Test/Generated0c65b0d5e0e28f11ea3c8193ad9d162dTest.php'),
-                    $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal-data-sets.yml' =>
-                        file_get_contents('tests/Fixtures/php/Test/GeneratedAe219ca93cea5924090e0b5a2d2eea22Test.php'),
-                    $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml' =>
-                        file_get_contents('tests/Fixtures/php/Test/Generated4238ad333014be4c5d99e227b087cc9eTest.php'),
+                'expectedGeneratedCodePaths' => [
+                    'tests/Fixtures/php/Test/Generated462f42149b07d13071c2620afb561b30Test.php',
+                    'tests/Fixtures/php/Test/Generated0c65b0d5e0e28f11ea3c8193ad9d162dTest.php',
+                    'tests/Fixtures/php/Test/GeneratedAe219ca93cea5924090e0b5a2d2eea22Test.php',
+                    'tests/Fixtures/php/Test/Generated4238ad333014be4c5d99e227b087cc9eTest.php',
                 ],
             ],
             'collection of test suites by directory' => [
@@ -162,13 +154,11 @@ trait SuccessDataProviderTrait
                         ),
                     ]
                 ),
-                'expectedGeneratedCode' => [
-                    $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml' =>
-                        file_get_contents('tests/Fixtures/php/Test/Generated4238ad333014be4c5d99e227b087cc9eTest.php'),
-                    $root . '/tests/Fixtures/basil/Test/example.com.import-step-verify-open-literal.yml' =>
-                        file_get_contents('tests/Fixtures/php/Test/Generated0c65b0d5e0e28f11ea3c8193ad9d162dTest.php'),
-                    $root . '/tests/Fixtures/basil/Test/example.com.follow-more-information.yml' =>
-                        file_get_contents('tests/Fixtures/php/Test/Generated462f42149b07d13071c2620afb561b30Test.php'),
+                'expectedGeneratedCodePaths' => [
+                    'tests/Fixtures/php/Test/Generated4238ad333014be4c5d99e227b087cc9eTest.php',
+                    'tests/Fixtures/php/Test/Generated0c65b0d5e0e28f11ea3c8193ad9d162dTest.php',
+                    'tests/Fixtures/php/Test/Generated462f42149b07d13071c2620afb561b30Test.php',
+                    'tests/Fixtures/php/Test/Generated4238ad333014be4c5d99e227b087cc9eTest.php',
                 ],
             ],
         ];
