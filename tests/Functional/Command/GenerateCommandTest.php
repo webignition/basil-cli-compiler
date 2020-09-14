@@ -58,7 +58,7 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
      * @param array<string, string> $input
      * @param int $expectedExitCode
      * @param SuiteManifest $expectedCommandOutput
-     * @param array<string, string> $expectedGeneratedCode
+     * @param string[] $expectedGeneratedCodePaths
      *
      * @dataProvider successDataProvider
      */
@@ -66,7 +66,7 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
         array $input,
         int $expectedExitCode,
         SuiteManifest $expectedCommandOutput,
-        array $expectedGeneratedCode
+        array $expectedGeneratedCodePaths
     ) {
         $stdout = new BufferedOutput();
         $stderr = new BufferedOutput();
@@ -78,19 +78,20 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
         self::assertSame('', $stderr->fetch());
 
         $suiteManifest = SuiteManifest::fromArray((array) Yaml::parse($stdout->fetch()));
-        $this->assertEquals($expectedCommandOutput, $suiteManifest);
+        self::assertEquals($expectedCommandOutput, $suiteManifest);
 
         $generatedTestsToRemove = [];
-        foreach ($suiteManifest->getTestManifests() as $testManifest) {
+        foreach ($suiteManifest->getTestManifests() as $testManifestIndex => $testManifest) {
             $expectedCodePath = $testManifest->getTarget();
 
             self::assertFileExists($expectedCodePath);
             self::assertFileIsReadable($expectedCodePath);
 
-            self::assertEquals(
-                $expectedGeneratedCode[ObjectReflector::getProperty($testManifest, 'source')],
-                file_get_contents($expectedCodePath)
-            );
+            $expectedGeneratedCodePath = $expectedGeneratedCodePaths[$testManifestIndex];
+            $expectedGeneratedCode = file_get_contents($expectedGeneratedCodePath);
+            $generatedCode = file_get_contents($expectedCodePath);
+
+            self::assertSame($expectedGeneratedCode, $generatedCode);
 
             $generatedTestsToRemove[] = $expectedCodePath;
         }

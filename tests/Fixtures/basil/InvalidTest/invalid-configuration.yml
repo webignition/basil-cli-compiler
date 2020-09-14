@@ -1,3 +1,3 @@
 config:
-  browser: ""
+  browsers:
   url: "https://example.com"

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ea68befc993a93096ca09bac57b1b227",
+    "content-hash": "7c7ca1177791377eab0463bfba7850a9",
     "packages": [
         {
             "name": "doctrine/instantiator",
@@ -3394,16 +3394,16 @@
         },
         {
             "name": "webignition/basil-data-validator",
-            "version": "0.14",
+            "version": "0.15",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webignition/basil-data-validator.git",
-                "reference": "b1d1bfc838720d680a9eb161b14bcd598e951b4c"
+                "reference": "4a30b59b967ea88ab0f4480f3cfa9033c255a5ff"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webignition/basil-data-validator/zipball/b1d1bfc838720d680a9eb161b14bcd598e951b4c",
-                "reference": "b1d1bfc838720d680a9eb161b14bcd598e951b4c",
+                "url": "https://api.github.com/repos/webignition/basil-data-validator/zipball/4a30b59b967ea88ab0f4480f3cfa9033c255a5ff",
+                "reference": "4a30b59b967ea88ab0f4480f3cfa9033c255a5ff",
                 "shasum": ""
             },
             "require": {
@@ -3411,13 +3411,14 @@
                 "php": ">=7.4",
                 "webignition/basil-dom-identifier-factory": ">=0.13,<1",
                 "webignition/basil-identifier-analyser": ">=0.7,<1",
-                "webignition/basil-models": ">=0.54,<1",
+                "webignition/basil-models": ">=0.57,<1",
                 "webignition/basil-validation-result": ">=0.1,<1"
             },
             "require-dev": {
                 "phpstan/phpstan": "^0.12",
                 "phpunit/phpunit": "~9.0",
                 "squizlabs/php_codesniffer": "3.*",
+                "symplify/easy-coding-standard": "^8.1",
                 "webignition/basil-parser": ">=0.25,<1",
                 "webignition/basil-resolver": ">=0.10,<1"
             },
@@ -3439,7 +3440,7 @@
             ],
             "description": "Validator for source data for basil language",
             "homepage": "https://github.com/webignition/basil-data-validator",
-            "time": "2020-06-12T13:48:04+00:00"
+            "time": "2020-07-29T13:59:33+00:00"
         },
         {
             "name": "webignition/basil-dom-identifier-factory",
@@ -3530,16 +3531,16 @@
         },
         {
             "name": "webignition/basil-loader",
-            "version": "0.27",
+            "version": "0.30",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webignition/basil-loader.git",
-                "reference": "59127a27f6c4b73de65a50e8971f41341729b48f"
+                "reference": "3ce5ea84bf2ded04cf439fac3f0c97c54872d4f5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webignition/basil-loader/zipball/59127a27f6c4b73de65a50e8971f41341729b48f",
-                "reference": "59127a27f6c4b73de65a50e8971f41341729b48f",
+                "url": "https://api.github.com/repos/webignition/basil-loader/zipball/3ce5ea84bf2ded04cf439fac3f0c97c54872d4f5",
+                "reference": "3ce5ea84bf2ded04cf439fac3f0c97c54872d4f5",
                 "shasum": ""
             },
             "require": {
@@ -3560,7 +3561,8 @@
                 "phpstan/phpstan": "^0.12",
                 "phpstan/phpstan-mockery": "^0.12",
                 "phpunit/phpunit": "~9",
-                "squizlabs/php_codesniffer": "3.*"
+                "squizlabs/php_codesniffer": "3.*",
+                "symplify/easy-coding-standard": "^8.2"
             },
             "type": "library",
             "autoload": {
@@ -3580,7 +3582,7 @@
             ],
             "description": "Loader for basil language files",
             "homepage": "https://github.com/webignition/basil-loader",
-            "time": "2020-06-12T13:57:37+00:00"
+            "time": "2020-09-03T10:47:28+00:00"
         },
         {
             "name": "webignition/basil-model-provider",
