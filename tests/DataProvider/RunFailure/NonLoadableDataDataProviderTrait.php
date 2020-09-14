@@ -28,7 +28,7 @@ trait NonLoadableDataDataProviderTrait
                         $root . '/tests/build/target',
                         AbstractBaseTest::class
                     ),
-                    'Unexpected characters near "https://example.com"" at line 3 (near "url: "https://example.com"").',
+                    'Malformed inline YAML string: ""chrome" at line 3 (near "- "chrome").',
                     ErrorOutputFactory::CODE_LOADER_INVALID_YAML,
                     [
                         'path' => $root . '/tests/Fixtures/basil/InvalidTest/invalid.unparseable.yml',
@@ -47,7 +47,7 @@ trait NonLoadableDataDataProviderTrait
                         $root . '/tests/build/target',
                         AbstractBaseTest::class
                     ),
-                    'Unexpected characters near "https://example.com"" at line 3 (near "url: "https://example.com"").',
+                    'Malformed inline YAML string: ""chrome" at line 3 (near "- "chrome").',
                     ErrorOutputFactory::CODE_LOADER_INVALID_YAML,
                     [
                         'path' => $root . '/tests/Fixtures/basil/InvalidTest/invalid.unparseable.yml',
