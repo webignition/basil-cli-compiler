@@ -21,9 +21,6 @@ trait NonRetrievableImportDataProviderTrait
         $testPath = $root . '/tests/Fixtures/basil/InvalidTest/import-unparseable-page.yml';
         $testAbsolutePath = '' . $testPath;
 
-        $testSuitePath = $root . '/tests/Fixtures/basil/InvalidTestSuite/imports-unparseable-page.yml';
-        $testSuiteAbsolutePath = '' . $testSuitePath;
-
         return [
             'test imports non-parsable page' => [
                 'input' => [
@@ -34,32 +31,6 @@ trait NonRetrievableImportDataProviderTrait
                 'expectedCommandOutput' => new ErrorOutput(
                     new Configuration(
                         $testAbsolutePath,
-                        $root . '/tests/build/target',
-                        AbstractBaseTest::class
-                    ),
-                    'Cannot retrieve page "unparseable_page" from "' . $pageAbsolutePath . '"',
-                    ErrorOutputFactory::CODE_LOADER_NON_RETRIEVABLE_IMPORT,
-                    [
-                        'test_path' => $testAbsolutePath,
-                        'type' => 'page',
-                        'name' => 'unparseable_page',
-                        'import_path' => $pageAbsolutePath,
-                        'loader_error' => [
-                            'message' => 'Malformed inline YAML string: ""http://example.com" at line 2.',
-                            'path' => $pageAbsolutePath,
-                        ],
-                    ]
-                ),
-            ],
-            'test suite imports test which imports non-parsable page' => [
-                'input' => [
-                    '--source' => $testSuiteAbsolutePath,
-                    '--target' => $root . '/tests/build/target',
-                ],
-                'expectedExitCode' => ErrorOutputFactory::CODE_LOADER_NON_RETRIEVABLE_IMPORT,
-                'expectedCommandOutput' => new ErrorOutput(
-                    new Configuration(
-                        $testSuiteAbsolutePath,
                         $root . '/tests/build/target',
                         AbstractBaseTest::class
                     ),

@@ -116,58 +116,6 @@ trait ParseExceptionDataProviderTrait
                     ]
                 ),
             ],
-            'test suite imports test which declares step, step contains unparseable action' => [
-                'input' => [
-                    '--source' =>
-                        $root . '/tests/Fixtures/basil/InvalidTestSuite/imports-test-declaring-unparseable-action.yml',
-                    '--target' => $root . '/tests/build/target',
-                ],
-                'expectedExitCode' => ErrorOutputFactory::CODE_LOADER_UNPARSEABLE_DATA,
-                'expectedCommandOutput' => new ErrorOutput(
-                    new Configuration(
-                        $root . '/tests/Fixtures/basil/InvalidTestSuite/imports-test-declaring-unparseable-action.yml',
-                        $root . '/tests/build/target',
-                        AbstractBaseTest::class
-                    ),
-                    'Unparseable test',
-                    ErrorOutputFactory::CODE_LOADER_UNPARSEABLE_DATA,
-                    [
-                        'type' => 'test',
-                        'test_path' => $root . '/tests/Fixtures/basil/InvalidTest/unparseable-action.yml',
-                        'step_name' => 'contains unparseable action',
-                        'statement_type' => 'action',
-                        'statement' => 'click invalid-identifier',
-                        'reason' => 'invalid-identifier',
-
-                    ]
-                ),
-            ],
-            'test suite imports test which imports step, step contains unparseable action' => [
-                'input' => [
-                    '--source' =>
-                        $root . '/tests/Fixtures/basil/InvalidTestSuite/imports-test-importing-unparseable-action.yml',
-                    '--target' => $root . '/tests/build/target',
-                ],
-                'expectedExitCode' => ErrorOutputFactory::CODE_LOADER_UNPARSEABLE_DATA,
-                'expectedCommandOutput' => new ErrorOutput(
-                    new Configuration(
-                        $root . '/tests/Fixtures/basil/InvalidTestSuite/imports-test-importing-unparseable-action.yml',
-                        $root . '/tests/build/target',
-                        AbstractBaseTest::class
-                    ),
-                    'Unparseable step',
-                    ErrorOutputFactory::CODE_LOADER_UNPARSEABLE_DATA,
-                    [
-                        'type' => 'step',
-                        'test_path' => $root . '/tests/Fixtures/basil/InvalidTest/import-unparseable-action.yml',
-                        'step_path' => $root . '/tests/Fixtures/basil/Step/unparseable-action.yml',
-                        'statement_type' => 'action',
-                        'statement' => 'click invalid-identifier',
-                        'reason' => 'invalid-identifier',
-
-                    ]
-                ),
-            ],
             'test declares step, step contains non-array actions data' => [
                 'input' => [
                     '--source' => $root . '/tests/Fixtures/basil/InvalidTest/non-array-actions-data.yml',

@@ -59,7 +59,7 @@
         "webignition/base-basil-test-case": "^0.38.0",
         "webignition/basil-compilable-source": "^0.50.0",
         "webignition/basil-compiler-models": "^0.8.0",
-        "webignition/basil-loader": "^0.30.0",
+        "webignition/basil-loader": "^0.31.0",
         "webignition/basil-models": "^0.57",
         "webignition/php-basil-compilable-source-factory": "^0.60.0",
         "webignition/single-command-application-factory": "^0.1.0",

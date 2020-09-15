@@ -22,9 +22,8 @@ use webignition\BasilLoader\Exception\InvalidPageException;
 use webignition\BasilLoader\Exception\InvalidTestException;
 use webignition\BasilLoader\Exception\NonRetrievableImportException;
 use webignition\BasilLoader\Exception\ParseException;
-use webignition\BasilLoader\Exception\UnknownTestException;
 use webignition\BasilLoader\Exception\YamlLoaderException;
-use webignition\BasilLoader\SourceLoader;
+use webignition\BasilLoader\TestLoader;
 use webignition\BasilModelProvider\Exception\UnknownItemException;
 use webignition\BasilModels\Test\TestInterface;
 use webignition\BasilResolver\CircularStepImportException;
@@ -40,14 +39,14 @@ class GenerateCommand extends Command
 
     private const NAME = 'generate';
 
-    private SourceLoader $sourceLoader;
+    private TestLoader $testLoader;
     private Compiler $compiler;
     private TestWriter $testWriter;
     private ErrorOutputFactory $errorOutputFactory;
     private OutputRenderer $outputRenderer;
 
     public function __construct(
-        SourceLoader $sourceLoader,
+        TestLoader $testLoader,
         Compiler $compiler,
         TestWriter $testWriter,
         ErrorOutputFactory $errorOutputFactory,
@@ -55,7 +54,7 @@ class GenerateCommand extends Command
     ) {
         parent::__construct();
 
-        $this->sourceLoader = $sourceLoader;
+        $this->testLoader = $testLoader;
         $this->compiler = $compiler;
         $this->testWriter = $testWriter;
         $this->errorOutputFactory = $errorOutputFactory;
@@ -123,98 +122,52 @@ class GenerateCommand extends Command
             );
         }
 
-        $sourcePaths = $this->createSourcePaths($configuration->getSource());
-
         $testManifests = [];
-        foreach ($sourcePaths as $sourcePath) {
-            try {
-                $testSuite = $this->sourceLoader->load($sourcePath);
-            } catch (
-                CircularStepImportException |
-                EmptyTestException |
-                InvalidPageException |
-                InvalidTestException |
-                NonRetrievableImportException |
-                ParseException |
-                UnknownElementException |
-                UnknownItemException |
-                UnknownPageElementException |
-                UnknownTestException |
-                YamlLoaderException $exception
-            ) {
-                return $this->outputRenderer->render(
-                    $this->errorOutputFactory->createForException($exception, $configuration)
+
+        try {
+            $tests = $this->testLoader->load($configuration->getSource());
+        } catch (
+            CircularStepImportException |
+            EmptyTestException |
+            InvalidPageException |
+            InvalidTestException |
+            NonRetrievableImportException |
+            ParseException |
+            UnknownElementException |
+            UnknownItemException |
+            UnknownPageElementException |
+            YamlLoaderException $exception
+        ) {
+            return $this->outputRenderer->render(
+                $this->errorOutputFactory->createForException($exception, $configuration)
+            );
+        }
+
+        try {
+            foreach ($tests as $test) {
+                $relativePathTest = $this->removeRootPathFromTestPath($test);
+                $relativePathCompiledTest = $this->compiler->compile(
+                    $relativePathTest,
+                    $configuration->getBaseClass()
+                );
+
+                $testManifests[] = $this->testWriter->write(
+                    $relativePathCompiledTest->withTest($test),
+                    $configuration->getTarget()
                 );
             }
-
-            try {
-                foreach ($testSuite->getTests() as $test) {
-                    $relativePathTest = $this->removeRootPathFromTestPath($test);
-                    $relativePathCompiledTest = $this->compiler->compile(
-                        $relativePathTest,
-                        $configuration->getBaseClass()
-                    );
-
-                    $testManifests[] = $this->testWriter->write(
-                        $relativePathCompiledTest->withTest($test),
-                        $configuration->getTarget()
-                    );
-                }
-            } catch (
-                UnresolvedPlaceholderException |
-                UnsupportedStepException $exception
-            ) {
-                return $this->outputRenderer->render(
-                    $this->errorOutputFactory->createForException($exception, $configuration)
-                );
-            }
+        } catch (
+            UnresolvedPlaceholderException |
+            UnsupportedStepException $exception
+        ) {
+            return $this->outputRenderer->render(
+                $this->errorOutputFactory->createForException($exception, $configuration)
+            );
         }
 
         $this->outputRenderer->render(new SuiteManifest($configuration, $testManifests));
 
         return 0;
-    }
-
-    /**
-     * @param string $source
-     *
-     * @return string[]
-     */
-    private function createSourcePaths(string $source): array
-    {
-        $sourcePaths = [];
-
-        if (is_file($source)) {
-            $sourcePaths[] = $source;
-        }
-
-        if (is_dir($source)) {
-            return $this->findSourcePaths($source);
-        }
-
-        return $sourcePaths;
-    }
-
-    /**
-     * @param string $directorySource
-     *
-     * @return string[]
-     */
-    private function findSourcePaths(string $directorySource): array
-    {
-        $sourcePaths = [];
-
-        $directoryIterator = new \DirectoryIterator($directorySource);
-        foreach ($directoryIterator as $item) {
-            /** @var \DirectoryIterator $item */
-            if ($item->isFile() && 'yml' === $item->getExtension()) {
-                $sourcePaths[] = $item->getPath() . DIRECTORY_SEPARATOR . $item->getFilename();
-            }
-        }
-
-        sort($sourcePaths);
-
-        return $sourcePaths;
     }
 
     private function removeRootPathFromTestPath(TestInterface $test): TestInterface

@@ -19,7 +19,7 @@ use webignition\BasilCliCompiler\Tests\Unit\AbstractBaseTest;
 use webignition\BasilCompilerModels\Configuration;
 use webignition\BasilCompilerModels\ErrorOutput;
 use webignition\BasilCompilerModels\ErrorOutputInterface;
-use webignition\BasilLoader\SourceLoader;
+use webignition\BasilLoader\TestLoader;
 
 class GenerateCommandTest extends AbstractBaseTest
 {
@@ -39,7 +39,7 @@ class GenerateCommandTest extends AbstractBaseTest
         $stderr = new BufferedOutput();
 
         $command = new GenerateCommand(
-            SourceLoader::createLoader(),
+            TestLoader::createLoader(),
             \Mockery::mock(Compiler::class),
             \Mockery::mock(TestWriter::class),
             new ErrorOutputFactory(new ValidatorInvalidResultSerializer()),

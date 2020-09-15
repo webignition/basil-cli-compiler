@@ -85,31 +85,6 @@ trait UnknownItemDataProviderTrait
                     ]
                 ),
             ],
-            'test suite imports test declaring step, step uses unknown dataset' => [
-                'input' => [
-                    '--source' => $root .
-                        '/tests/Fixtures/basil/InvalidTestSuite/imports-test-declaring-step-using-unknown-dataset.yml',
-                    '--target' => $root . '/tests/build/target',
-                ],
-                'expectedExitCode' => ErrorOutputFactory::CODE_LOADER_UNKNOWN_ITEM,
-                'expectedCommandOutput' => new ErrorOutput(
-                    new Configuration(
-                        $root .
-                        '/tests/Fixtures/basil/InvalidTestSuite/imports-test-declaring-step-using-unknown-dataset.yml',
-                        $root . '/tests/build/target',
-                        AbstractBaseTest::class
-                    ),
-                    'Unknown dataset "unknown_data_provider_name"',
-                    ErrorOutputFactory::CODE_LOADER_UNKNOWN_ITEM,
-                    [
-                        'type' => 'dataset',
-                        'name' => 'unknown_data_provider_name',
-                        'test_path' => $root . '/tests/Fixtures/basil/InvalidTest/step-uses-unknown-dataset.yml',
-                        'step_name' => 'step name',
-                        'statement' => '',
-                    ]
-                ),
-            ],
         ];
     }
 }

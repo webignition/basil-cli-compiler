@@ -21,9 +21,6 @@ trait InvalidPageDataProviderTrait
         $pagePath = $root . '/tests/Fixtures/basil/InvalidPage/url-empty.yml';
         $pageAbsolutePath = '' . $pagePath;
 
-        $testSuitePath = $root . '/tests/Fixtures/basil/InvalidTestSuite/imports-invalid-page.yml';
-        $testSuiteAbsolutePath = '' . $testSuitePath;
-
         return [
             'test imports invalid page; url empty' => [
                 'input' => [
@@ -34,31 +31,6 @@ trait InvalidPageDataProviderTrait
                 'expectedCommandOutput' => new ErrorOutput(
                     new Configuration(
                         $testAbsolutePath,
-                        $root . '/tests/build/target',
-                        AbstractBaseTest::class
-                    ),
-                    'Invalid page "empty_url_page" at path "' . $pageAbsolutePath . '": page-url-empty',
-                    ErrorOutputFactory::CODE_LOADER_INVALID_PAGE,
-                    [
-                        'test_path' => $testAbsolutePath,
-                        'import_name' => 'empty_url_page',
-                        'page_path' => $pageAbsolutePath,
-                        'validation_result' => [
-                            'type' => 'page',
-                            'reason' => 'page-url-empty',
-                        ],
-                    ]
-                ),
-            ],
-            'test suite imports test which imports invalid page; url empty' => [
-                'input' => [
-                    '--source' => $testSuitePath,
-                    '--target' => $root . '/tests/build/target',
-                ],
-                'expectedExitCode' => ErrorOutputFactory::CODE_LOADER_INVALID_PAGE,
-                'expectedCommandOutput' => new ErrorOutput(
-                    new Configuration(
-                        $testSuiteAbsolutePath,
                         $root . '/tests/build/target',
                         AbstractBaseTest::class
                     ),

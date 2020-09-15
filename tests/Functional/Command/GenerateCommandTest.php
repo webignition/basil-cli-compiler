@@ -25,7 +25,6 @@ use webignition\BasilCliCompiler\Tests\DataProvider\RunFailure\ParseExceptionDat
 use webignition\BasilCliCompiler\Tests\DataProvider\RunFailure\UnknownElementDataProviderTrait;
 use webignition\BasilCliCompiler\Tests\DataProvider\RunFailure\UnknownItemDataProviderTrait;
 use webignition\BasilCliCompiler\Tests\DataProvider\RunFailure\UnknownPageElementDataProviderTrait;
-use webignition\BasilCliCompiler\Tests\DataProvider\RunFailure\UnknownTestDataProviderTrait;
 use webignition\BasilCliCompiler\Tests\DataProvider\RunSuccess\SuccessDataProviderTrait;
 use webignition\BasilCompilableSourceFactory\Exception\UnsupportedContentException;
 use webignition\BasilCompilableSourceFactory\Exception\UnsupportedStatementException;
@@ -51,7 +50,6 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
     use UnknownElementDataProviderTrait;
     use UnknownItemDataProviderTrait;
     use UnknownPageElementDataProviderTrait;
-    use UnknownTestDataProviderTrait;
     use SuccessDataProviderTrait;
 
     /**
@@ -121,7 +119,6 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
      * @dataProvider unknownElementDataProvider
      * @dataProvider unknownItemDataProvider
      * @dataProvider unknownPageElementDataProvider
-     * @dataProvider unknownTestDataProvider
      * @dataProvider unresolvedPlaceholderDataProvider
      */
     public function testRunFailure(
