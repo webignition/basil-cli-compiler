@@ -62,55 +62,6 @@ trait UnknownElementDataProviderTrait
                     ]
                 ),
             ],
-            'test suite imports test declaring step, step contains action with unknown element' => [
-                'input' => [
-                    '--source' => $root . '/tests/Fixtures/basil/InvalidTestSuite/' .
-                        'imports-test-declaring-action-containing-unknown-element.yml',
-                    '--target' => $root . '/tests/build/target',
-                ],
-                'expectedExitCode' => ErrorOutputFactory::CODE_LOADER_UNKNOWN_ELEMENT,
-                'expectedCommandOutput' => new ErrorOutput(
-                    new Configuration(
-                        $root . '/tests/Fixtures/basil/InvalidTestSuite/' .
-                        'imports-test-declaring-action-containing-unknown-element.yml',
-                        $root . '/tests/build/target',
-                        AbstractBaseTest::class
-                    ),
-                    'Unknown element "unknown_element_name"',
-                    ErrorOutputFactory::CODE_LOADER_UNKNOWN_ELEMENT,
-                    [
-                        'element_name' => 'unknown_element_name',
-                        'test_path' => $root . '/tests/Fixtures/basil/InvalidTest/action-contains-unknown-element.yml',
-                        'step_name' => 'action contains unknown element',
-                        'statement' => 'click $elements.unknown_element_name',
-                    ]
-                ),
-            ],
-            'test suite imports test importing step, step contains action with unknown element' => [
-                'input' => [
-                    '--source' => $root . '/tests/Fixtures/basil/InvalidTestSuite/' .
-                        'imports-test-importing-action-containing-unknown-element.yml',
-                    '--target' => $root . '/tests/build/target',
-                ],
-                'expectedExitCode' => ErrorOutputFactory::CODE_LOADER_UNKNOWN_ELEMENT,
-                'expectedCommandOutput' => new ErrorOutput(
-                    new Configuration(
-                        $root . '/tests/Fixtures/basil/InvalidTestSuite/' .
-                        'imports-test-importing-action-containing-unknown-element.yml',
-                        $root . '/tests/build/target',
-                        AbstractBaseTest::class
-                    ),
-                    'Unknown element "unknown_element_name"',
-                    ErrorOutputFactory::CODE_LOADER_UNKNOWN_ELEMENT,
-                    [
-                        'element_name' => 'unknown_element_name',
-                        'test_path' => $root .
-                            '/tests/Fixtures/basil/InvalidTest/import-action-containing-unknown-element.yml',
-                        'step_name' => 'use action_contains_unknown_element',
-                        'statement' => 'click $elements.unknown_element_name',
-                    ]
-                ),
-            ],
         ];
     }
 }

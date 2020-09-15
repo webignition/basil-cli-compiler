@@ -18,9 +18,6 @@ trait InvalidTestDataProviderTrait
         $testPath = $root . '/tests/Fixtures/basil/InvalidTest/invalid-configuration.yml';
         $testAbsolutePath = '' . $testPath;
 
-        $testSuitePath = $root . '/tests/Fixtures/basil/InvalidTestSuite/imports-invalid-test.yml';
-        $testSuiteAbsolutePath = '' . $testSuitePath;
-
         return [
             'test has invalid configuration' => [
                 'input' => [
@@ -31,35 +28,6 @@ trait InvalidTestDataProviderTrait
                 'expectedCommandOutput' => new ErrorOutput(
                     new Configuration(
                         $testAbsolutePath,
-                        $root . '/tests/build/target',
-                        AbstractBaseTest::class
-                    ),
-                    'Invalid test at path "' .
-                    $testAbsolutePath .
-                    '": test-configuration-invalid',
-                    ErrorOutputFactory::CODE_LOADER_INVALID_TEST,
-                    [
-                        'test_path' => $testAbsolutePath,
-                        'validation_result' => [
-                            'type' => 'test',
-                            'reason' => 'test-configuration-invalid',
-                            'previous' => [
-                                'type' => 'test-configuration',
-                                'reason' => 'test-configuration-browser-empty',
-                            ],
-                        ],
-                    ]
-                ),
-            ],
-            'test suite imports test with invalid configuration' => [
-                'input' => [
-                    '--source' => $testSuitePath,
-                    '--target' => $root . '/tests/build/target',
-                ],
-                'expectedExitCode' => ErrorOutputFactory::CODE_LOADER_INVALID_TEST,
-                'expectedCommandOutput' => new ErrorOutput(
-                    new Configuration(
-                        $testSuiteAbsolutePath,
                         $root . '/tests/build/target',
                         AbstractBaseTest::class
                     ),

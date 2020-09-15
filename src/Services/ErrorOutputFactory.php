@@ -17,7 +17,6 @@ use webignition\BasilLoader\Exception\InvalidPageException;
 use webignition\BasilLoader\Exception\InvalidTestException;
 use webignition\BasilLoader\Exception\NonRetrievableImportException;
 use webignition\BasilLoader\Exception\ParseException;
-use webignition\BasilLoader\Exception\UnknownTestException;
 use webignition\BasilLoader\Exception\YamlLoaderException;
 use webignition\BasilModelProvider\Exception\UnknownItemException;
 use webignition\BasilParser\Exception\UnparseableActionException;
@@ -62,7 +61,6 @@ class ErrorOutputFactory
     public const CODE_LOADER_UNKNOWN_ELEMENT = 207;
     public const CODE_LOADER_UNKNOWN_ITEM = 208;
     public const CODE_LOADER_UNKNOWN_PAGE_ELEMENT = 209;
-    public const CODE_LOADER_UNKNOWN_TEST = 210;
     public const CODE_GENERATOR_UNRESOLVED_PLACEHOLDER = 211;
     public const CODE_GENERATOR_UNSUPPORTED_STEP = 212;
 
@@ -191,10 +189,6 @@ class ErrorOutputFactory
 
         if ($exception instanceof UnknownPageElementException) {
             return $this->createForUnknownPageElementException($exception, $configuration);
-        }
-
-        if ($exception instanceof UnknownTestException) {
-            return $this->createForUnknownTestException($exception, $configuration);
         }
 
         if ($exception instanceof UnresolvedPlaceholderException) {
@@ -421,20 +415,6 @@ class ErrorOutputFactory
                 ],
                 $this->createErrorOutputContextFromExceptionContext($unknownPageElementException->getExceptionContext())
             )
-        );
-    }
-
-    public function createForUnknownTestException(
-        UnknownTestException $unknownTestException,
-        ConfigurationInterface $configuration
-    ): ErrorOutputInterface {
-        return new ErrorOutput(
-            $configuration,
-            $unknownTestException->getMessage(),
-            self::CODE_LOADER_UNKNOWN_TEST,
-            [
-                'import_name' => $unknownTestException->getImportName(),
-            ]
         );
     }
 
