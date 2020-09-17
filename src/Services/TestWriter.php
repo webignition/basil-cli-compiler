@@ -15,16 +15,15 @@ class TestWriter
         $this->phpFileCreator = $phpFileCreator;
     }
 
-    public static function createWriter(): self
+    public static function createWriter(string $outputDirectory): self
     {
         return new TestWriter(
-            new PhpFileCreator()
+            new PhpFileCreator($outputDirectory)
         );
     }
 
     public function write(CompiledTest $compiledTest, string $outputDirectory): string
     {
-        $this->phpFileCreator->setOutputDirectory($outputDirectory);
         $filename = $this->phpFileCreator->create($compiledTest->getClassName(), $compiledTest->getCode());
 
         return $outputDirectory . '/' . $filename;

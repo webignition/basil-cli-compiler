@@ -7,20 +7,9 @@ namespace webignition\BasilCliCompiler\Tests\Unit\Services;
 use phpmock\mockery\PHPMockery;
 use webignition\BasilCliCompiler\Services\PhpFileCreator;
 use webignition\BasilCliCompiler\Tests\Unit\AbstractBaseTest;
-use webignition\ObjectReflector\ObjectReflector;
 
 class PhpFileCreatorTest extends AbstractBaseTest
 {
-    public function testSetOutputDirectory()
-    {
-        $creator = new PhpFileCreator();
-        self::assertSame('', ObjectReflector::getProperty($creator, 'outputDirectory'));
-
-        $outputDirectory = 'build';
-        $creator->setOutputDirectory($outputDirectory);
-        self::assertSame($outputDirectory, ObjectReflector::getProperty($creator, 'outputDirectory'));
-    }
-
     /**
      * @dataProvider createDataProvider
      *
@@ -39,8 +28,7 @@ class PhpFileCreatorTest extends AbstractBaseTest
             ->with($expectedFilePutContentsFilename, $expectedFilePutContentsData)
             ->andReturn(strlen($expectedFilePutContentsData));
 
-        $creator = new PhpFileCreator();
-        $creator->setOutputDirectory($outputDirectory);
+        $creator = new PhpFileCreator($outputDirectory);
         $createdFileName = $creator->create($className, $code);
 
         self::assertSame($expectedCreatedFilename, $createdFileName);

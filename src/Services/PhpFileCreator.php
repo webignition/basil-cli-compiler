@@ -18,7 +18,7 @@ EOT;
 
     private string $outputDirectory = '';
 
-    public function setOutputDirectory(string $outputDirectory): void
+    public function __construct(string $outputDirectory)
     {
         $this->outputDirectory = $outputDirectory;
     }

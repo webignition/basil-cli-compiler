@@ -69,7 +69,7 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
         $stdout = new BufferedOutput();
         $stderr = new BufferedOutput();
 
-        $command = CommandFactory::createGenerateCommand($stdout, $stderr);
+        $command = CommandFactory::createGenerateCommand($stdout, $stderr, $this->createArgvFromInput($input));
 
         $exitCode = $command->run(new ArrayInput($input), new NullOutput());
         self::assertSame($expectedExitCode, $exitCode);
@@ -130,7 +130,7 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
         $stdout = new BufferedOutput();
         $stderr = new BufferedOutput();
 
-        $command = CommandFactory::createGenerateCommand($stdout, $stderr);
+        $command = CommandFactory::createGenerateCommand($stdout, $stderr, $this->createArgvFromInput($input));
 
         if (null !== $initializer) {
             $initializer($command);
@@ -210,7 +210,7 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
         $stdout = new BufferedOutput();
         $stderr = new BufferedOutput();
 
-        $command = CommandFactory::createGenerateCommand($stdout, $stderr);
+        $command = CommandFactory::createGenerateCommand($stdout, $stderr, $this->createArgvFromInput($input));
 
         ObjectReflector::setProperty(
             $command,
@@ -354,5 +354,20 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
             'compiler',
             $compiler
         );
+    }
+
+    /**
+     * @param array<mixed> $input
+     *
+     * @return array<mixed>
+     */
+    private function createArgvFromInput(array $input): array
+    {
+        $argv = [];
+        foreach ($input as $key => $value) {
+            $argv[] = $key . '=' . $value;
+        }
+
+        return $argv;
     }
 }
