@@ -57,7 +57,6 @@ class CompilerTest extends \PHPUnit\Framework\TestCase
                 'test' => $test,
                 'fullyQualifiedBaseClass' => AbstractBaseTest::class,
                 'expectedCompiledTest' => new CompiledTest(
-                    $test,
                     $this->createExpectedCodeFromSource(
                         'tests/Fixtures/php/Test/Generated4238ad333014be4c5d99e227b087cc9eTest.php'
                     ),

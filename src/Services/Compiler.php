@@ -53,6 +53,6 @@ class Compiler
 
         $code = $this->compiledClassResolver->resolve($classDefinition->render());
 
-        return new CompiledTest($test, $code, $classDefinition->getName());
+        return new CompiledTest($code, $classDefinition->getName());
     }
 }
