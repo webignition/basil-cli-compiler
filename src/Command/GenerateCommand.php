@@ -17,6 +17,7 @@ use webignition\BasilCliCompiler\Services\TestWriter;
 use webignition\BasilCompilableSourceFactory\Exception\UnsupportedStepException;
 use webignition\BasilCompilerModels\Configuration;
 use webignition\BasilCompilerModels\SuiteManifest;
+use webignition\BasilCompilerModels\TestManifest;
 use webignition\BasilLoader\Exception\EmptyTestException;
 use webignition\BasilLoader\Exception\InvalidPageException;
 use webignition\BasilLoader\Exception\InvalidTestException;
@@ -151,9 +152,13 @@ class GenerateCommand extends Command
                     $configuration->getBaseClass()
                 );
 
-                $testManifests[] = $this->testWriter->write(
-                    $relativePathCompiledTest->withTest($test),
-                    $configuration->getTarget()
+                $target = $this->testWriter->write($relativePathCompiledTest, $configuration->getTarget());
+
+                $testManifests[] = new TestManifest(
+                    $test->getConfiguration(),
+                    $test->getPath() ?? '',
+                    $target,
+                    count($test->getSteps())
                 );
             }
         } catch (
