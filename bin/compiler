@@ -23,7 +23,7 @@ use webignition\SingleCommandApplicationFactory\Factory;
 $stdout = new StreamOutput(STDOUT);
 $stderr = new StreamOutput(STDERR);
 
-$command = CommandFactory::createGenerateCommand($stdout, $stderr);
+$command = CommandFactory::createGenerateCommand($stdout, $stderr, $argv);
 
 $application = (new Factory())->create($command, VERSION);
 $application->run(null, new NullOutput());

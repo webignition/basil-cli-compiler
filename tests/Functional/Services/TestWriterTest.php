@@ -9,15 +9,6 @@ use webignition\BasilCliCompiler\Services\TestWriter;
 
 class TestWriterTest extends \PHPUnit\Framework\TestCase
 {
-    private TestWriter $testWriter;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->testWriter = TestWriter::createWriter();
-    }
-
     /**
      * @dataProvider generateDataProvider
      */
@@ -26,7 +17,9 @@ class TestWriterTest extends \PHPUnit\Framework\TestCase
         string $outputDirectory,
         string $expectedGeneratedCode
     ) {
-        $target = $this->testWriter->write($compiledTest, $outputDirectory);
+        $testWriter = TestWriter::createWriter($outputDirectory);
+
+        $target = $testWriter->write($compiledTest, $outputDirectory);
 
         self::assertFileExists($target);
         self::assertFileIsReadable($target);
