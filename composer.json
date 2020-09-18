@@ -58,7 +58,7 @@
         "symfony/yaml": "^5.1",
         "webignition/base-basil-test-case": "^0.38.0",
         "webignition/basil-compilable-source": "^0.50.0",
-        "webignition/basil-compiler-models": "^0.13.0",
+        "webignition/basil-compiler-models": "^0.14.0",
         "webignition/basil-loader": "^0.31.0",
         "webignition/basil-models": "^0.57",
         "webignition/php-basil-compilable-source-factory": "^0.60.0",
