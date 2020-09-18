@@ -6,11 +6,12 @@ namespace webignition\BasilCliCompiler\Services;
 
 use Symfony\Component\Console\Output\OutputInterface;
 use webignition\BasilCliCompiler\Command\GenerateCommand;
+use webignition\BasilCliCompiler\Model\Options;
 use webignition\BasilLoader\TestLoader;
 
 class CommandFactory
 {
-    private const TARGET_ARG_START_PATTERN = '/^--' . GenerateCommand::OPTION_TARGET . '=/';
+    private const TARGET_ARG_START_PATTERN = '/^--' . Options::OPTION_TARGET . '=/';
 
     /**
      * @param OutputInterface $stdout
@@ -29,7 +30,8 @@ class CommandFactory
             Compiler::createCompiler(),
             TestWriter::createWriter(self::getOutputDirectory($cliArguments)),
             new ErrorOutputFactory(new ValidatorInvalidResultSerializer()),
-            new OutputRenderer($stdout, $stderr)
+            new OutputRenderer($stdout, $stderr),
+            new ConfigurationFactory()
         );
     }
 

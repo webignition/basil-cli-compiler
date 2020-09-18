@@ -10,7 +10,9 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface as ConsoleOutputInterface;
 use webignition\BaseBasilTestCase\AbstractBaseTest;
 use webignition\BasilCliCompiler\Exception\UnresolvedPlaceholderException;
+use webignition\BasilCliCompiler\Model\Options;
 use webignition\BasilCliCompiler\Services\Compiler;
+use webignition\BasilCliCompiler\Services\ConfigurationFactory;
 use webignition\BasilCliCompiler\Services\ErrorOutputFactory;
 use webignition\BasilCliCompiler\Services\OutputRenderer;
 use webignition\BasilCliCompiler\Services\TestWriter;
@@ -30,14 +32,9 @@ use webignition\BasilModels\Test\TestInterface;
 use webignition\BasilResolver\CircularStepImportException;
 use webignition\BasilResolver\UnknownElementException;
 use webignition\BasilResolver\UnknownPageElementException;
-use webignition\SymfonyConsole\TypedInput\TypedInput;
 
 class GenerateCommand extends Command
 {
-    public const OPTION_SOURCE = 'source';
-    public const OPTION_TARGET = 'target';
-    public const OPTION_BASE_CLASS = 'base-class';
-
     private const NAME = 'generate';
 
     private TestLoader $testLoader;
@@ -45,13 +42,15 @@ class GenerateCommand extends Command
     private TestWriter $testWriter;
     private ErrorOutputFactory $errorOutputFactory;
     private OutputRenderer $outputRenderer;
+    private ConfigurationFactory $configurationFactory;
 
     public function __construct(
         TestLoader $testLoader,
         Compiler $compiler,
         TestWriter $testWriter,
         ErrorOutputFactory $errorOutputFactory,
-        OutputRenderer $outputRenderer
+        OutputRenderer $outputRenderer,
+        ConfigurationFactory $configurationFactory
     ) {
         parent::__construct();
 
@@ -60,6 +59,7 @@ class GenerateCommand extends Command
         $this->testWriter = $testWriter;
         $this->errorOutputFactory = $errorOutputFactory;
         $this->outputRenderer = $outputRenderer;
+        $this->configurationFactory = $configurationFactory;
     }
 
     protected function configure(): void
@@ -68,7 +68,7 @@ class GenerateCommand extends Command
             ->setName(self::NAME)
             ->setDescription('Generate tests from basil source')
             ->addOption(
-                self::OPTION_SOURCE,
+                Options::OPTION_SOURCE,
                 null,
                 InputOption::VALUE_REQUIRED,
                 'Path to the basil test source from which to generate tests. ' .
@@ -76,14 +76,14 @@ class GenerateCommand extends Command
                 ''
             )
             ->addOption(
-                self::OPTION_TARGET,
+                Options::OPTION_TARGET,
                 null,
                 InputOption::VALUE_REQUIRED,
                 'Output path for generated tests',
                 ''
             )
             ->addOption(
-                self::OPTION_BASE_CLASS,
+                Options::OPTION_BASE_CLASS,
                 null,
                 InputOption::VALUE_OPTIONAL,
                 'Base class to extend',
@@ -100,21 +100,7 @@ class GenerateCommand extends Command
      */
     protected function execute(InputInterface $input, ConsoleOutputInterface $output)
     {
-        $typedInput = new TypedInput($input);
-
-        $rawSource = trim((string) $typedInput->getStringOption(GenerateCommand::OPTION_SOURCE));
-        $rawTarget = trim((string) $typedInput->getStringOption(GenerateCommand::OPTION_TARGET));
-        $baseClass = trim((string) $typedInput->getStringOption(GenerateCommand::OPTION_BASE_CLASS));
-
-        $configuration = new Configuration($rawSource, $rawTarget, $baseClass);
-
-        if ('' === $rawSource) {
-            return $this->outputRenderer->render($this->errorOutputFactory->createForEmptySource($configuration));
-        }
-
-        if ('' === $rawTarget) {
-            return $this->outputRenderer->render($this->errorOutputFactory->createForEmptyTarget($configuration));
-        }
+        $configuration = $this->configurationFactory->create($input);
 
         $configurationValidationState = $configuration->validate();
         if (Configuration::VALIDATION_STATE_VALID !== $configurationValidationState) {

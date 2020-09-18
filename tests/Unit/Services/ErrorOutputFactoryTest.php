@@ -68,6 +68,16 @@ class ErrorOutputFactoryTest extends AbstractBaseTest
             ->shouldReceive('validate')
             ->andReturn(Configuration::VALIDATION_STATE_TARGET_NOT_ABSOLUTE);
 
+        $configurationSourceEmpty = \Mockery::mock(ConfigurationInterface::class);
+        $configurationSourceEmpty
+            ->shouldReceive('validate')
+            ->andReturn(Configuration::VALIDATION_STATE_SOURCE_EMPTY);
+
+        $configurationTargetEmpty = \Mockery::mock(ConfigurationInterface::class);
+        $configurationTargetEmpty
+            ->shouldReceive('validate')
+            ->andReturn(Configuration::VALIDATION_STATE_TARGET_EMPTY);
+
         return [
             'source not readable' => [
                 'configuration' => $configurationSourceNotReadable,
@@ -112,6 +122,24 @@ class ErrorOutputFactoryTest extends AbstractBaseTest
                     $configurationTargetNotAbsolute,
                     'target invalid: path must be absolute',
                     ErrorOutputFactory::CODE_COMMAND_CONFIG_TARGET_INVALID_NOT_ABSOLUTE
+                ),
+            ],
+            'source empty' => [
+                'configuration' => $configurationSourceEmpty,
+                'configurationValidationState' => Configuration::VALIDATION_STATE_SOURCE_EMPTY,
+                'expectedOutput' => new ErrorOutput(
+                    $configurationSourceEmpty,
+                    'source empty; call with --source=SOURCE',
+                    ErrorOutputFactory::CODE_COMMAND_CONFIG_SOURCE_EMPTY
+                ),
+            ],
+            'target empty' => [
+                'configuration' => $configurationTargetEmpty,
+                'configurationValidationState' => Configuration::VALIDATION_STATE_TARGET_EMPTY,
+                'expectedOutput' => new ErrorOutput(
+                    $configurationTargetEmpty,
+                    'target empty; call with --target=TARGET',
+                    ErrorOutputFactory::CODE_COMMAND_CONFIG_TARGET_EMPTY
                 ),
             ],
         ];

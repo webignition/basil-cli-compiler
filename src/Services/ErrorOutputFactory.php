@@ -134,6 +134,14 @@ class ErrorOutputFactory
             $errorCode = self::CODE_COMMAND_CONFIG_TARGET_INVALID_NOT_ABSOLUTE;
         }
 
+        if (Configuration::VALIDATION_STATE_SOURCE_EMPTY === $configurationValidationState) {
+            $errorCode = self::CODE_COMMAND_CONFIG_SOURCE_EMPTY;
+        }
+
+        if (Configuration::VALIDATION_STATE_TARGET_EMPTY === $configurationValidationState) {
+            $errorCode = self::CODE_COMMAND_CONFIG_TARGET_EMPTY;
+        }
+
         return $this->createForConfigurationErrorCode($configuration, $errorCode);
     }
 
