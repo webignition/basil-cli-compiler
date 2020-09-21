@@ -26,6 +26,7 @@ use webignition\BasilCliCompiler\Tests\DataProvider\RunFailure\UnknownElementDat
 use webignition\BasilCliCompiler\Tests\DataProvider\RunFailure\UnknownItemDataProviderTrait;
 use webignition\BasilCliCompiler\Tests\DataProvider\RunFailure\UnknownPageElementDataProviderTrait;
 use webignition\BasilCliCompiler\Tests\DataProvider\RunSuccess\SuccessDataProviderTrait;
+use webignition\BasilCliCompiler\Tests\Services\ServiceMocker;
 use webignition\BasilCompilableSourceFactory\Exception\UnsupportedContentException;
 use webignition\BasilCompilableSourceFactory\Exception\UnsupportedStatementException;
 use webignition\BasilCompilableSourceFactory\Exception\UnsupportedStepException;
@@ -57,6 +58,7 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
      * @param int $expectedExitCode
      * @param SuiteManifest $expectedCommandOutput
      * @param string[] $expectedGeneratedCodePaths
+     * @param string[] $classNames
      *
      * @dataProvider successDataProvider
      */
@@ -64,12 +66,15 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
         array $input,
         int $expectedExitCode,
         SuiteManifest $expectedCommandOutput,
-        array $expectedGeneratedCodePaths
+        array $expectedGeneratedCodePaths,
+        array $classNames
     ) {
         $stdout = new BufferedOutput();
         $stderr = new BufferedOutput();
 
         $command = CommandFactory::createGenerateCommand($stdout, $stderr, $this->createArgvFromInput($input));
+
+        $this->mockClassNameFactoryOnCommand($command, $classNames);
 
         $exitCode = $command->run(new ArrayInput($input), new NullOutput());
         self::assertSame($expectedExitCode, $exitCode);
@@ -369,5 +374,21 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
         }
 
         return $argv;
+    }
+
+    /**
+     * @param GenerateCommand $command
+     * @param string[] $classNames
+     */
+    private function mockClassNameFactoryOnCommand(GenerateCommand $command, array $classNames): void
+    {
+        $serviceMocker = new ServiceMocker();
+
+        $compiler = $serviceMocker->mockClassNameFactoryOnCompiler(
+            ObjectReflector::getProperty($command, 'compiler'),
+            $classNames
+        );
+
+        ObjectReflector::setProperty($command, GenerateCommand::class, 'compiler', $compiler);
     }
 }

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace webignition\BasilCliCompiler\Tests\Integration\Phar;
 
 use Symfony\Component\Process\Process;
-use Symfony\Component\Yaml\Yaml;
 use webignition\BasilCliCompiler\Tests\DataProvider\RunFailure\CircularStepImportDataProviderTrait;
 use webignition\BasilCliCompiler\Tests\DataProvider\RunFailure\EmptyTestDataProviderTrait;
 use webignition\BasilCliCompiler\Tests\DataProvider\RunFailure\InvalidPageDataProviderTrait;
@@ -17,9 +16,6 @@ use webignition\BasilCliCompiler\Tests\DataProvider\RunFailure\UnknownElementDat
 use webignition\BasilCliCompiler\Tests\DataProvider\RunFailure\UnknownItemDataProviderTrait;
 use webignition\BasilCliCompiler\Tests\DataProvider\RunFailure\UnknownPageElementDataProviderTrait;
 use webignition\BasilCliCompiler\Tests\DataProvider\RunSuccess\SuccessDataProviderTrait;
-use webignition\BasilCompilerModels\ErrorOutput;
-use webignition\BasilCompilerModels\OutputInterface;
-use webignition\BasilCompilerModels\SuiteManifest;
 
 class PharTest extends \PHPUnit\Framework\TestCase
 {
@@ -62,7 +58,7 @@ class PharTest extends \PHPUnit\Framework\TestCase
      * @dataProvider unknownPageElementDataProvider
      * @dataProvider successDataProvider
      */
-    public function testRun(array $input, int $expectedExitCode, OutputInterface $expectedCommandOutput)
+    public function testRun(array $input, int $expectedExitCode)
     {
         $modifiedInput = [];
 
@@ -81,29 +77,17 @@ class PharTest extends \PHPUnit\Framework\TestCase
         $exitCode = $pharProcess->run();
 
         $this->assertSame($expectedExitCode, $exitCode);
+    }
 
-        $outputContent = 0 === $expectedExitCode ? $pharProcess->getOutput() : $pharProcess->getErrorOutput();
-        $processOutputData = (array) Yaml::parse($outputContent);
+    public static function tearDownAfterClass(): void
+    {
+        parent::tearDownAfterClass();
 
-        $suiteManifest = 0 === $exitCode
-            ? SuiteManifest::fromArray($processOutputData)
-            : ErrorOutput::fromArray($processOutputData);
+        $directoryIterator = new \DirectoryIterator(getcwd() . '/tests/build/target');
 
-        $this->assertEquals($expectedCommandOutput, $suiteManifest);
-
-        if ($suiteManifest instanceof SuiteManifest) {
-            $generatedTestsToRemove = [];
-
-            foreach ($suiteManifest->getTestManifests() as $testManifest) {
-                $testPath = $testManifest->getTarget();
-                $generatedTestsToRemove[$testPath] = $testPath;
-            }
-
-            foreach ($generatedTestsToRemove as $path) {
-                self::assertFileExists($path);
-                self::assertFileIsReadable($path);
-
-                unlink($path);
+        foreach ($directoryIterator as $item) {
+            if ($item->isFile() && $item->isReadable() && 'php' === $item->getExtension()) {
+                unlink($item->getPathname());
             }
         }
     }

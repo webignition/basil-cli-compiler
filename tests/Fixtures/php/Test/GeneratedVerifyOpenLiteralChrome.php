@@ -6,7 +6,7 @@ use webignition\BaseBasilTestCase\AbstractBaseTest;
 use webignition\BaseBasilTestCase\ClientManager;
 use webignition\BasilModels\Test\Configuration;
 
-class Generated4238ad333014be4c5d99e227b087cc9eTest extends AbstractBaseTest
+class GeneratedVerifyOpenLiteralChrome extends AbstractBaseTest
 {
     public static function setUpBeforeClass(): void
     {
