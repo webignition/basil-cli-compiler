@@ -7,31 +7,34 @@ namespace webignition\BasilCliCompiler\Tests\Functional\Services;
 use webignition\BaseBasilTestCase\AbstractBaseTest;
 use webignition\BasilCliCompiler\Model\CompiledTest;
 use webignition\BasilCliCompiler\Services\Compiler;
+use webignition\BasilCliCompiler\Tests\Services\ServiceMocker;
 use webignition\BasilModels\Test\TestInterface;
 use webignition\BasilParser\Test\TestParser;
 
 class CompilerTest extends \PHPUnit\Framework\TestCase
 {
-    private Compiler $compiler;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->compiler = Compiler::createCompiler();
-    }
-
     /**
      * @dataProvider compileDataProvider
+     *
+     * @param TestInterface $test
+     * @param string[]  $classNameFactoryClassNames
+     * @param string $fullyQualifiedBaseClass
+     * @param CompiledTest $expectedCompiledTest
      */
     public function testCompile(
         TestInterface $test,
+        array $classNameFactoryClassNames,
         string $fullyQualifiedBaseClass,
         CompiledTest $expectedCompiledTest
     ) {
+        $compiler = Compiler::createCompiler();
+
+        $serviceMocker = new ServiceMocker();
+        $compiler = $serviceMocker->mockClassNameFactoryOnCompiler($compiler, $classNameFactoryClassNames);
+
         self::assertEquals(
             $expectedCompiledTest,
-            $this->compiler->compile($test, $fullyQualifiedBaseClass)
+            $compiler->compile($test, $fullyQualifiedBaseClass)
         );
     }
 
@@ -55,12 +58,15 @@ class CompilerTest extends \PHPUnit\Framework\TestCase
         return [
             'default' => [
                 'test' => $test,
+                'classNameFactoryClassNames' => [
+                    'GeneratedVerifyOpenLiteralChrome',
+                ],
                 'fullyQualifiedBaseClass' => AbstractBaseTest::class,
                 'expectedCompiledTest' => new CompiledTest(
                     $this->createExpectedCodeFromSource(
-                        'tests/Fixtures/php/Test/Generated4238ad333014be4c5d99e227b087cc9eTest.php'
+                        'tests/Fixtures/php/Test/GeneratedVerifyOpenLiteralChrome.php'
                     ),
-                    'Generated4238ad333014be4c5d99e227b087cc9eTest'
+                    'GeneratedVerifyOpenLiteralChrome'
                 ),
             ],
         ];

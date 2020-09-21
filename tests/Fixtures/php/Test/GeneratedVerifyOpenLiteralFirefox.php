@@ -6,14 +6,14 @@ use webignition\BaseBasilTestCase\AbstractBaseTest;
 use webignition\BaseBasilTestCase\ClientManager;
 use webignition\BasilModels\Test\Configuration;
 
-class Generated4b5acb6ab789aa90fe19904bd0e5f458Test extends AbstractBaseTest
+class GeneratedVerifyOpenLiteralFirefox extends AbstractBaseTest
 {
     public static function setUpBeforeClass(): void
     {
         try {
             self::setClientManager(new ClientManager(
                 new Configuration(
-                    'chrome',
+                    'firefox',
                     'https://example.com/'
                 )
             ));

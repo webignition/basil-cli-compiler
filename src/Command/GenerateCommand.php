@@ -28,7 +28,6 @@ use webignition\BasilLoader\Exception\ParseException;
 use webignition\BasilLoader\Exception\YamlLoaderException;
 use webignition\BasilLoader\TestLoader;
 use webignition\BasilModelProvider\Exception\UnknownItemException;
-use webignition\BasilModels\Test\TestInterface;
 use webignition\BasilResolver\CircularStepImportException;
 use webignition\BasilResolver\UnknownElementException;
 use webignition\BasilResolver\UnknownPageElementException;
@@ -132,13 +131,8 @@ class GenerateCommand extends Command
 
         try {
             foreach ($tests as $test) {
-                $relativePathTest = $this->removeRootPathFromTestPath($test);
-                $relativePathCompiledTest = $this->compiler->compile(
-                    $relativePathTest,
-                    $configuration->getBaseClass()
-                );
-
-                $target = $this->testWriter->write($relativePathCompiledTest, $configuration->getTarget());
+                $compiledTest = $this->compiler->compile($test, $configuration->getBaseClass());
+                $target = $this->testWriter->write($compiledTest, $configuration->getTarget());
 
                 $testManifests[] = new TestManifest(
                     $test->getConfiguration(),
@@ -159,16 +153,5 @@ class GenerateCommand extends Command
         $this->outputRenderer->render(new SuiteManifest($configuration, $testManifests));
 
         return 0;
-    }
-
-    private function removeRootPathFromTestPath(TestInterface $test): TestInterface
-    {
-        $root = (string) getcwd();
-
-        $path = (string) $test->getPath();
-        $path = (string) preg_replace('/^' . preg_quote($root, '/') . '/', '', $path);
-        $path = ltrim($path, '/');
-
-        return $test->withPath($path);
     }
 }
