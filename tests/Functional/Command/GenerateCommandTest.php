@@ -167,7 +167,7 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
                         $root . '/tests/build/target',
                         AbstractBaseTest::class
                     ),
-                    'Unresolved placeholder "CLIENT" in content ' .
+                    'Unresolved variable "CLIENT" in template ' .
                     '"{{ CLIENT }}->request(\'GET\', \'https://example.com/\');"',
                     ErrorOutputFactory::CODE_GENERATOR_UNRESOLVED_PLACEHOLDER,
                     [

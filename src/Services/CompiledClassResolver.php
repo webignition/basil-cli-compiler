@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace webignition\BasilCliCompiler\Services;
 
-use webignition\BasilCliCompiler\Exception\UnresolvedPlaceholderException;
 use webignition\BasilCliCompiler\Model\ExternalVariableIdentifiers;
+use webignition\Stubble\UnresolvedVariableException;
 
 class CompiledClassResolver
 {
@@ -33,7 +33,7 @@ class CompiledClassResolver
      *
      * @return string
      *
-     * @throws UnresolvedPlaceholderException
+     * @throws UnresolvedVariableException
      */
     public function resolve(string $compiledClass): string
     {

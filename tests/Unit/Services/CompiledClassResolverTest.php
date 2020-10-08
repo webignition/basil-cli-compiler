@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace webignition\BasilCliCompiler\Tests\Unit\Services;
 
-use webignition\BasilCliCompiler\Exception\UnresolvedPlaceholderException;
 use webignition\BasilCliCompiler\Services\CompiledClassResolver;
 use webignition\BasilCliCompiler\Services\ExternalVariableIdentifiersFactory;
 use webignition\BasilCompilableSource\VariableDependency;
@@ -28,8 +27,6 @@ class CompiledClassResolverTest extends \PHPUnit\Framework\TestCase
      *
      * @param string $compiledClass
      * @param string $expectedResolvedClass
-     *
-     * @throws UnresolvedPlaceholderException
      */
     public function testResolve(string $compiledClass, string $expectedResolvedClass)
     {

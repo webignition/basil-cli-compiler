@@ -4,37 +4,26 @@ declare(strict_types=1);
 
 namespace webignition\BasilCliCompiler\Services;
 
-use webignition\BasilCliCompiler\Exception\UnresolvedPlaceholderException;
+use webignition\Stubble\VariableResolver;
 
-class VariablePlaceholderResolver
+class VariablePlaceholderResolver extends VariableResolver
 {
-    /**
-     * @param string $content
-     * @param array<string, string> $variableIdentifiers
-     *
-     * @return string
-     *
-     * @throws UnresolvedPlaceholderException
-     */
-    public function resolve(string $content, array $variableIdentifiers): string
+    public function __construct()
     {
-        $search = [];
-        $replace = [];
+        parent::__construct();
 
-        foreach ($variableIdentifiers as $identifier => $name) {
-            $search[] = sprintf('{{ %s }}', $identifier);
-            $replace[] = $name;
-        }
+        $this->addUnresolvedVariableDecider(function (string $variable) {
+            $prefix = '$"';
+            $prefixLength = strlen($prefix);
+            $variableLength = strlen($variable);
 
-        $resolvedContent = (string) str_replace($search, $replace, $content);
+            if ($variableLength < $prefixLength) {
+                return false;
+            }
 
-        $placeholderMatches = [];
-        if (preg_match('/{{ [^${]+ }}/', $resolvedContent, $placeholderMatches)) {
-            $unresolvedPlaceholder = trim($placeholderMatches[0], '{} ');
+            $variableStart = substr($variable, 0, $prefixLength);
 
-            throw new UnresolvedPlaceholderException($unresolvedPlaceholder, trim($content));
-        }
-
-        return $resolvedContent;
+            return $variableStart === $prefix;
+        });
     }
 }

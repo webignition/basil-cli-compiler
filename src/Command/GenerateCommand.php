@@ -9,7 +9,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface as ConsoleOutputInterface;
 use webignition\BaseBasilTestCase\AbstractBaseTest;
-use webignition\BasilCliCompiler\Exception\UnresolvedPlaceholderException;
 use webignition\BasilCliCompiler\Model\Options;
 use webignition\BasilCliCompiler\Services\Compiler;
 use webignition\BasilCliCompiler\Services\ConfigurationFactory;
@@ -31,6 +30,7 @@ use webignition\BasilModelProvider\Exception\UnknownItemException;
 use webignition\BasilResolver\CircularStepImportException;
 use webignition\BasilResolver\UnknownElementException;
 use webignition\BasilResolver\UnknownPageElementException;
+use webignition\Stubble\UnresolvedVariableException;
 
 class GenerateCommand extends Command
 {
@@ -142,7 +142,7 @@ class GenerateCommand extends Command
                 );
             }
         } catch (
-            UnresolvedPlaceholderException |
+            UnresolvedVariableException |
             UnsupportedStepException $exception
         ) {
             return $this->outputRenderer->render(
