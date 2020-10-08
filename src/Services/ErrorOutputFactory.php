@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace webignition\BasilCliCompiler\Services;
 
-use webignition\BasilCliCompiler\Exception\UnresolvedPlaceholderException;
 use webignition\BasilCompilableSourceFactory\Exception\UnsupportedContentException;
 use webignition\BasilCompilableSourceFactory\Exception\UnsupportedStepException;
 use webignition\BasilCompilerModels\Configuration;
@@ -28,6 +27,7 @@ use webignition\BasilParser\Exception\UnparseableTestException;
 use webignition\BasilResolver\CircularStepImportException;
 use webignition\BasilResolver\UnknownElementException;
 use webignition\BasilResolver\UnknownPageElementException;
+use webignition\Stubble\UnresolvedVariableException;
 
 class ErrorOutputFactory
 {
@@ -199,8 +199,8 @@ class ErrorOutputFactory
             return $this->createForUnknownPageElementException($exception, $configuration);
         }
 
-        if ($exception instanceof UnresolvedPlaceholderException) {
-            return $this->createForUnresolvedPlaceholderException($exception, $configuration);
+        if ($exception instanceof UnresolvedVariableException) {
+            return $this->createForUnresolvedVariableException($exception, $configuration);
         }
 
         if ($exception instanceof UnsupportedStepException) {
@@ -426,17 +426,17 @@ class ErrorOutputFactory
         );
     }
 
-    public function createForUnresolvedPlaceholderException(
-        UnresolvedPlaceholderException $unresolvedPlaceholderException,
+    public function createForUnresolvedVariableException(
+        UnresolvedVariableException $exception,
         ConfigurationInterface $configuration
     ): ErrorOutputInterface {
         return new ErrorOutput(
             $configuration,
-            $unresolvedPlaceholderException->getMessage(),
+            $exception->getMessage(),
             self::CODE_GENERATOR_UNRESOLVED_PLACEHOLDER,
             [
-                'placeholder' => $unresolvedPlaceholderException->getPlaceholder(),
-                'content' => $unresolvedPlaceholderException->getContent(),
+                'placeholder' => $exception->getVariable(),
+                'content' => $exception->getTemplate(),
             ]
         );
     }

@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace webignition\BasilCliCompiler\Services;
 
-use webignition\BasilCliCompiler\Exception\UnresolvedPlaceholderException;
 use webignition\BasilCliCompiler\Model\CompiledTest;
 use webignition\BasilCompilableSource\ClassDefinition;
 use webignition\BasilCompilableSource\ClassName;
 use webignition\BasilCompilableSourceFactory\ClassDefinitionFactory;
 use webignition\BasilCompilableSourceFactory\Exception\UnsupportedStepException;
 use webignition\BasilModels\Test\TestInterface;
+use webignition\Stubble\UnresolvedVariableException;
 
 class Compiler
 {
@@ -41,7 +41,7 @@ class Compiler
      *
      * @return CompiledTest
      *
-     * @throws UnresolvedPlaceholderException
+     * @throws UnresolvedVariableException
      * @throws UnsupportedStepException
      */
     public function compile(TestInterface $test, string $fullyQualifiedBaseClass): CompiledTest
