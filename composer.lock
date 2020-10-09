@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b7245962910acc6719f10710564f7aa9",
+    "content-hash": "cce67afd89f54102b12b01334a11c3c3",
     "packages": [
         {
             "name": "doctrine/instantiator",
@@ -4257,16 +4257,16 @@
         },
         {
             "name": "webignition/stubble",
-            "version": "0.1",
+            "version": "0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webignition/stubble.git",
-                "reference": "611e3e1df543ec3077c0b09153905bb14a54710e"
+                "reference": "2ddda3bd53a2edff59a678efc41d988b273193bf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webignition/stubble/zipball/611e3e1df543ec3077c0b09153905bb14a54710e",
-                "reference": "611e3e1df543ec3077c0b09153905bb14a54710e",
+                "url": "https://api.github.com/repos/webignition/stubble/zipball/2ddda3bd53a2edff59a678efc41d988b273193bf",
+                "reference": "2ddda3bd53a2edff59a678efc41d988b273193bf",
                 "shasum": ""
             },
             "require": {
@@ -4306,9 +4306,9 @@
             ],
             "support": {
                 "issues": "https://github.com/webignition/stubble/issues",
-                "source": "https://github.com/webignition/stubble/tree/0.1"
+                "source": "https://github.com/webignition/stubble/tree/0.2"
             },
-            "time": "2020-10-08T17:58:21+00:00"
+            "time": "2020-10-09T09:39:05+00:00"
         },
         {
             "name": "webignition/symfony-console-typed-input",
