@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace webignition\BasilCliCompiler\Tests\Unit\Services;
 
 use webignition\BasilCliCompiler\Services\VariablePlaceholderResolver;
+use webignition\Stubble\Resolvable;
+use webignition\Stubble\ResolvableInterface;
 
 class VariablePlaceholderResolverTest extends \PHPUnit\Framework\TestCase
 {
@@ -19,14 +21,10 @@ class VariablePlaceholderResolverTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @dataProvider resolveDataProvider
-     *
-     * @param string $template
-     * @param array<string, string> $context
-     * @param string $expectedResolvedTemplate
      */
-    public function testResolve(string $template, array $context, string $expectedResolvedTemplate)
+    public function testResolve(ResolvableInterface $resolvable, string $expectedResolvedTemplate)
     {
-        $resolvedContent = $this->variablePlaceholderResolver->resolve($template, $context);
+        $resolvedContent = $this->variablePlaceholderResolver->resolve($resolvable);
 
         $this->assertSame($expectedResolvedTemplate, $resolvedContent);
     }
@@ -35,13 +33,11 @@ class VariablePlaceholderResolverTest extends \PHPUnit\Framework\TestCase
     {
         return [
             'contains parent > child descendant identifier' => [
-                'template' => 'method(\'$"{{ $".parent" }} .child"\')',
-                'context' => [],
+                'resolvable' => new Resolvable('method(\'$"{{ $".parent" }} .child"\')', []),
                 'expectedResolvedTemplate' => 'method(\'$"{{ $".parent" }} .child"\')',
             ],
             'contains grandparent > parent > child descendant identifier' => [
-                'template' => 'method(\'$"{{ $"{{ $".grandparent" }} .parent" }} .child"\')',
-                'context' => [],
+                'resolvable' => new Resolvable('method(\'$"{{ $"{{ $".grandparent" }} .parent" }} .child"\')', []),
                 'expectedResolvedTemplate' => 'method(\'$"{{ $"{{ $".grandparent" }} .parent" }} .child"\')',
             ],
         ];
