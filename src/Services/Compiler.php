@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace webignition\BasilCliCompiler\Services;
 
 use webignition\BasilCliCompiler\Model\CompiledTest;
-use webignition\BasilCompilableSource\ClassDefinition;
-use webignition\BasilCompilableSource\ClassName;
 use webignition\BasilCompilableSourceFactory\ClassDefinitionFactory;
 use webignition\BasilCompilableSourceFactory\Exception\UnsupportedStepException;
 use webignition\BasilModels\Test\TestInterface;
@@ -46,13 +44,13 @@ class Compiler
      */
     public function compile(TestInterface $test, string $fullyQualifiedBaseClass): CompiledTest
     {
-        $classDefinition = $this->classDefinitionFactory->createClassDefinition($test);
-        if ($classDefinition instanceof ClassDefinition) {
-            $classDefinition->setBaseClass(new ClassName($fullyQualifiedBaseClass));
-        }
+        $classDefinition = $this->classDefinitionFactory->createClassDefinition($test, $fullyQualifiedBaseClass);
 
         $code = $this->compiledClassResolver->resolve($classDefinition->render());
 
-        return new CompiledTest($code, $classDefinition->getName());
+        return new CompiledTest(
+            $code,
+            $classDefinition->getSignature()->getName()
+        );
     }
 }

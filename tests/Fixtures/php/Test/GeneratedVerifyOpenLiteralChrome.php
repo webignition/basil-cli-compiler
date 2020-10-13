@@ -21,7 +21,6 @@ class GeneratedVerifyOpenLiteralChrome extends AbstractBaseTest
             self::$client->request('GET', 'https://example.com/');
         } catch (\Throwable $exception) {
             self::staticSetLastException($exception);
-            self::fail('Exception raised during setUpBeforeClass()');
         }
     }
 
