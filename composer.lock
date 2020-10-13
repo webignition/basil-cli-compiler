@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "cce67afd89f54102b12b01334a11c3c3",
+    "content-hash": "844601d4b75708338a812b7e52782f5c",
     "packages": [
         {
             "name": "doctrine/instantiator",
@@ -3252,16 +3252,16 @@
         },
         {
             "name": "webignition/base-basil-test-case",
-            "version": "0.38",
+            "version": "0.40",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webignition/base-basil-test-case.git",
-                "reference": "f229faae5e1306db019fbcacdf092981ff625f24"
+                "reference": "e2faa13ba1d48a61c713d9ae347a87b42209a1a1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webignition/base-basil-test-case/zipball/f229faae5e1306db019fbcacdf092981ff625f24",
-                "reference": "f229faae5e1306db019fbcacdf092981ff625f24",
+                "url": "https://api.github.com/repos/webignition/base-basil-test-case/zipball/e2faa13ba1d48a61c713d9ae347a87b42209a1a1",
+                "reference": "e2faa13ba1d48a61c713d9ae347a87b42209a1a1",
                 "shasum": ""
             },
             "require": {
@@ -3300,20 +3300,24 @@
                 }
             ],
             "homepage": "https://github.com/webignition/base-basil-test-case",
-            "time": "2020-09-01T09:09:06+00:00"
+            "support": {
+                "issues": "https://github.com/webignition/base-basil-test-case/issues",
+                "source": "https://github.com/webignition/base-basil-test-case/tree/0.40"
+            },
+            "time": "2020-10-08T11:08:26+00:00"
         },
         {
             "name": "webignition/basil-compilable-source",
-            "version": "0.50",
+            "version": "0.58",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webignition/basil-compilable-source.git",
-                "reference": "6c087385ec839a022abb7cdf80e6d03d399d9774"
+                "reference": "c75580fef9ec9a4e98256565ced6071033339d2e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webignition/basil-compilable-source/zipball/6c087385ec839a022abb7cdf80e6d03d399d9774",
-                "reference": "6c087385ec839a022abb7cdf80e6d03d399d9774",
+                "url": "https://api.github.com/repos/webignition/basil-compilable-source/zipball/c75580fef9ec9a4e98256565ced6071033339d2e",
+                "reference": "c75580fef9ec9a4e98256565ced6071033339d2e",
                 "shasum": ""
             },
             "require": {
@@ -3343,7 +3347,11 @@
                 }
             ],
             "homepage": "https://github.com/webignition/basil-compilable-source",
-            "time": "2020-08-24T14:40:59+00:00"
+            "support": {
+                "issues": "https://github.com/webignition/basil-compilable-source/issues",
+                "source": "https://github.com/webignition/basil-compilable-source/tree/0.58"
+            },
+            "time": "2020-10-13T10:57:43+00:00"
         },
         {
             "name": "webignition/basil-compiler-models",
@@ -3390,6 +3398,10 @@
                 }
             ],
             "homepage": "https://github.com/webignition/basil-compiler-models",
+            "support": {
+                "issues": "https://github.com/webignition/basil-compiler-models/issues",
+                "source": "https://github.com/webignition/basil-compiler-models/tree/0.14"
+            },
             "time": "2020-09-18T09:26:41+00:00"
         },
         {
@@ -3440,6 +3452,10 @@
             ],
             "description": "Validator for source data for basil language",
             "homepage": "https://github.com/webignition/basil-data-validator",
+            "support": {
+                "issues": "https://github.com/webignition/basil-data-validator/issues",
+                "source": "https://github.com/webignition/basil-data-validator/tree/0.15"
+            },
             "time": "2020-07-29T13:59:33+00:00"
         },
         {
@@ -3485,6 +3501,10 @@
                 }
             ],
             "homepage": "https://github.com/webignition/basil-dom-identifier-factory",
+            "support": {
+                "issues": "https://github.com/webignition/basil-dom-identifier-factory/issues",
+                "source": "https://github.com/webignition/basil-dom-identifier-factory/tree/0.13"
+            },
             "time": "2020-05-27T16:24:15+00:00"
         },
         {
@@ -3527,6 +3547,10 @@
                 }
             ],
             "homepage": "https://github.com/webignition/basil-identifier-analyser",
+            "support": {
+                "issues": "https://github.com/webignition/basil-identifier-analyser/issues",
+                "source": "https://github.com/webignition/basil-identifier-analyser/tree/master"
+            },
             "time": "2020-05-28T09:12:22+00:00"
         },
         {
@@ -3582,6 +3606,10 @@
             ],
             "description": "Loader for basil language files",
             "homepage": "https://github.com/webignition/basil-loader",
+            "support": {
+                "issues": "https://github.com/webignition/basil-loader/issues",
+                "source": "https://github.com/webignition/basil-loader/tree/0.31"
+            },
             "time": "2020-09-15T16:53:08+00:00"
         },
         {
@@ -3626,6 +3654,10 @@
             ],
             "description": "Providers for basil models",
             "homepage": "https://github.com/webignition/basil-model-provider",
+            "support": {
+                "issues": "https://github.com/webignition/basil-model-provider/issues",
+                "source": "https://github.com/webignition/basil-model-provider/tree/0.8"
+            },
             "time": "2020-05-28T15:02:21+00:00"
         },
         {
@@ -3670,6 +3702,10 @@
                 }
             ],
             "homepage": "https://github.com/webignition/basil-models",
+            "support": {
+                "issues": "https://github.com/webignition/basil-models/issues",
+                "source": "https://github.com/webignition/basil-models/tree/0.57"
+            },
             "time": "2020-07-29T13:22:30+00:00"
         },
         {
@@ -3717,6 +3753,10 @@
             ],
             "description": "Parses raw basil data into basic data structures",
             "homepage": "https://github.com/webignition/basil-parser",
+            "support": {
+                "issues": "https://github.com/webignition/basil-parser/issues",
+                "source": "https://github.com/webignition/basil-parser/tree/master"
+            },
             "time": "2020-06-12T10:03:28+00:00"
         },
         {
@@ -3762,6 +3802,10 @@
                 }
             ],
             "homepage": "https://github.com/webignition/basil-resolver",
+            "support": {
+                "issues": "https://github.com/webignition/basil-resolver/issues",
+                "source": "https://github.com/webignition/basil-resolver/tree/master"
+            },
             "time": "2020-06-12T13:18:09+00:00"
         },
         {
@@ -3804,6 +3848,10 @@
             ],
             "description": "Models for the result of basil validators",
             "homepage": "https://github.com/webignition/basil-validation-result",
+            "support": {
+                "issues": "https://github.com/webignition/basil-validation-result/issues",
+                "source": "https://github.com/webignition/basil-validation-result/tree/0.1"
+            },
             "time": "2019-11-20T10:51:00+00:00"
         },
         {
@@ -3847,6 +3895,10 @@
                 }
             ],
             "homepage": "https://github.com/webignition/basil-value-extractor",
+            "support": {
+                "issues": "https://github.com/webignition/basil-value-extractor/issues",
+                "source": "https://github.com/webignition/basil-value-extractor/tree/master"
+            },
             "time": "2020-05-27T16:00:25+00:00"
         },
         {
@@ -3889,27 +3941,31 @@
                 }
             ],
             "homepage": "https://github.com/webignition/basil-value-type-identifier",
+            "support": {
+                "issues": "https://github.com/webignition/basil-value-type-identifier/issues",
+                "source": "https://github.com/webignition/basil-value-type-identifier/tree/0.1"
+            },
             "time": "2020-07-07T17:10:47+00:00"
         },
         {
             "name": "webignition/php-basil-compilable-source-factory",
-            "version": "0.60",
+            "version": "0.61",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webignition/php-basil-compilable-source-factory.git",
-                "reference": "41b096048ff7d077a67cfe73d206d5b49c9db61c"
+                "reference": "49dc5aa80043db4562c378279e39da0f60cdc0b7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webignition/php-basil-compilable-source-factory/zipball/41b096048ff7d077a67cfe73d206d5b49c9db61c",
-                "reference": "41b096048ff7d077a67cfe73d206d5b49c9db61c",
+                "url": "https://api.github.com/repos/webignition/php-basil-compilable-source-factory/zipball/49dc5aa80043db4562c378279e39da0f60cdc0b7",
+                "reference": "49dc5aa80043db4562c378279e39da0f60cdc0b7",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
                 "php": ">=7.4",
-                "webignition/base-basil-test-case": ">=0.38,<1",
-                "webignition/basil-compilable-source": ">=0.50,<1",
+                "webignition/base-basil-test-case": ">=0.40,<1",
+                "webignition/basil-compilable-source": ">=0.58,<1",
                 "webignition/basil-dom-identifier-factory": ">=0.12,<1",
                 "webignition/basil-identifier-analyser": ">=0.6,<1",
                 "webignition/basil-models": ">=0.56,<1",
@@ -3947,7 +4003,11 @@
                 }
             ],
             "homepage": "https://github.com/webignition/php-basil-compilable-source-factory",
-            "time": "2020-09-03T16:11:36+00:00"
+            "support": {
+                "issues": "https://github.com/webignition/php-basil-compilable-source-factory/issues",
+                "source": "https://github.com/webignition/php-basil-compilable-source-factory/tree/0.61"
+            },
+            "time": "2020-10-13T11:28:23+00:00"
         },
         {
             "name": "webignition/php-basil-context-aware-exception",
@@ -3989,6 +4049,10 @@
             ],
             "description": "Models for basil language objects",
             "homepage": "https://github.com/webignition/php-basil-context-aware-exception",
+            "support": {
+                "issues": "https://github.com/webignition/php-basil-context-aware-exception/issues",
+                "source": "https://github.com/webignition/php-basil-context-aware-exception/tree/master"
+            },
             "time": "2020-05-28T10:45:08+00:00"
         },
         {
@@ -4032,6 +4096,10 @@
                 }
             ],
             "homepage": "https://github.com/webignition/php-dom-element-identifier",
+            "support": {
+                "issues": "https://github.com/webignition/php-dom-element-identifier/issues",
+                "source": "https://github.com/webignition/php-dom-element-identifier/tree/master"
+            },
             "time": "2020-05-27T14:10:38+00:00"
         },
         {
@@ -4074,6 +4142,10 @@
             ],
             "description": "Model for identifying the location of an element within a DOM",
             "homepage": "https://github.com/webignition/php-dom-element-locator",
+            "support": {
+                "issues": "https://github.com/webignition/php-dom-element-locator/issues",
+                "source": "https://github.com/webignition/php-dom-element-locator/tree/0.4"
+            },
             "time": "2020-05-27T13:59:02+00:00"
         },
         {
@@ -4121,6 +4193,10 @@
                 "path",
                 "resolver"
             ],
+            "support": {
+                "issues": "https://github.com/webignition/php-path-resolver/issues",
+                "source": "https://github.com/webignition/php-path-resolver/tree/master"
+            },
             "time": "2020-05-28T11:19:14+00:00"
         },
         {
@@ -4163,6 +4239,10 @@
                 }
             ],
             "homepage": "https://github.com/webignition/quoted-string-value-extractor",
+            "support": {
+                "issues": "https://github.com/webignition/quoted-string-value-extractor/issues",
+                "source": "https://github.com/webignition/quoted-string-value-extractor/tree/master"
+            },
             "time": "2020-05-27T16:05:14+00:00"
         },
         {
@@ -4208,6 +4288,10 @@
                 }
             ],
             "homepage": "https://github.com/webignition/single-command-application-factory",
+            "support": {
+                "issues": "https://github.com/webignition/single-command-application-factory/issues",
+                "source": "https://github.com/webignition/single-command-application-factory/tree/master"
+            },
             "time": "2020-07-02T09:23:12+00:00"
         },
         {
@@ -4253,20 +4337,24 @@
                 }
             ],
             "homepage": "https://github.com/webignition/single-command-application-phar-builder",
+            "support": {
+                "issues": "https://github.com/webignition/single-command-application-phar-builder/issues",
+                "source": "https://github.com/webignition/single-command-application-phar-builder/tree/master"
+            },
             "time": "2020-07-01T18:31:54+00:00"
         },
         {
             "name": "webignition/stubble",
-            "version": "0.2",
+            "version": "0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webignition/stubble.git",
-                "reference": "2ddda3bd53a2edff59a678efc41d988b273193bf"
+                "reference": "bf9c8b6be1d359ed33108900762303e6548129ef"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webignition/stubble/zipball/2ddda3bd53a2edff59a678efc41d988b273193bf",
-                "reference": "2ddda3bd53a2edff59a678efc41d988b273193bf",
+                "url": "https://api.github.com/repos/webignition/stubble/zipball/bf9c8b6be1d359ed33108900762303e6548129ef",
+                "reference": "bf9c8b6be1d359ed33108900762303e6548129ef",
                 "shasum": ""
             },
             "require": {
@@ -4306,9 +4394,9 @@
             ],
             "support": {
                 "issues": "https://github.com/webignition/stubble/issues",
-                "source": "https://github.com/webignition/stubble/tree/0.2"
+                "source": "https://github.com/webignition/stubble/tree/0.5"
             },
-            "time": "2020-10-09T09:39:05+00:00"
+            "time": "2020-10-09T11:24:36+00:00"
         },
         {
             "name": "webignition/symfony-console-typed-input",
@@ -4361,6 +4449,10 @@
                 "type",
                 "typed"
             ],
+            "support": {
+                "issues": "https://github.com/webignition/symfony-console-typed-input/issues",
+                "source": "https://github.com/webignition/symfony-console-typed-input/tree/master"
+            },
             "time": "2020-05-28T11:48:40+00:00"
         },
         {
@@ -4412,6 +4504,10 @@
             ],
             "description": "Navigate around a symfony panther dom crawler using convenience methods",
             "homepage": "https://github.com/webignition/symfony-panther-dom-crawler-navigatorr",
+            "support": {
+                "issues": "https://github.com/webignition/symfony-panther-dom-crawler-navigator/issues",
+                "source": "https://github.com/webignition/symfony-panther-dom-crawler-navigator/tree/master"
+            },
             "time": "2020-06-01T16:09:58+00:00"
         },
         {
@@ -4457,6 +4553,10 @@
             ],
             "description": "A collection of Facebook\\WebDriver\\WebDriverElement",
             "homepage": "https://github.com/webignition/web-driver-element-collection",
+            "support": {
+                "issues": "https://github.com/webignition/web-driver-element-collection/issues",
+                "source": "https://github.com/webignition/web-driver-element-collection/tree/master"
+            },
             "time": "2020-05-27T13:44:23+00:00"
         },
         {
@@ -4513,6 +4613,10 @@
                 "webdriver",
                 "webdriver-element"
             ],
+            "support": {
+                "issues": "https://github.com/webignition/webdriver-element-inspector/issues",
+                "source": "https://github.com/webignition/webdriver-element-inspector/tree/0.8"
+            },
             "time": "2020-05-27T15:02:04+00:00"
         },
         {
@@ -4570,6 +4674,10 @@
                 "webdriver",
                 "webdriver-element"
             ],
+            "support": {
+                "issues": "https://github.com/webignition/webdriver-element-mutator/issues",
+                "source": "https://github.com/webignition/webdriver-element-mutator/tree/0.4"
+            },
             "time": "2020-05-27T15:35:50+00:00"
         },
         {
@@ -7954,6 +8062,10 @@
                 }
             ],
             "homepage": "https://github.com/webignition/object-reflector",
+            "support": {
+                "issues": "https://github.com/webignition/object-reflector/issues",
+                "source": "https://github.com/webignition/object-reflector/tree/0.2"
+            },
             "time": "2020-06-24T17:20:47+00:00"
         },
         {
@@ -7996,6 +8108,10 @@
                 }
             ],
             "homepage": "https://github.com/webignition/symfony-panther-webserver-runner",
+            "support": {
+                "issues": "https://github.com/webignition/symfony-panther-webserver-runner/issues",
+                "source": "https://github.com/webignition/symfony-panther-webserver-runner/tree/master"
+            },
             "time": "2020-05-27T14:22:32+00:00"
         }
     ],
