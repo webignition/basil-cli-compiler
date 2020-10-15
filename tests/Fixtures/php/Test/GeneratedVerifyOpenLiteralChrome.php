@@ -26,6 +26,9 @@ class GeneratedVerifyOpenLiteralChrome extends AbstractBaseTest
 
     public function test1()
     {
+        if (self::hasException()) {
+            return;
+        }
         $this->setBasilStepName('verify page is open');
         $this->setCurrentDataSet(null);
 
