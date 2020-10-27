@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace webignition\BasilCliCompiler\Services;
 
 use webignition\BasilCliCompiler\Model\ExternalVariableIdentifiers;
-use webignition\Stubble\Resolvable;
 use webignition\Stubble\UnresolvedVariableException;
+use webignition\StubbleResolvable\Resolvable;
 
 class CompiledClassResolver
 {
