@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace webignition\BasilCliCompiler\Tests\Unit\Services;
 
 use webignition\BasilCliCompiler\Services\VariablePlaceholderResolver;
-use webignition\Stubble\Resolvable;
-use webignition\Stubble\ResolvableInterface;
+use webignition\StubbleResolvable\Resolvable;
+use webignition\StubbleResolvable\ResolvableInterface;
 
 class VariablePlaceholderResolverTest extends \PHPUnit\Framework\TestCase
 {

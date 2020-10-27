@@ -8,6 +8,9 @@ use webignition\BasilCliCompiler\Services\CompiledClassResolver;
 use webignition\BasilCliCompiler\Services\ExternalVariableIdentifiersFactory;
 use webignition\BasilCompilableSource\VariableDependency;
 use webignition\BasilCompilableSourceFactory\VariableNames;
+use webignition\Stubble\VariableResolver;
+use webignition\StubbleResolvable\ResolvableCollection;
+use webignition\StubbleResolvable\ResolvedTemplateMutatorResolvable;
 
 class CompiledClassResolverTest extends \PHPUnit\Framework\TestCase
 {
@@ -47,15 +50,7 @@ class CompiledClassResolverTest extends \PHPUnit\Framework\TestCase
                 'expectedResolvedContent' => 'non-resolvable content',
             ],
             'resolvable content' => [
-                'content' =>
-                    (new VariableDependency(VariableNames::ACTION_FACTORY))->render() . "\n" .
-                    (new VariableDependency(VariableNames::ASSERTION_FACTORY))->render() . "\n" .
-                    (new VariableDependency(VariableNames::DOM_CRAWLER_NAVIGATOR))->render() . "\n" .
-                    (new VariableDependency(VariableNames::ENVIRONMENT_VARIABLE_ARRAY))->render() . "\n" .
-                    (new VariableDependency(VariableNames::PANTHER_CLIENT))->render() . "\n" .
-                    (new VariableDependency(VariableNames::PANTHER_CRAWLER))->render() . "\n" .
-                    (new VariableDependency(VariableNames::WEBDRIVER_ELEMENT_INSPECTOR))->render() . "\n" .
-                    (new VariableDependency(VariableNames::WEBDRIVER_ELEMENT_MUTATOR))->render(),
+                'content' => $this->createRenderedListOfAllExternalDependencies(),
                 'expectedResolvedContent' =>
                     '$this->actionFactory' . "\n" .
                     '$this->assertionFactory' . "\n" .
@@ -67,5 +62,38 @@ class CompiledClassResolverTest extends \PHPUnit\Framework\TestCase
                     'self::$mutator',
             ],
         ];
+    }
+
+    private function createRenderedListOfAllExternalDependencies(): string
+    {
+        $variableDependencies = [
+            new VariableDependency(VariableNames::ACTION_FACTORY),
+            new VariableDependency(VariableNames::ASSERTION_FACTORY),
+            new VariableDependency(VariableNames::DOM_CRAWLER_NAVIGATOR),
+            new VariableDependency(VariableNames::ENVIRONMENT_VARIABLE_ARRAY),
+            new VariableDependency(VariableNames::PANTHER_CLIENT),
+            new VariableDependency(VariableNames::PANTHER_CRAWLER),
+            new VariableDependency(VariableNames::WEBDRIVER_ELEMENT_INSPECTOR),
+            new VariableDependency(VariableNames::WEBDRIVER_ELEMENT_MUTATOR),
+        ];
+
+        $mutableVariableDependencies = [];
+        foreach ($variableDependencies as $variableDependency) {
+            $mutableVariableDependencies[] = new ResolvedTemplateMutatorResolvable(
+                $variableDependency,
+                function (string $resolvedTemplate) {
+                    return $resolvedTemplate . "\n";
+                },
+            );
+        }
+
+        return (new VariableResolver())->resolveAndIgnoreUnresolvedVariables(
+            new ResolvedTemplateMutatorResolvable(
+                ResolvableCollection::create($mutableVariableDependencies),
+                function (string $resolvedTemplate) {
+                    return trim($resolvedTemplate);
+                }
+            )
+        );
     }
 }
