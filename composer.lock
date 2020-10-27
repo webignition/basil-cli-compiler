@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6b59b69f2a22b37c43f9778beb3e8856",
+    "content-hash": "5cee1020879b2d48a7d7d4ecc6738ba4",
     "packages": [
         {
             "name": "doctrine/instantiator",
@@ -4348,20 +4348,21 @@
         },
         {
             "name": "webignition/stubble",
-            "version": "0.7",
+            "version": "0.13",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webignition/stubble.git",
-                "reference": "3dc07f07f50c775f1986e5c5eacd9202322411c1"
+                "reference": "1fab9126d0563e2b4067dccd2fb0b55595578c3f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webignition/stubble/zipball/3dc07f07f50c775f1986e5c5eacd9202322411c1",
-                "reference": "3dc07f07f50c775f1986e5c5eacd9202322411c1",
+                "url": "https://api.github.com/repos/webignition/stubble/zipball/1fab9126d0563e2b4067dccd2fb0b55595578c3f",
+                "reference": "1fab9126d0563e2b4067dccd2fb0b55595578c3f",
                 "shasum": ""
             },
             "require": {
-                "php": ">=7.4"
+                "php": ">=7.4",
+                "webignition/stubble-resolvable": ">=0.21,<1"
             },
             "require-dev": {
                 "phpstan/extension-installer": "~1.0",
@@ -4397,9 +4398,9 @@
             ],
             "support": {
                 "issues": "https://github.com/webignition/stubble/issues",
-                "source": "https://github.com/webignition/stubble/tree/0.7"
+                "source": "https://github.com/webignition/stubble/tree/0.13"
             },
-            "time": "2020-10-15T10:13:58+00:00"
+            "time": "2020-10-27T16:17:41+00:00"
         },
         {
             "name": "webignition/stubble-resolvable",
