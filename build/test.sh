@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-CURRENT_DIRECTORY="$(dirname "$0")"
-source ${CURRENT_DIRECTORY}/.image_data.sh
-
 SOURCE_PATH="/input"
 TARGET_PATH="/output"
 
@@ -25,7 +22,7 @@ mkdir -p ${HOST_TARGET_PATH}
 cp tests/Fixtures/basil/Test/example.com.verify-open-literal.yml ${HOST_SOURCE_PATH}/${CONTAINER_TEST_FILENAME}
 
 docker rm -f ${CONTAINER_NAME}
-docker create -p ${HOST_PORT}:${CONTAINER_PORT} -v ${HOST_DATA_PATH}:${CONTAINER_DATA_PATH} --name ${CONTAINER_NAME} ${IMAGE_NAME}
+docker create -p ${HOST_PORT}:${CONTAINER_PORT} -v ${HOST_DATA_PATH}:${CONTAINER_DATA_PATH} --name ${CONTAINER_NAME} smartassert/basil-compiler:${TAG_NAME:-master}
 docker start ${CONTAINER_NAME}
 
 sleep 0.1

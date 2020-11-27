@@ -31,3 +31,9 @@ jobs:
           ./build/build.sh
         env:
           TAG: ${{steps.vars.outputs.tag}}
+
+      - name: Test image
+        run: |
+          ./build/test.sh
+        env:
+          TAG: ${{steps.vars.outputs.tag}}
