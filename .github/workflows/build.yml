@@ -23,4 +23,4 @@ jobs:
 
       - name: Run build script
         run: |
-          ./build/build.sh
+          ./build/poc.sh
