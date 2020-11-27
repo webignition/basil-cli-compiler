@@ -43,14 +43,18 @@ jobs:
           echo "${{steps.vars.outputs.var3}}"
           echo "${{steps.vars.outputs.tag}}"
 
+      - name: Build image
+        run: |
+          echo "test"
+
 #      - name: Build Phar
 #        run: composer phar-build
 #
 #      - name: Test Phar
 #        run: composer phar-test
 
-       - name: Build docker image
-         run: ./build/test_image_tests.sh
+#       - name: Build docker image
+#         run: ./build/test_image_tests.sh
 #         env:
 #           IMAGE_NAME: ${{steps.vars.outputs.repo}}
 
