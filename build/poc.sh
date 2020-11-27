@@ -27,6 +27,6 @@ echo $CURRENT_DIRECTORY
 #  fi
 #done
 
-echo "foo 02"
+echo "foo 03"
 
 exit 0
