@@ -31,17 +31,17 @@ jobs:
       - name: Foo
         id: vars
         run: |
-          echo "::set-output name=var1::smartassert/basil-compiler"
+          echo "::set-output name=repo::smartassert/basil-compiler"
           echo "::set-output name=var2::$(echo ${GITHUB_REF})"
           echo "::set-output name=var3::$(echo ${GITHUB_REF##*})"
-          echo "::set-output name=var4::$(echo $GITHUB_REF | awk 'BEGIN { FS = "/" } ; { print $3 }')"
+          echo "::set-output name=tag::$(echo $GITHUB_REF | awk 'BEGIN { FS = "/" } ; { print $3 }')"
 
       - name: Bar
         run: |
-          echo "${{steps.vars.outputs.var1}}"
+          echo "${{steps.vars.outputs.repo}}"
           echo "${{steps.vars.outputs.var2}}"
           echo "${{steps.vars.outputs.var3}}"
-          echo "${{steps.vars.outputs.var4}}"
+          echo "${{steps.vars.outputs.tag}}"
 
 #      - name: Build Phar
 #        run: composer phar-build
