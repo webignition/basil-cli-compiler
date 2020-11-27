@@ -22,23 +22,16 @@ jobs:
 #      - name: Get color
 #        run: echo "The selected color is ${{ steps.random-color-generator.outputs.SELECTED_COLOR }}"
 
-      - name: Branch name
-        run: echo "running on branch ${GITHUB_REF##*/}"
+      - name: Build Phar
+        run: composer phar-build
 
-      - name: PR number
-        run: echo "$(echo $GITHUB_REF | awk 'BEGIN { FS = "/" } ; { print $3 }')"
+      - name: Test Phar
+        run: composer phar-test
 
-      - name: Foo
+      - name: Set image tag name
         id: vars
         run: |
           echo "::set-output name=tag::$(echo $GITHUB_REF | awk 'BEGIN { FS = "/" } ; { print $3 }')"
-
-      - name: Bar
-        run: |
-          echo "${{steps.vars.outputs.repo}}"
-          echo "${{steps.vars.outputs.var2}}"
-          echo "${{steps.vars.outputs.var3}}"
-          echo "${{steps.vars.outputs.tag}}"
 
       - name: Build image
         run: |
@@ -46,11 +39,7 @@ jobs:
         env:
           TAG: ${{steps.vars.outputs.tag}}
 
-#      - name: Build Phar
-#        run: composer phar-build
-#
-#      - name: Test Phar
-#        run: composer phar-test
+
 
 #       - name: Build docker image
 #         run: ./build/test_image_tests.sh
