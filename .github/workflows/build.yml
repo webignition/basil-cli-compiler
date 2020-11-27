@@ -15,19 +15,19 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set selected color
-        run: echo '::set-output name=SELECTED_COLOR::green'
-        id: random-color-generator
-
-      - name: Get color
-        run: echo "The selected color is ${{ steps.random-color-generator.outputs.SELECTED_COLOR }}"
-
-#      - name: Foo
-#        id: vars
-#        run: echo ::set-output name=tag::$(echo ${GITHUB_REF:10})
+#      - name: Set selected color
+#        run: echo "::set-output name=SELECTED_COLOR::green"
+#        id: random-color-generator
 #
-#      - name: Bar
-#        run: echo "${{steps.vars.outputs.tag}}"
+#      - name: Get color
+#        run: echo "The selected color is ${{ steps.random-color-generator.outputs.SELECTED_COLOR }}"
+
+      - name: Foo
+        id: vars
+        run: echo "::set-output name=tag::$(echo ${GITHUB_REF:10})"
+
+      - name: Bar
+        run: echo "${{steps.vars.outputs.tag}}"
 
 #      - name: Build Phar
 #        run: composer phar-build
