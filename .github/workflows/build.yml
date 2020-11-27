@@ -15,13 +15,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-#      - name: Set selected color
-#        run: echo "::set-output name=SELECTED_COLOR::green"
-#        id: random-color-generator
-#
-#      - name: Get color
-#        run: echo "The selected color is ${{ steps.random-color-generator.outputs.SELECTED_COLOR }}"
-
       - name: Build Phar
         run: composer phar-build
 
@@ -38,14 +31,3 @@ jobs:
           ./build/build.sh
         env:
           TAG: ${{steps.vars.outputs.tag}}
-
-
-
-#       - name: Build docker image
-#         run: ./build/test_image_tests.sh
-#         env:
-#           IMAGE_NAME: ${{steps.vars.outputs.repo}}
-
-#      - name: Run build script
-#        run: |
-#          ./build/poc.sh
