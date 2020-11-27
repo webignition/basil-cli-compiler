@@ -45,7 +45,7 @@ jobs:
 
       - name: Build image
         run: |
-          echo "test"
+          ./build/test_image_tests.sh
 
 #      - name: Build Phar
 #        run: composer phar-build
