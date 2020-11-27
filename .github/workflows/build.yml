@@ -33,11 +33,15 @@ jobs:
         run: |
           echo "::set-output name=var1::$(echo ${GITHUB_REF:10})"
           echo "::set-output name=var2::$(echo ${GITHUB_REF})"
+          echo "::set-output name=var3::$(echo ${GITHUB_REF##*})"
+          echo "::set-output name=var4::$(echo $GITHUB_REF | awk 'BEGIN { FS = "/" } ; { print $3 }')"
 
       - name: Bar
         run: |
           echo "${{steps.vars.outputs.var1}}"
           echo "${{steps.vars.outputs.var2}}"
+          echo "${{steps.vars.outputs.var3}}"
+          echo "${{steps.vars.outputs.var4}}"
 
 #      - name: Build Phar
 #        run: composer phar-build
