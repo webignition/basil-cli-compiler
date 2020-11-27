@@ -22,4 +22,6 @@ jobs:
         run: composer phar-test
 
       - name: Run build script
-        run: ls -la ./build/ci.sh
+        run: |
+          ls -la ./build/ci.sh
+          ./build.ci.sh
