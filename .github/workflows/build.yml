@@ -15,12 +15,19 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Foo
+        id: vars
+        run: echo ::set-output name=tag::$(echo ${GITHUB_REF:10})
+
+      - name: Bar
+        run: echo ${{steps.vars.outputs.tag}}
+
 #      - name: Build Phar
 #        run: composer phar-build
 #
 #      - name: Test Phar
 #        run: composer phar-test
 
-      - name: Run build script
-        run: |
-          ./build/poc.sh
+#      - name: Run build script
+#        run: |
+#          ./build/poc.sh
