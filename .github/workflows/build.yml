@@ -46,6 +46,8 @@ jobs:
       - name: Build image
         run: |
           ./build/test_image_tests.sh
+        env:
+          IMAGE_NAME: ${{steps.vars.outputs.repo}}
 
 #      - name: Build Phar
 #        run: composer phar-build
