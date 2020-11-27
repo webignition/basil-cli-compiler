@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
 
+CURRENT_DIRECTORY=$(dirname "$0")
+
+echo $CURRENT_DIRECTORY
+
+#sh ./.image_data.sh
+
 #CURRENT_DIRECTORY="$(dirname "$0")"
 #
 #echo ${CURRENT_DIRECTORY}
@@ -21,6 +27,6 @@
 #  fi
 #done
 
-echo "foo 01"
+echo "foo 02"
 
 exit 0
