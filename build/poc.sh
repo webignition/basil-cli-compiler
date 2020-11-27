@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-CURRENT_DIRECTORY="$(dirname "$0")"
-
-echo ${CURRENT_DIRECTORY}
+#CURRENT_DIRECTORY="$(dirname "$0")"
+#
+#echo ${CURRENT_DIRECTORY}
 
 #declare -a STEPS=(
 #  ${CURRENT_DIRECTORY}"/build.sh"
@@ -20,5 +20,7 @@ echo ${CURRENT_DIRECTORY}
 #    exit $?
 #  fi
 #done
+
+echo "foo 01"
 
 exit 0
