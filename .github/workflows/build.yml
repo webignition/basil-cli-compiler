@@ -45,7 +45,7 @@ jobs:
 
       - name: Build image
         run: |
-          ./build/test_image_tests.sh
+          ./build/test_image_exists.sh
         env:
           IMAGE_NAME: ${{steps.vars.outputs.repo}}
 
