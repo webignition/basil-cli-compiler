@@ -35,7 +35,7 @@ jobs:
           echo "::set-output name=var2::$(echo ${GITHUB_REF})"
           echo "::set-output name=var3::$(echo ${GITHUB_REF##*})"
           echo "::set-output name=tag::$(echo $GITHUB_REF | awk 'BEGIN { FS = "/" } ; { print $3 }')"
-          echo "::set-output name=image::"${{steps.vars.outputs.repo}}"
+          echo "::set-output name=image::${{steps.vars.outputs.repo}}"
 
       - name: Bar
         run: |
