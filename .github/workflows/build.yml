@@ -31,9 +31,6 @@ jobs:
       - name: Foo
         id: vars
         run: |
-#          echo "::set-output name=repo::smartassert/basil-compiler"
-#          echo "::set-output name=var2::$(echo ${GITHUB_REF})"
-#          echo "::set-output name=var3::$(echo ${GITHUB_REF##*})"
           echo "::set-output name=tag::$(echo $GITHUB_REF | awk 'BEGIN { FS = "/" } ; { print $3 }')"
 
       - name: Bar
