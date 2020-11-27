@@ -23,5 +23,4 @@ jobs:
 
       - name: Run build script
         run: |
-          ls -la ./build/ci.sh
-          ./build.ci.sh
+          ./build/build.sh
