@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-CURRENT_DIRECTORY="$(dirname "$0")"
-source ${CURRENT_DIRECTORY}/.image_data.sh
+#CURRENT_DIRECTORY="$(dirname "$0")"
+#source ${CURRENT_DIRECTORY}/.image_data.sh
 
 OUTPUT=$(docker images | tail -n +2 | awk '{print $1":"$2}' | grep ${IMAGE_NAME} | wc -l)
 
