@@ -35,6 +35,7 @@ jobs:
           echo "::set-output name=var2::$(echo ${GITHUB_REF})"
           echo "::set-output name=var3::$(echo ${GITHUB_REF##*})"
           echo "::set-output name=tag::$(echo $GITHUB_REF | awk 'BEGIN { FS = "/" } ; { print $3 }')"
+          echo "::set-output name=image::"${{steps.vars.outputs.repo}}"
 
       - name: Bar
         run: |
@@ -42,6 +43,7 @@ jobs:
           echo "${{steps.vars.outputs.var2}}"
           echo "${{steps.vars.outputs.var3}}"
           echo "${{steps.vars.outputs.tag}}"
+          echo "${{steps.vars.outputs.image}}"
 
 #      - name: Build Phar
 #        run: composer phar-build
