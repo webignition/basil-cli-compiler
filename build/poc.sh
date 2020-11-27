@@ -1,9 +1,24 @@
 #!/usr/bin/env bash
 
-IMAGE_REPOSITORY="smartassert/basil-compiler"
+CURRENT_DIRECTORY="$(dirname "$0")"
 
-DEFAULT_TAG="${TRAVIS_BRANCH:-master}"
-TAG="${1:-${DEFAULT_TAG}}"
+echo ${CURRENT_DIRECTORY}
 
-IMAGE_NAME=${IMAGE_REPOSITORY}:${TAG}
-echo "Image name: "${IMAGE_NAME}
+#declare -a STEPS=(
+#  ${CURRENT_DIRECTORY}"/build.sh"
+#  ${CURRENT_DIRECTORY}"/test_image_exists.sh"
+#  ${CURRENT_DIRECTORY}"/test.sh"
+#)
+#
+#for STEP in "${STEPS[@]}"; do
+#  ${STEP}
+#
+#  if [ $? -ne 0 ]
+#  then
+#    echo ${STEP}" failed"
+#
+#    exit $?
+#  fi
+#done
+
+exit 0
