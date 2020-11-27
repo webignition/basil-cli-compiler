@@ -49,10 +49,10 @@ jobs:
 #      - name: Test Phar
 #        run: composer phar-test
 
-       - name: Build docker image
-         run: ./build/test_image_tests.sh
-         env:
-           IMAGE_NAME: ${{steps.vars.outputs.repo}}
+#       - name: Build docker image
+#         run: ./build/test_image_tests.sh
+#         env:
+#           IMAGE_NAME: ${{steps.vars.outputs.repo}}
 
 #      - name: Run build script
 #        run: |
