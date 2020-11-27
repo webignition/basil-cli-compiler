@@ -31,9 +31,9 @@ jobs:
       - name: Foo
         id: vars
         run: |
-          echo "::set-output name=repo::smartassert/basil-compiler"
-          echo "::set-output name=var2::$(echo ${GITHUB_REF})"
-          echo "::set-output name=var3::$(echo ${GITHUB_REF##*})"
+#          echo "::set-output name=repo::smartassert/basil-compiler"
+#          echo "::set-output name=var2::$(echo ${GITHUB_REF})"
+#          echo "::set-output name=var3::$(echo ${GITHUB_REF##*})"
           echo "::set-output name=tag::$(echo $GITHUB_REF | awk 'BEGIN { FS = "/" } ; { print $3 }')"
 
       - name: Bar
@@ -45,9 +45,9 @@ jobs:
 
       - name: Build image
         run: |
-          ./build/test_image_exists.sh
+          ./build/build.sh
         env:
-          IMAGE_NAME: ${{steps.vars.outputs.repo}}:${{steps.vars.outputs.tag}}
+          TAG: ${{steps.vars.outputs.tag}}
 
 #      - name: Build Phar
 #        run: composer phar-build
