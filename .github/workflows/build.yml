@@ -31,7 +31,7 @@ jobs:
       - name: Set image tag name
         id: vars
         run: |
-          echo "::set-output name=tag::${{ github.event.number }}"
+          echo "::set-output name=tag::${{ github.event_name }}-${{ github.event.number }}"
 
       - name: Build image
         env:
