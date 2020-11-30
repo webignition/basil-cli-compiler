@@ -5,6 +5,9 @@ on:
     branches:
       - master
   pull_request:
+  release:
+    types:
+      - created
 
 jobs:
   build:
@@ -23,17 +26,20 @@ jobs:
 
       - name: Set image tag name
         id: vars
+        env:
+          PULL_REQUEST_TAG_NAME: ${{ github.event_name }}-${{ github.event.number }}
+          RELEASE_TAG_NAME: ${{ github.event.release.tag_name }}
         run: |
-          echo "::set-output name=tag::${{ github.event_name }}-${{ github.event.number }}"
+          [[ ! -z "$RELEASE_TAG_NAME" ]] && echo "::set-output name=tag::$RELEASE_TAG_NAME" || echo "::set-output name=tag::$PULL_REQUEST_TAG_NAME"
 
       - name: Build image
         env:
-          TAG_NAME: ${{steps.vars.outputs.tag}}
+          TAG_NAME: ${{ steps.vars.outputs.tag }}
         run: |
           ./build/build.sh
 
       - name: Test image
         env:
-          TAG_NAME: ${{steps.vars.outputs.tag}}
+          TAG_NAME: ${{ steps.vars.outputs.tag }}
         run: |
           ./build/test.sh
