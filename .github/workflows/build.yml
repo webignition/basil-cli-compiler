@@ -5,6 +5,9 @@ on:
     branches:
       - master
   pull_request:
+  release:
+    types:
+      - created
 
 jobs:
   build:
@@ -21,10 +24,17 @@ jobs:
       - name: Test Phar
         run: composer phar-test
 
-      - name: Set image tag name
+      - name: Set image tag name for pull request
+        if: ${{ github.event_name == 'pull_request' }}
         id: vars
         run: |
           echo "::set-output name=tag::${{ github.event_name }}-${{ github.event.number }}"
+
+      - name: Set image tag name for created release
+        if: ${{ github.event_name == 'release' && github.event.action == 'created' }}
+        id: vars
+        run: |
+          echo "::set-output name=tag::${{ github.event.release.tag_name }}"
 
       - name: Build image
         env:
