@@ -41,7 +41,7 @@ jobs:
           ./build/test.sh
 
       - name: Set up Docker Buildx
-        if: ${{ github.event_name == 'release' && github.event.action == 'published' }}
+        if: ${{ github.event_name == 'release' }} && ${{ github.event.action == 'published' }}
         uses: docker/setup-buildx-action@v1
 #
 #      - name: Login to Docker Hub
