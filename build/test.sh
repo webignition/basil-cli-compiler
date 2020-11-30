@@ -21,7 +21,7 @@ mkdir -p ${HOST_TARGET_PATH}
 
 cp tests/Fixtures/basil/Test/example.com.verify-open-literal.yml ${HOST_SOURCE_PATH}/${CONTAINER_TEST_FILENAME}
 
-docker rm -f ${CONTAINER_NAME}
+docker rm -f ${CONTAINER_NAME} >/dev/null 2>&1
 docker create -p ${HOST_PORT}:${CONTAINER_PORT} -v ${HOST_DATA_PATH}:${CONTAINER_DATA_PATH} --name ${CONTAINER_NAME} smartassert/basil-compiler:${TAG_NAME:-master}
 docker start ${CONTAINER_NAME}
 
