@@ -24,20 +24,8 @@ jobs:
       - name: Test Phar
         run: composer phar-test
 
-      - name: Set image tag name for pull request
-        if: ${{ github.event_name == 'pull_request' }}
-        id: pull_request_vars
-        run: |
-          echo "::set-output name=tag::${{ github.event_name }}-${{ github.event.number }}"
-
-      - name: Set image tag name for created release
-        if: ${{ github.event_name == 'release' && github.event.action == 'created' }}
-        id: release_vars
-        run: |
-          echo "::set-output name=tag::${{ github.event.release.tag_name }}"
-
-      - name: Set image tag name conditonally (?)
-        id: conditional_vars
+      - name: Set image tag name
+        id: vars
         env:
           PULL_REQUEST_TAG_NAME: ${{ github.event_name }}-${{ github.event.number }}
           RELEASE_TAG_NAME: ${{ github.event.release.tag_name }}
@@ -46,37 +34,17 @@ jobs:
 
       - name: Echo tester
         run: |
-          echo "from pull request"
-          echo "${{steps.pull_request_vars.outputs.tag}}"
-          echo "from release"
-          echo "${{steps.release_vars.outputs.tag}}"
           echo "from conditional set"
-          echo "${{steps.conditional_vars.outputs.tag}}"
+          echo "${{ steps.vars.outputs.tag }}"
 
-      - name: Build image for pull request
-        if: ${{ steps.pull_request_vars.outputs.tag != '' }}
+      - name: Build image
         env:
-          TAG_NAME: ${{steps.pull_request_vars.outputs.tag}}
+          TAG_NAME: ${{ steps.vars.outputs.tag }}
         run: |
           ./build/build.sh
 
-      - name: Build image for release
-        if: ${{ steps.release_vars.outputs.tag != '' }}
+      - name: Test image
         env:
-          TAG_NAME: ${{steps.release_vars.outputs.tag}}
-        run: |
-          ./build/build.sh
-
-      - name: Test image for pull request
-        if: ${{ steps.pull_request_vars.outputs.tag != '' }}
-        env:
-          TAG_NAME: ${{steps.pull_request_vars.outputs.tag}}
-        run: |
-          ./build/test.sh
-
-      - name: Test image for release
-        if: ${{ steps.release_vars.outputs.tag != '' }}
-        env:
-          TAG_NAME: ${{steps.release_vars.outputs.tag}}
+          TAG_NAME: ${{ steps.vars.outputs.tag }}
         run: |
           ./build/test.sh
