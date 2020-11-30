@@ -26,24 +26,24 @@ jobs:
 
       - name: Set image tag name for pull request
         if: ${{ github.event_name == 'pull_request' }}
-        id: vars
+        id: pull_request_vars
         run: |
           echo "::set-output name=tag::${{ github.event_name }}-${{ github.event.number }}"
 
       - name: Set image tag name for created release
         if: ${{ github.event_name == 'release' && github.event.action == 'created' }}
-        id: vars
+        id: release_vars
         run: |
           echo "::set-output name=tag::${{ github.event.release.tag_name }}"
 
       - name: Build image
         env:
-          TAG_NAME: ${{steps.vars.outputs.tag}}
+          TAG_NAME: ${{steps.pull_request_vars.outputs.tag}}
         run: |
           ./build/build.sh
 
       - name: Test image
         env:
-          TAG_NAME: ${{steps.vars.outputs.tag}}
+          TAG_NAME: ${{steps.pull_request_vars.outputs.tag}}
         run: |
           ./build/test.sh
