@@ -1,7 +1,7 @@
 name: Examine Github Actions Context
 
 on:
-  release:
+  pull_request:
 
 jobs:
   build:
