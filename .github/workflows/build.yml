@@ -32,11 +32,6 @@ jobs:
         run: |
           [[ ! -z "$RELEASE_TAG_NAME" ]] && echo "::set-output name=tag::$RELEASE_TAG_NAME" || echo "::set-output name=tag::$PULL_REQUEST_TAG_NAME"
 
-      - name: Echo tester
-        run: |
-          echo "from conditional set"
-          echo "${{ steps.vars.outputs.tag }}"
-
       - name: Build image
         env:
           TAG_NAME: ${{ steps.vars.outputs.tag }}
