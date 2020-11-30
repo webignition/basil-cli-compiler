@@ -19,42 +19,40 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Set image tag name
-        id: vars
+        id: image_tag_name
         env:
-          PULL_REQUEST_TAG_NAME: ${{ github.event_name }}-${{ github.event.number }}
           RELEASE_TAG_NAME: ${{ github.event.release.tag_name }}
         run: |
-          [[ ! -z "$RELEASE_TAG_NAME" ]] && echo "::set-output name=tag::$RELEASE_TAG_NAME" || echo "::set-output name=tag::$PULL_REQUEST_TAG_NAME"
+          [[ ! -z "$RELEASE_TAG_NAME" ]] && echo "::set-output name=value::$RELEASE_TAG_NAME" || echo "::set-output name=value::master"
+
+      - name: Set deploy image conditional
+        id: deploy_image
+        if: ${{ (github.event_name == 'release' && github.event.action == 'published') || (github.event_name == 'push' && github.event.ref == 'refs/heads/master') }}
+        run: |
+          echo "::set-output name=deploy::true"
 
       - name: Build test image
-        if: ${{ github.event_name == 'pull_request' }}
+        if: ${{ steps.deploy_image.outputs.deploy == '' }}
         env:
-          TAG_NAME: ${{ steps.vars.outputs.tag }}
+          TAG_NAME: ${{ steps.image_tag_name.outputs.value }}
         run: |
           ./build/build.sh
           ./build/test.sh
 
-      - name: Print GitHub context
-        env:
-          GITHUB_CONTEXT: ${{ toJson(github) }}
-        run: |
-          echo "The event name is ${{ github.event_name }}"
-          echo "$GITHUB_CONTEXT"
-
       - name: Set up Docker Buildx
-        if: ${{ github.event_name == 'release' && github.event.action == 'published' }}
+        if: ${{ steps.deploy_image.outputs.deploy == 'true' }}
         uses: docker/setup-buildx-action@v1
 
       - name: Login to Docker Hub
-        if: ${{ github.event_name == 'release' && github.event.action == 'published' }}
+        if: ${{ steps.deploy_image.outputs.deploy == 'true' }}
         uses: docker/login-action@v1
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build and push image
-        if: ${{ github.event_name == 'release' && github.event.action == 'published' }}
+        if: ${{ steps.deploy_image.outputs.deploy == 'true' }}
         uses: docker/build-push-action@v2
         with:
           push: true
-          tags: smartassert/basil-compiler:${{ steps.vars.outputs.tag }}
+          tags: smartassert/basil-compiler:${{ steps.image_tag_name.outputs.value }}
