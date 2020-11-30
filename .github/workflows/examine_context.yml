@@ -1,0 +1,17 @@
+name: Examine Github Actions Context
+
+on:
+  release:
+
+jobs:
+  build:
+    name: Examine
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Print GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: |
+          echo "The event name is ${{ github.event_name }}"
+          echo "$GITHUB_CONTEXT"
