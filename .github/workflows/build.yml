@@ -43,13 +43,29 @@ jobs:
           echo "from release"
           echo "${{steps.release_vars.outputs.tag}}"
 
-      - name: Build image
+      - name: Build image for pull request
+        if: ${{ steps.pull_request_vars.outputs.tag != '' }}
         env:
           TAG_NAME: ${{steps.pull_request_vars.outputs.tag}}
         run: |
           ./build/build.sh
 
-      - name: Test image
+      - name: Build image for release
+        if: ${{ steps.pull_request_vars.outputs.tag != '' }}
+        env:
+          TAG_NAME: ${{steps.pull_request_vars.outputs.tag}}
+        run: |
+          ./build/build.sh
+
+      - name: Test image for pull request
+        if: ${{ steps.pull_request_vars.outputs.tag != '' }}
+        env:
+          TAG_NAME: ${{steps.pull_request_vars.outputs.tag}}
+        run: |
+          ./build/test.sh
+
+      - name: Test image for release
+        if: ${{ steps.pull_request_vars.outputs.tag != '' }}
         env:
           TAG_NAME: ${{steps.pull_request_vars.outputs.tag}}
         run: |
