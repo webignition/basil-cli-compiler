@@ -32,14 +32,10 @@ jobs:
         run: |
           [[ ! -z "$RELEASE_TAG_NAME" ]] && echo "::set-output name=tag::$RELEASE_TAG_NAME" || echo "::set-output name=tag::$PULL_REQUEST_TAG_NAME"
 
-      - name: Build image
+      - name: Build test image
+        if: ${{ github.event_name == 'pull_request' }}
         env:
           TAG_NAME: ${{ steps.vars.outputs.tag }}
         run: |
           ./build/build.sh
-
-      - name: Test image
-        env:
-          TAG_NAME: ${{ steps.vars.outputs.tag }}
-        run: |
           ./build/test.sh
