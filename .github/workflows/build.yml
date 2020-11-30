@@ -18,12 +18,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Build Phar
-        run: composer phar-build
-
-      - name: Test Phar
-        run: composer phar-test
-
       - name: Set image tag name
         id: vars
         env:
