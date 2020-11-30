@@ -24,16 +24,16 @@ jobs:
       - name: Set image tag name
         id: vars
         run: |
-          echo "::set-output name=tag::$(echo $GITHUB_REF | awk 'BEGIN { FS = "/" } ; { print $3 }')"
+          echo "::set-output name=tag::${{ github.event_name }}-${{ github.event.number }}"
 
       - name: Build image
+        env:
+          TAG_NAME: ${{steps.vars.outputs.tag}}
         run: |
           ./build/build.sh
-        env:
-          TAG: ${{steps.vars.outputs.tag}}
 
       - name: Test image
+        env:
+          TAG_NAME: ${{steps.vars.outputs.tag}}
         run: |
           ./build/test.sh
-        env:
-          TAG: ${{steps.vars.outputs.tag}}
