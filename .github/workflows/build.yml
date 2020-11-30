@@ -42,7 +42,7 @@ jobs:
           PULL_REQUEST_TAG_NAME: ${{ github.event_name }}-${{ github.event.number }}
           RELEASE_TAG_NAME: ${{ github.event.release.tag_name }}
         run: |
-          [[ ! -z "$RELEASE_TAG_NAME" ]] && echo "::set-output name=tag::$RELEASE_TAG_NAME" || echo "::set-output name=tag::PULL_REQUEST_TAG_NAME"
+          [[ ! -z "$RELEASE_TAG_NAME" ]] && echo "::set-output name=tag::$RELEASE_TAG_NAME" || echo "::set-output name=tag::$PULL_REQUEST_TAG_NAME"
 
       - name: Echo tester
         run: |
