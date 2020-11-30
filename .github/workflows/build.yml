@@ -27,11 +27,7 @@ jobs:
 
       - name: Set deploy image conditional
         id: deploy_image
-        if: |
-          ${{ \
-          (github.event_name == 'release' && github.event.action == 'published') || \
-          (github.event_name == 'push' && github.event.ref == 'refs/heads/master')\
-          }}
+        if: ${{ (github.event_name == 'release' && github.event.action == 'published') || (github.event_name == 'push' && github.event.ref == 'refs/heads/master') }}
         run: |
           echo "::set-output name=deploy::true"
 
