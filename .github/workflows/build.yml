@@ -11,7 +11,7 @@ on:
 
 jobs:
   build:
-    name: Create Phar and Build Image
+    name: Build Docker Image
     runs-on: ubuntu-latest
 
     steps:
