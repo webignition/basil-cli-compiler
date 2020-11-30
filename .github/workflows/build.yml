@@ -21,14 +21,19 @@ jobs:
       - name: Test Phar
         run: composer phar-test
 
+      - name: Set image tag name
+        id: vars
+        run: |
+          echo "::set-output name=tag::${{ github.event.number }}"
+
       - name: Build image
         env:
-          TAG_NAME: ${{ github.event.number }}
+          TAG_NAME: ${{steps.vars.outputs.tag}}
         run: |
           ./build/build.sh
 
       - name: Test image
         env:
-          TAG_NAME: ${{ github.event.number }}
+          TAG_NAME: ${{steps.vars.outputs.tag}}
         run: |
           ./build/test.sh
