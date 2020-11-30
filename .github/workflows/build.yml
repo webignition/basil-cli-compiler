@@ -51,9 +51,9 @@ jobs:
           ./build/build.sh
 
       - name: Build image for release
-        if: ${{ steps.pull_request_vars.outputs.tag != '' }}
+        if: ${{ steps.release_vars.outputs.tag != '' }}
         env:
-          TAG_NAME: ${{steps.pull_request_vars.outputs.tag}}
+          TAG_NAME: ${{steps.release_vars.outputs.tag}}
         run: |
           ./build/build.sh
 
@@ -65,8 +65,8 @@ jobs:
           ./build/test.sh
 
       - name: Test image for release
-        if: ${{ steps.pull_request_vars.outputs.tag != '' }}
+        if: ${{ steps.release_vars.outputs.tag != '' }}
         env:
-          TAG_NAME: ${{steps.pull_request_vars.outputs.tag}}
+          TAG_NAME: ${{steps.release_vars.outputs.tag}}
         run: |
           ./build/test.sh
