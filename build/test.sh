@@ -16,13 +16,17 @@ CONTAINER_PORT="8000"
 HOST_PORT="9000"
 CONTAINER_TEST_FILENAME="test.yml"
 
+IMAGE_NAME="smartassert/basil-compiler:${TAG_NAME:-master}"
+
+echo "Testing image: ${IMAGE_NAME}"
+
 mkdir -p ${HOST_SOURCE_PATH}
 mkdir -p ${HOST_TARGET_PATH}
 
 cp tests/Fixtures/basil/Test/example.com.verify-open-literal.yml ${HOST_SOURCE_PATH}/${CONTAINER_TEST_FILENAME}
 
 docker rm -f ${CONTAINER_NAME} >/dev/null 2>&1
-docker create -p ${HOST_PORT}:${CONTAINER_PORT} -v ${HOST_DATA_PATH}:${CONTAINER_DATA_PATH} --name ${CONTAINER_NAME} smartassert/basil-compiler:${TAG_NAME:-master}
+docker create -p ${HOST_PORT}:${CONTAINER_PORT} -v ${HOST_DATA_PATH}:${CONTAINER_DATA_PATH} --name ${CONTAINER_NAME} ${IMAGE_NAME}
 docker start ${CONTAINER_NAME}
 
 sleep 0.1
