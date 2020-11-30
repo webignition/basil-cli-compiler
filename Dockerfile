@@ -28,7 +28,7 @@ COPY composer.lock /app
 RUN composer check-platform-reqs --ansi
 
 RUN echo "Installing dependencies"
-RUN composer install --no-dev --no-progress --prefer-dist --classmap-authoritative
+RUN composer install --no-dev
 RUN rm composer.json
 RUN rm composer.lock
 
