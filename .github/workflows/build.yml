@@ -15,33 +15,33 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Build Phar
-        run: composer phar-build
-
-      - name: Test Phar
-        run: composer phar-test
-
-      - name: Set image tag name
-        id: vars
-        env:
-          PULL_REQUEST_TAG_NAME: ${{ github.event_name }}-${{ github.event.number }}
-          RELEASE_TAG_NAME: ${{ github.event.release.tag_name }}
-        run: |
-          [[ ! -z "$RELEASE_TAG_NAME" ]] && echo "::set-output name=tag::$RELEASE_TAG_NAME" || echo "::set-output name=tag::$PULL_REQUEST_TAG_NAME"
-
-      - name: Build test image
-        if: ${{ github.event_name == 'pull_request' }}
-        env:
-          TAG_NAME: ${{ steps.vars.outputs.tag }}
-        run: |
-          ./build/build.sh
-          ./build/test.sh
+#      - name: Checkout code
+#        uses: actions/checkout@v2
+#
+#      - name: Build Phar
+#        run: composer phar-build
+#
+#      - name: Test Phar
+#        run: composer phar-test
+#
+#      - name: Set image tag name
+#        id: vars
+#        env:
+#          PULL_REQUEST_TAG_NAME: ${{ github.event_name }}-${{ github.event.number }}
+#          RELEASE_TAG_NAME: ${{ github.event.release.tag_name }}
+#        run: |
+#          [[ ! -z "$RELEASE_TAG_NAME" ]] && echo "::set-output name=tag::$RELEASE_TAG_NAME" || echo "::set-output name=tag::$PULL_REQUEST_TAG_NAME"
+#
+#      - name: Build test image
+#        if: ${{ github.event_name == 'pull_request' }}
+#        env:
+#          TAG_NAME: ${{ steps.vars.outputs.tag }}
+#        run: |
+#          ./build/build.sh
+#          ./build/test.sh
 
       - name: Set up Docker Buildx Test
-        if: ${{ github.event_name == 'cheese' }}
+        if: ${{ github.event_name == 'cheese' }} && ${{ github.event.action == 'published' }}
         uses: docker/setup-buildx-action@v1
 
 #      - name: Set up Docker Buildx
