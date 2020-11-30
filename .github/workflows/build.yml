@@ -52,7 +52,7 @@ jobs:
         uses: docker/setup-buildx-action@v1
 
       - name: Set up Docker Buildx Test2
-        if: ${{ github.event_name == 'release' && github.event.action == 'published' }}
+        if: ${{ github.event_name == 'pull_request' && github.event.action == 'synchronize' }}
         uses: docker/setup-buildx-action@v1
 
 #      - name: Set up Docker Buildx
