@@ -36,6 +36,13 @@ jobs:
         run: |
           echo "::set-output name=tag::${{ github.event.release.tag_name }}"
 
+      - name: Echo tester
+        run: |
+          echo "from pull request"
+          echo "${{steps.pull_request_vars.outputs.tag}}"
+          echo "from release"
+          echo "${{steps.release_vars.outputs.tag}}"
+
       - name: Build image
         env:
           TAG_NAME: ${{steps.pull_request_vars.outputs.tag}}
