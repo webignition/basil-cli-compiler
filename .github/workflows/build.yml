@@ -40,7 +40,18 @@ jobs:
 #          ./build/build.sh
 #          ./build/test.sh
 
-      - name: Set up Docker Buildx Test
+      - name: Print GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: |
+          echo "The event name is ${{ github.event_name }}"
+          echo "$GITHUB_CONTEXT"
+
+      - name: Set up Docker Buildx Test1
+        if: ${{ github.event_name == 'release' && github.event.action == 'published' }}
+        uses: docker/setup-buildx-action@v1
+
+      - name: Set up Docker Buildx Test2
         if: ${{ github.event_name == 'release' && github.event.action == 'published' }}
         uses: docker/setup-buildx-action@v1
 
