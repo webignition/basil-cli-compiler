@@ -19,6 +19,7 @@ RUN composer --version
 RUN echo "Copying compiler"
 COPY bin/compiler /app/bin/compiler
 RUN chmod +x /app/bin/compiler
+RUN ln -s /app/bin/compiler /app/compiler
 
 COPY src /app/src
 
