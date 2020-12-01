@@ -31,7 +31,7 @@ docker start ${CONTAINER_NAME}
 
 sleep 0.1
 
-( echo "./bin/compiler --version"; ) | nc localhost ${HOST_PORT}
+( echo "./compiler --version"; ) | nc localhost ${HOST_PORT}
 printf "\n"
 
 COMPILER_OUTPUT=$( ( echo "./bin/compiler --source=${CONTAINER_SOURCE_PATH}/${CONTAINER_TEST_FILENAME} --target=${CONTAINER_TARGET_PATH}"; ) | nc localhost ${HOST_PORT} )
