@@ -49,12 +49,12 @@
         "ext-json": "*",
         "symfony/console": "^5.1",
         "symfony/yaml": "^5.1",
-        "webignition/base-basil-test-case": "^0.40.0",
+        "webignition/base-basil-test-case": "^0.41",
         "webignition/basil-compilable-source": "^0.66.0",
         "webignition/basil-compiler-models": "^0.14.0",
         "webignition/basil-loader": "^0.31.0",
         "webignition/basil-models": "^0.57",
-        "webignition/php-basil-compilable-source-factory": "^0.63.0",
+        "webignition/php-basil-compilable-source-factory": "^0.64.0",
         "webignition/single-command-application-factory": "^0.1.0",
         "webignition/stubble": "^0.13.0",
         "webignition/symfony-console-typed-input": "^0.5.0"
@@ -72,7 +72,7 @@
         "webignition/basil-data-validator": ">=0.14,<1",
         "webignition/basil-parser": ">=0.25,<1",
         "webignition/object-reflector": ">=0.2,<1",
-        "webignition/symfony-panther-webserver-runner": ">=0.3,<1"
+        "webignition/symfony-panther-webserver-runner": ">=0.4,<1"
     },
     "bin": [
         "bin/compiler"
