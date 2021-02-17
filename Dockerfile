@@ -13,8 +13,7 @@ RUN apt-get autoremove -y \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 RUN echo "Install composer"
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-RUN composer --version
+COPY --from=composer /usr/bin/composer /usr/bin/composer
 
 RUN echo "Copying compiler"
 COPY bin/compiler /app/bin/compiler
@@ -39,6 +38,7 @@ RUN curl https://raw.githubusercontent.com/webignition/docker-tcp-cli-proxy/${pr
 RUN composer check-platform-reqs --ansi
 RUN rm composer.json
 RUN rm composer.lock
+RUN rm /usr/bin/composer
 
 RUN echo "Fetching proxy server ${proxy_server_version}"
 RUN curl -L https://github.com/webignition/docker-tcp-cli-proxy/releases/download/${proxy_server_version}/server.phar --output ./server
