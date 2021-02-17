@@ -12,27 +12,27 @@ RUN apt-get autoremove -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-RUN echo "Install composer"
+# Install composer
 COPY --from=composer /usr/bin/composer /usr/bin/composer
 
-RUN echo "Copying compiler"
+# Copying compiler
 COPY bin/compiler /app/bin/compiler
 RUN chmod +x /app/bin/compiler
 RUN ln -s /app/bin/compiler /app/compiler
 
 COPY src /app/src
 
-RUN echo "Checking compiler platform requirements"
+# Checking compiler platform requirements
 COPY composer.json /app
 COPY composer.lock /app
 RUN composer check-platform-reqs --ansi
 
-RUN echo "Installing dependencies"
+# Installing dependencies
 RUN composer install --no-dev
 RUN rm composer.json
 RUN rm composer.lock
 
-RUN echo "Checking proxy server platform requirements ${proxy_server_version}"
+# Checking proxy server platform requirements
 RUN curl https://raw.githubusercontent.com/webignition/docker-tcp-cli-proxy/${proxy_server_version}/composer.json --output composer.json
 RUN curl https://raw.githubusercontent.com/webignition/docker-tcp-cli-proxy/${proxy_server_version}/composer.lock --output composer.lock
 RUN composer check-platform-reqs --ansi
@@ -40,7 +40,7 @@ RUN rm composer.json
 RUN rm composer.lock
 RUN rm /usr/bin/composer
 
-RUN echo "Fetching proxy server ${proxy_server_version}"
+# Fetching proxy server
 RUN curl -L https://github.com/webignition/docker-tcp-cli-proxy/releases/download/${proxy_server_version}/server.phar --output ./server
 RUN chmod +x ./server
 
