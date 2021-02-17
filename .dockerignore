@@ -1,0 +1,8 @@
+# Ignore everything
+**
+
+# Allow source
+!/bin/compiler
+!/composer.json
+!/composer.lock
+!/src
