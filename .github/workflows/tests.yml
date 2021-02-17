@@ -33,3 +33,17 @@ jobs:
 
       - name: Run PHPUnit integration tests
         run: composer test-integration
+
+  image:
+    name: Test Docker Image
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Build test image
+        run: |
+          ./build/build.sh
+          ./build/test.sh
+
