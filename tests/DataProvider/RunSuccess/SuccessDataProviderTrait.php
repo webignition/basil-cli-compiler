@@ -12,6 +12,9 @@ use webignition\BasilModels\Test\Configuration as TestModelConfiguration;
 
 trait SuccessDataProviderTrait
 {
+    /**
+     * @return array[]
+     */
     public function successDataProvider(): array
     {
         $root = getcwd();

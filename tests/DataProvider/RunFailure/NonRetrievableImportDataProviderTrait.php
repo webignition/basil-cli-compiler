@@ -11,6 +11,9 @@ use webignition\BasilCompilerModels\ErrorOutput;
 
 trait NonRetrievableImportDataProviderTrait
 {
+    /**
+     * @return array[]
+     */
     public function nonRetrievableImportDataProvider(): array
     {
         $root = getcwd();

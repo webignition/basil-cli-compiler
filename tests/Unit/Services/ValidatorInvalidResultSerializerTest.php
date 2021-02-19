@@ -35,11 +35,14 @@ class ValidatorInvalidResultSerializerTest extends AbstractBaseTest
      * @param InvalidResultInterface $invalidResult
      * @param array<mixed> $expectedData
      */
-    public function testSerializeToArray(InvalidResultInterface $invalidResult, array $expectedData)
+    public function testSerializeToArray(InvalidResultInterface $invalidResult, array $expectedData): void
     {
         self::assertSame($expectedData, $this->serializer->serializeToArray($invalidResult));
     }
 
+    /**
+     * @return array[]
+     */
     public function serializeToArrayDataProvider(): array
     {
         $actionParser = ActionParser::create();

@@ -11,6 +11,9 @@ use webignition\BasilCompilerModels\ErrorOutput;
 
 trait NonLoadableDataDataProviderTrait
 {
+    /**
+     * @return array[]
+     */
     public function nonLoadableDataDataProvider(): array
     {
         $root = getcwd();

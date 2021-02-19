@@ -26,7 +26,7 @@ class CompilerTest extends \PHPUnit\Framework\TestCase
         array $classNameFactoryClassNames,
         string $fullyQualifiedBaseClass,
         CompiledTest $expectedCompiledTest
-    ) {
+    ): void {
         $compiler = Compiler::createCompiler();
 
         $serviceMocker = new ServiceMocker();
@@ -38,6 +38,9 @@ class CompilerTest extends \PHPUnit\Framework\TestCase
         );
     }
 
+    /**
+     * @return array[]
+     */
     public function compileDataProvider(): array
     {
         $testParser = TestParser::create();

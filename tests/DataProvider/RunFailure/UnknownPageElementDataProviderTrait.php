@@ -11,6 +11,9 @@ use webignition\BasilCompilerModels\ErrorOutput;
 
 trait UnknownPageElementDataProviderTrait
 {
+    /**
+     * @return array[]
+     */
     public function unknownPageElementDataProvider(): array
     {
         $root = getcwd();

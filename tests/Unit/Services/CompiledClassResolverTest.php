@@ -31,13 +31,16 @@ class CompiledClassResolverTest extends \PHPUnit\Framework\TestCase
      * @param string $compiledClass
      * @param string $expectedResolvedClass
      */
-    public function testResolve(string $compiledClass, string $expectedResolvedClass)
+    public function testResolve(string $compiledClass, string $expectedResolvedClass): void
     {
         $resolvedContent = $this->compiledClassResolver->resolve($compiledClass);
 
         $this->assertSame($expectedResolvedClass, $resolvedContent);
     }
 
+    /**
+     * @return array[]
+     */
     public function resolveDataProvider(): array
     {
         return [

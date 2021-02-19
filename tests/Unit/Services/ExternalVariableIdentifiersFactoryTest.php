@@ -10,7 +10,7 @@ use webignition\BasilCliCompiler\Tests\Unit\AbstractBaseTest;
 
 class ExternalVariableIdentifiersFactoryTest extends AbstractBaseTest
 {
-    public function testCreate()
+    public function testCreate(): void
     {
         self::assertEquals(
             new ExternalVariableIdentifiers(

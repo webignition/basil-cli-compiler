@@ -11,6 +11,9 @@ use webignition\BasilCompilerModels\ErrorOutput;
 
 trait UnknownElementDataProviderTrait
 {
+    /**
+     * @return array[]
+     */
     public function unknownElementDataProvider(): array
     {
         $root = getcwd();
