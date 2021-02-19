@@ -42,7 +42,7 @@ trait NonRetrievableImportDataProviderTrait
                         'name' => 'unparseable_page',
                         'import_path' => $pageAbsolutePath,
                         'loader_error' => [
-                            'message' => 'Malformed inline YAML string: ""http://example.com" at line 2.',
+                            'message' => 'Malformed inline YAML string at line 2',
                             'path' => $pageAbsolutePath,
                         ],
                     ]

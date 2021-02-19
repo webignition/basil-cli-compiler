@@ -28,7 +28,7 @@ trait NonLoadableDataDataProviderTrait
                         $root . '/tests/build/target',
                         AbstractBaseTest::class
                     ),
-                    'Malformed inline YAML string: ""chrome" at line 3 (near "- "chrome").',
+                    'Malformed inline YAML string at line 3 (near "- "chrome")',
                     ErrorOutputFactory::CODE_LOADER_INVALID_YAML,
                     [
                         'path' => $root . '/tests/Fixtures/basil/InvalidTest/invalid.unparseable.yml',
