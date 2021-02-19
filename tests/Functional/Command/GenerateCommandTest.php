@@ -68,7 +68,7 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
         SuiteManifest $expectedCommandOutput,
         array $expectedGeneratedCodePaths,
         array $classNames
-    ) {
+    ): void {
         $stdout = new BufferedOutput();
         $stderr = new BufferedOutput();
 
@@ -131,7 +131,7 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
         int $expectedExitCode,
         ErrorOutputInterface $expectedCommandOutput,
         ?callable $initializer = null
-    ) {
+    ): void {
         $stdout = new BufferedOutput();
         $stderr = new BufferedOutput();
 
@@ -150,6 +150,9 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
         self::assertEquals($expectedCommandOutput, $commandOutput);
     }
 
+    /**
+     * @return array[]
+     */
     public function unresolvedPlaceholderDataProvider(): array
     {
         $root = getcwd();
@@ -199,7 +202,7 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
     public function testRunFailureUnsupportedStepException(
         UnsupportedStepException $unsupportedStepException,
         array $expectedErrorOutputContext
-    ) {
+    ): void {
         $root = getcwd();
 
         $input = [
@@ -244,6 +247,9 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
         self::assertEquals($expectedCommandOutput, $commandOutput);
     }
 
+    /**
+     * @return array[]
+     */
     public function runFailureUnsupportedStepDataProvider(): array
     {
         $actionParser = ActionParser::create();

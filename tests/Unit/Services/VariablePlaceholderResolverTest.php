@@ -22,13 +22,16 @@ class VariablePlaceholderResolverTest extends \PHPUnit\Framework\TestCase
     /**
      * @dataProvider resolveDataProvider
      */
-    public function testResolve(ResolvableInterface $resolvable, string $expectedResolvedTemplate)
+    public function testResolve(ResolvableInterface $resolvable, string $expectedResolvedTemplate): void
     {
         $resolvedContent = $this->variablePlaceholderResolver->resolve($resolvable);
 
         $this->assertSame($expectedResolvedTemplate, $resolvedContent);
     }
 
+    /**
+     * @return array[]
+     */
     public function resolveDataProvider(): array
     {
         return [

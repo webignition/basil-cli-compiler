@@ -11,6 +11,9 @@ use webignition\BasilCompilerModels\ErrorOutput;
 
 trait UnknownItemDataProviderTrait
 {
+    /**
+     * @return array[]
+     */
     public function unknownItemDataProvider(): array
     {
         $root = getcwd();

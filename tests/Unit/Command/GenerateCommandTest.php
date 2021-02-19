@@ -23,7 +23,7 @@ use webignition\BasilLoader\TestLoader;
 
 class GenerateCommandTest extends AbstractBaseTest
 {
-    public function testRunFailureInvalidConfiguration()
+    public function testRunFailureInvalidConfiguration(): void
     {
         $input = [];
 

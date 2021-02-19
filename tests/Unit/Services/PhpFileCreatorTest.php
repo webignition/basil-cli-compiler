@@ -23,7 +23,7 @@ class PhpFileCreatorTest extends AbstractBaseTest
         string $expectedFilePutContentsFilename,
         string $expectedFilePutContentsData,
         string $expectedCreatedFilename
-    ) {
+    ): void {
         PHPMockery::mock('webignition\BasilCliCompiler\Services', 'file_put_contents')
             ->with($expectedFilePutContentsFilename, $expectedFilePutContentsData)
             ->andReturn(strlen($expectedFilePutContentsData));
@@ -34,6 +34,9 @@ class PhpFileCreatorTest extends AbstractBaseTest
         self::assertSame($expectedCreatedFilename, $createdFileName);
     }
 
+    /**
+     * @return array[]
+     */
     public function createDataProvider(): array
     {
         return [

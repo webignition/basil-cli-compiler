@@ -18,7 +18,7 @@ class CompilerTest extends \PHPUnit\Framework\TestCase
      * @param string $target
      * @param array<mixed> $expectedGeneratedTestDataCollection
      */
-    public function testGenerate(string $source, string $target, array $expectedGeneratedTestDataCollection)
+    public function testGenerate(string $source, string $target, array $expectedGeneratedTestDataCollection): void
     {
         $generateProcess = $this->createGenerateCommandProcess($source, $target);
         $exitCode = $generateProcess->run();
@@ -53,6 +53,9 @@ class CompilerTest extends \PHPUnit\Framework\TestCase
         }
     }
 
+    /**
+     * @return array[]
+     */
     public function generateDataProvider(): array
     {
         $root = getcwd();

@@ -11,6 +11,9 @@ use webignition\BasilCompilerModels\ErrorOutput;
 
 trait ParseExceptionDataProviderTrait
 {
+    /**
+     * @return array[]
+     */
     public function parseExceptionDataProvider(): array
     {
         $root = getcwd();

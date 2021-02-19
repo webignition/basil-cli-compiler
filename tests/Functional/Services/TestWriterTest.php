@@ -16,7 +16,7 @@ class TestWriterTest extends \PHPUnit\Framework\TestCase
         CompiledTest $compiledTest,
         string $outputDirectory,
         string $expectedGeneratedCode
-    ) {
+    ): void {
         $testWriter = TestWriter::createWriter($outputDirectory);
 
         $target = $testWriter->write($compiledTest, $outputDirectory);
@@ -31,6 +31,9 @@ class TestWriterTest extends \PHPUnit\Framework\TestCase
         }
     }
 
+    /**
+     * @return array[]
+     */
     public function generateDataProvider(): array
     {
         $root = getcwd();

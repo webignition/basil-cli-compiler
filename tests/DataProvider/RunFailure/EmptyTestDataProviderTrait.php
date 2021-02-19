@@ -11,6 +11,9 @@ use webignition\BasilCompilerModels\ErrorOutput;
 
 trait EmptyTestDataProviderTrait
 {
+    /**
+     * @return array[]
+     */
     public function emptyTestDataProvider(): array
     {
         $root = getcwd();

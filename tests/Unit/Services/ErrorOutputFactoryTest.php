@@ -31,7 +31,7 @@ class ErrorOutputFactoryTest extends AbstractBaseTest
         ConfigurationInterface $configuration,
         int $configurationValidationState,
         ErrorOutput $expectedOutput
-    ) {
+    ): void {
         self::assertEquals(
             $expectedOutput,
             $this->factory->createFromInvalidConfiguration(
@@ -41,6 +41,9 @@ class ErrorOutputFactoryTest extends AbstractBaseTest
         );
     }
 
+    /**
+     * @return array[]
+     */
     public function createFromInvalidConfigurationDataProvider(): array
     {
         $configurationSourceNotReadable = \Mockery::mock(ConfigurationInterface::class);

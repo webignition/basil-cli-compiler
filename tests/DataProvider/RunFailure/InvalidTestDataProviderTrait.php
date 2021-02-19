@@ -11,6 +11,9 @@ use webignition\BasilCompilerModels\ErrorOutput;
 
 trait InvalidTestDataProviderTrait
 {
+    /**
+     * @return array[]
+     */
     public function invalidTestDataProvider(): array
     {
         $root = getcwd();

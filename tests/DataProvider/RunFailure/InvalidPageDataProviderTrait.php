@@ -11,6 +11,9 @@ use webignition\BasilCompilerModels\ErrorOutput;
 
 trait InvalidPageDataProviderTrait
 {
+    /**
+     * @return array[]
+     */
     public function invalidPageDataProvider(): array
     {
         $root = getcwd();

@@ -11,6 +11,9 @@ use webignition\BasilCompilerModels\ErrorOutput;
 
 trait CircularStepImportDataProviderTrait
 {
+    /**
+     * @return array[]
+     */
     public function circularStepImportDataProvider(): array
     {
         $root = getcwd();
