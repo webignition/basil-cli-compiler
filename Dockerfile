@@ -2,7 +2,7 @@ FROM php:8-cli-buster
 
 WORKDIR /app
 
-ARG proxy_server_version=0.5
+ARG proxy_server_version=0.7
 
 COPY --from=composer /usr/bin/composer /usr/bin/composer
 COPY bin/compiler /app/bin/compiler
