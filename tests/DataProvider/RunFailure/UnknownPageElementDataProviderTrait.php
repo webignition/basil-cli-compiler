@@ -35,8 +35,7 @@ trait UnknownPageElementDataProviderTrait
                     [
                         'import_name' => 'page_import_name',
                         'element_name' => 'unknown_element',
-                        'test_path' =>
-                            FixturePaths::getInvalidTest() . '/action-contains-unknown-page-element.yml',
+                        'test_path' => FixturePaths::getInvalidTest() . '/action-contains-unknown-page-element.yml',
                         'step_name' => 'action contains unknown page element',
                         'statement' => 'click $page_import_name.elements.unknown_element'
                     ]

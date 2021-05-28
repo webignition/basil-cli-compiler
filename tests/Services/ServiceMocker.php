@@ -19,7 +19,8 @@ class ServiceMocker
         $classNameFactory = \Mockery::mock(ClassNameFactory::class);
         $classNameFactory
             ->shouldReceive('create')
-            ->andReturnValues($classNames);
+            ->andReturnValues($classNames)
+        ;
 
         ObjectReflector::setProperty(
             $classDefinitionFactory,

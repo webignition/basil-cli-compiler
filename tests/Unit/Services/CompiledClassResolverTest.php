@@ -51,8 +51,7 @@ class CompiledClassResolverTest extends \PHPUnit\Framework\TestCase
             ],
             'resolvable content' => [
                 'content' => $this->createRenderedListOfAllExternalDependencies(),
-                'expectedResolvedContent' =>
-                    '$this->actionFactory' . "\n" .
+                'expectedResolvedContent' => '$this->actionFactory' . "\n" .
                     '$this->assertionFactory' . "\n" .
                     '$this->navigator' . "\n" .
                     '$_ENV' . "\n" .

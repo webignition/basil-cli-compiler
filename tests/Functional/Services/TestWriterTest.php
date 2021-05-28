@@ -45,8 +45,7 @@ class TestWriterTest extends \PHPUnit\Framework\TestCase
                     'ClassName'
                 ),
                 'outputDirectory' => $root . '/tests/build/target',
-                'expectedGeneratedCode' =>
-                    '<?php' . "\n" .
+                'expectedGeneratedCode' => '<?php' . "\n" .
                     "\n" .
                     'namespace webignition\BasilCliCompiler\Generated;' . "\n" .
                     "\n" .

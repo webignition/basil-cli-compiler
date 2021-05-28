@@ -16,7 +16,7 @@ class CompilerTest extends \PHPUnit\Framework\TestCase
     /**
      * @dataProvider compileDataProvider
      *
-     * @param string[]  $classNameFactoryClassNames
+     * @param string[] $classNameFactoryClassNames
      */
     public function testCompile(
         TestInterface $test,
