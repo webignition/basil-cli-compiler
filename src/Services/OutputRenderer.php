@@ -13,13 +13,10 @@ class OutputRenderer
 {
     private const YAML_DUMP_INLINE_DEPTH = 4;
 
-    private ConsoleOutputInterface $stdout;
-    private ConsoleOutputInterface $stderr;
-
-    public function __construct(ConsoleOutputInterface $stdout, ConsoleOutputInterface $stderr)
-    {
-        $this->stdout = $stdout;
-        $this->stderr = $stderr;
+    public function __construct(
+        private ConsoleOutputInterface $stdout,
+        private ConsoleOutputInterface $stderr
+    ) {
     }
 
     public function render(OutputInterface $commandOutput): int

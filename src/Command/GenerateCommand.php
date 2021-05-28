@@ -36,29 +36,15 @@ class GenerateCommand extends Command
 {
     private const NAME = 'generate';
 
-    private TestLoader $testLoader;
-    private Compiler $compiler;
-    private TestWriter $testWriter;
-    private ErrorOutputFactory $errorOutputFactory;
-    private OutputRenderer $outputRenderer;
-    private ConfigurationFactory $configurationFactory;
-
     public function __construct(
-        TestLoader $testLoader,
-        Compiler $compiler,
-        TestWriter $testWriter,
-        ErrorOutputFactory $errorOutputFactory,
-        OutputRenderer $outputRenderer,
-        ConfigurationFactory $configurationFactory
+        private TestLoader $testLoader,
+        private Compiler $compiler,
+        private TestWriter $testWriter,
+        private ErrorOutputFactory $errorOutputFactory,
+        private OutputRenderer $outputRenderer,
+        private ConfigurationFactory $configurationFactory
     ) {
         parent::__construct();
-
-        $this->testLoader = $testLoader;
-        $this->compiler = $compiler;
-        $this->testWriter = $testWriter;
-        $this->errorOutputFactory = $errorOutputFactory;
-        $this->outputRenderer = $outputRenderer;
-        $this->configurationFactory = $configurationFactory;
     }
 
     protected function configure(): void
@@ -91,13 +77,7 @@ class GenerateCommand extends Command
         ;
     }
 
-    /**
-     * @param InputInterface $input
-     * @param ConsoleOutputInterface $output
-     *
-     * @return int|null
-     */
-    protected function execute(InputInterface $input, ConsoleOutputInterface $output)
+    protected function execute(InputInterface $input, ConsoleOutputInterface $output): int
     {
         $configuration = $this->configurationFactory->create($input);
 

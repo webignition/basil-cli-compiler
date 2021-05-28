@@ -15,12 +15,9 @@ namespace webignition\BasilCliCompiler\Generated;
 
 EOT;
 
-
-    private string $outputDirectory = '';
-
-    public function __construct(string $outputDirectory)
-    {
-        $this->outputDirectory = $outputDirectory;
+    public function __construct(
+        private string $outputDirectory
+    ) {
     }
 
     public function create(string $className, string $code): string

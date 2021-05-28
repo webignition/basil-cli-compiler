@@ -10,15 +10,10 @@ use webignition\StubbleResolvable\Resolvable;
 
 class CompiledClassResolver
 {
-    private ExternalVariableIdentifiers $externalVariableIdentifiers;
-    private VariablePlaceholderResolver $variablePlaceholderResolver;
-
     public function __construct(
-        ExternalVariableIdentifiers $externalVariableIdentifiers,
-        VariablePlaceholderResolver $variablePlaceholderResolver
+        private ExternalVariableIdentifiers $externalVariableIdentifiers,
+        private VariablePlaceholderResolver $variablePlaceholderResolver
     ) {
-        $this->externalVariableIdentifiers = $externalVariableIdentifiers;
-        $this->variablePlaceholderResolver = $variablePlaceholderResolver;
     }
 
     public static function createResolver(ExternalVariableIdentifiers $externalVariableIdentifiers): self
@@ -30,10 +25,6 @@ class CompiledClassResolver
     }
 
     /**
-     * @param string $compiledClass
-     *
-     * @return string
-     *
      * @throws UnresolvedVariableException
      */
     public function resolve(string $compiledClass): string

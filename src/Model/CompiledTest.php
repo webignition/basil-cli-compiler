@@ -6,13 +6,10 @@ namespace webignition\BasilCliCompiler\Model;
 
 class CompiledTest
 {
-    private string $code;
-    private string $className;
-
-    public function __construct(string $code, string $className)
-    {
-        $this->code = $code;
-        $this->className = $className;
+    public function __construct(
+        private string $code,
+        private string $className
+    ) {
     }
 
     public function getCode(): string

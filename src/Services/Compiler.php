@@ -13,18 +13,11 @@ use webignition\Stubble\VariableResolver;
 
 class Compiler
 {
-    private ClassDefinitionFactory $classDefinitionFactory;
-    private CompiledClassResolver $compiledClassResolver;
-    private VariableResolver $variableResolver;
-
     public function __construct(
-        ClassDefinitionFactory $classDefinitionFactory,
-        CompiledClassResolver $compiledClassResolver,
-        VariableResolver $variableResolver
+        private ClassDefinitionFactory $classDefinitionFactory,
+        private CompiledClassResolver $compiledClassResolver,
+        private VariableResolver $variableResolver
     ) {
-        $this->classDefinitionFactory = $classDefinitionFactory;
-        $this->compiledClassResolver = $compiledClassResolver;
-        $this->variableResolver = $variableResolver;
     }
 
     public static function createCompiler(): self
@@ -39,11 +32,6 @@ class Compiler
     }
 
     /**
-     * @param TestInterface $test
-     * @param string $fullyQualifiedBaseClass
-     *
-     * @return CompiledTest
-     *
      * @throws UnresolvedVariableException
      * @throws UnsupportedStepException
      */

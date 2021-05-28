@@ -10,10 +10,7 @@ use webignition\ObjectReflector\ObjectReflector;
 class ServiceMocker
 {
     /**
-     * @param Compiler $compiler
      * @param string[] $classNames
-     *
-     * @return Compiler
      */
     public function mockClassNameFactoryOnCompiler(Compiler $compiler, array $classNames): Compiler
     {

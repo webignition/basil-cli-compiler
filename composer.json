@@ -45,7 +45,7 @@
         ]
     },
     "require": {
-        "php": ">=7.4|^8",
+        "php": ">=8",
         "ext-json": "*",
         "symfony/console": "^5.2",
         "symfony/yaml": "^5.2",
@@ -66,7 +66,7 @@
         "phpstan/extension-installer": "^1.1",
         "phpstan/phpstan": "^0.12.77",
         "phpstan/phpstan-mockery": "^0.12.12",
-        "squizlabs/php_codesniffer": "^3.5",
+        "squizlabs/php_codesniffer": "^3.6",
         "symfony/process": "^5.2",
         "symplify/easy-coding-standard": "^9.1",
         "webignition/basil-data-validator": ">=0.16,<1",

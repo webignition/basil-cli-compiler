@@ -10,8 +10,6 @@ use webignition\BasilValidationResult\InvalidResultInterface;
 class ValidatorInvalidResultSerializer
 {
     /**
-     * @param InvalidResultInterface $invalidResult
-     *
      * @return array<mixed>
      */
     public function serializeToArray(InvalidResultInterface $invalidResult): array
