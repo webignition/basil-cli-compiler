@@ -87,8 +87,8 @@ class ErrorOutputFactoryTest extends AbstractBaseTest
                 'configurationValidationState' => Configuration::VALIDATION_STATE_SOURCE_NOT_READABLE,
                 'expectedOutput' => new ErrorOutput(
                     $configurationSourceNotReadable,
-                    'source invalid; file is not readable',
-                    ErrorOutputFactory::CODE_COMMAND_CONFIG_SOURCE_INVALID_NOT_READABLE
+                    ErrorOutputFactory::MESSAGE_COMMAND_CONFIG_SOURCE_NOT_READABLE,
+                    ErrorOutputFactory::CODE_COMMAND_CONFIG_SOURCE_NOT_READABLE
                 ),
             ],
             'target not writable' => [
@@ -96,8 +96,8 @@ class ErrorOutputFactoryTest extends AbstractBaseTest
                 'configurationValidationState' => Configuration::VALIDATION_STATE_TARGET_NOT_WRITABLE,
                 'expectedOutput' => new ErrorOutput(
                     $configurationTargetNotWritable,
-                    'target invalid; directory is not writable',
-                    ErrorOutputFactory::CODE_COMMAND_CONFIG_TARGET_INVALID_NOT_WRITABLE
+                    ErrorOutputFactory::MESSAGE_COMMAND_CONFIG_TARGET_NOT_WRITABLE,
+                    ErrorOutputFactory::CODE_COMMAND_CONFIG_TARGET_NOT_WRITABLE
                 ),
             ],
             'target not a directory' => [
@@ -105,8 +105,8 @@ class ErrorOutputFactoryTest extends AbstractBaseTest
                 'configurationValidationState' => Configuration::VALIDATION_STATE_TARGET_NOT_DIRECTORY,
                 'expectedOutput' => new ErrorOutput(
                     $configurationTargetNotDirectory,
-                    'target invalid; is not a directory (is it a file?)',
-                    ErrorOutputFactory::CODE_COMMAND_CONFIG_TARGET_INVALID_NOT_A_DIRECTORY
+                    ErrorOutputFactory::MESSAGE_COMMAND_CONFIG_TARGET_NOT_A_DIRECTORY,
+                    ErrorOutputFactory::CODE_COMMAND_CONFIG_TARGET_NOT_A_DIRECTORY
                 ),
             ],
             'source not absolute' => [
@@ -114,8 +114,8 @@ class ErrorOutputFactoryTest extends AbstractBaseTest
                 'configurationValidationState' => Configuration::VALIDATION_STATE_SOURCE_NOT_ABSOLUTE,
                 'expectedOutput' => new ErrorOutput(
                     $configurationSourceNotAbsolute,
-                    'source invalid: path must be absolute',
-                    ErrorOutputFactory::CODE_COMMAND_CONFIG_SOURCE_INVALID_NOT_ABSOLUTE
+                    ErrorOutputFactory::MESSAGE_COMMAND_CONFIG_SOURCE_NOT_ABSOLUTE,
+                    ErrorOutputFactory::CODE_COMMAND_CONFIG_SOURCE_NOT_ABSOLUTE
                 ),
             ],
             'target not absolute' => [
@@ -123,8 +123,8 @@ class ErrorOutputFactoryTest extends AbstractBaseTest
                 'configurationValidationState' => Configuration::VALIDATION_STATE_TARGET_NOT_ABSOLUTE,
                 'expectedOutput' => new ErrorOutput(
                     $configurationTargetNotAbsolute,
-                    'target invalid: path must be absolute',
-                    ErrorOutputFactory::CODE_COMMAND_CONFIG_TARGET_INVALID_NOT_ABSOLUTE
+                    ErrorOutputFactory::MESSAGE_COMMAND_CONFIG_TARGET_NOT_ABSOLUTE,
+                    ErrorOutputFactory::CODE_COMMAND_CONFIG_TARGET_NOT_ABSOLUTE
                 ),
             ],
             'source empty' => [
@@ -132,7 +132,7 @@ class ErrorOutputFactoryTest extends AbstractBaseTest
                 'configurationValidationState' => Configuration::VALIDATION_STATE_SOURCE_EMPTY,
                 'expectedOutput' => new ErrorOutput(
                     $configurationSourceEmpty,
-                    'source empty; call with --source=SOURCE',
+                    ErrorOutputFactory::MESSAGE_COMMAND_CONFIG_SOURCE_EMPTY,
                     ErrorOutputFactory::CODE_COMMAND_CONFIG_SOURCE_EMPTY
                 ),
             ],
@@ -141,7 +141,7 @@ class ErrorOutputFactoryTest extends AbstractBaseTest
                 'configurationValidationState' => Configuration::VALIDATION_STATE_TARGET_EMPTY,
                 'expectedOutput' => new ErrorOutput(
                     $configurationTargetEmpty,
-                    'target empty; call with --target=TARGET',
+                    ErrorOutputFactory::MESSAGE_COMMAND_CONFIG_TARGET_EMPTY,
                     ErrorOutputFactory::CODE_COMMAND_CONFIG_TARGET_EMPTY
                 ),
             ],
