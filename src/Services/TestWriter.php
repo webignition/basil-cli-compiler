@@ -8,11 +8,9 @@ use webignition\BasilCliCompiler\Model\CompiledTest;
 
 class TestWriter
 {
-    private PhpFileCreator $phpFileCreator;
-
-    public function __construct(PhpFileCreator $phpFileCreator)
-    {
-        $this->phpFileCreator = $phpFileCreator;
+    public function __construct(
+        private PhpFileCreator $phpFileCreator
+    ) {
     }
 
     public static function createWriter(string $outputDirectory): self

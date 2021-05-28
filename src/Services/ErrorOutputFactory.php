@@ -105,11 +105,9 @@ class ErrorOutputFactory
             'target invalid: path must be absolute'
     ];
 
-    private ValidatorInvalidResultSerializer $validatorInvalidResultSerializer;
-
-    public function __construct(ValidatorInvalidResultSerializer $validatorInvalidResultSerializer)
-    {
-        $this->validatorInvalidResultSerializer = $validatorInvalidResultSerializer;
+    public function __construct(
+        private ValidatorInvalidResultSerializer $validatorInvalidResultSerializer
+    ) {
     }
 
     public function createFromInvalidConfiguration(
@@ -454,8 +452,6 @@ class ErrorOutputFactory
     }
 
     /**
-     * @param UnsupportedStepException $unsupportedStepException
-     *
      * @return array<string, string>
      */
     private function createErrorOutputContextFromUnsupportedStepException(
@@ -484,8 +480,6 @@ class ErrorOutputFactory
     }
 
     /**
-     * @param ExceptionContextInterface $exceptionContext
-     *
      * @return array<string, string>
      */
     private function createErrorOutputContextFromExceptionContext(ExceptionContextInterface $exceptionContext): array

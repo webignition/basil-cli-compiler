@@ -14,11 +14,7 @@ class CommandFactory
     private const TARGET_ARG_START_PATTERN = '/^--' . Options::OPTION_TARGET . '=/';
 
     /**
-     * @param OutputInterface $stdout
-     * @param OutputInterface $stderr
      * @param array<int, string> $cliArguments
-     *
-     * @return GenerateCommand
      */
     public static function createGenerateCommand(
         OutputInterface $stdout,
@@ -37,8 +33,6 @@ class CommandFactory
 
     /**
      * @param array<int, string> $cliArguments
-     *
-     * @return string
      */
     private static function getOutputDirectory(array $cliArguments): string
     {

@@ -8,36 +8,17 @@ use webignition\BasilCompilableSourceFactory\VariableNames;
 
 class ExternalVariableIdentifiers
 {
-    private string $domNavigatorCrawlerName;
-    private string $environmentVariableArrayName;
-    private string $pantherClientName;
-    private string $pantherCrawlerName;
-    private string $phpUnitTestCaseName;
-    private string $webDriverElementInspectorName;
-    private string $webDriverElementMutatorName;
-    private string $actionFactoryName;
-    private string $assertionFactoryName;
-
     public function __construct(
-        string $domNavigatorCrawlerName,
-        string $environmentVariableArrayName,
-        string $pantherClientName,
-        string $pantherCrawlerName,
-        string $phpUnitTestCaseName,
-        string $webDriverElementInspectorName,
-        string $webDriverElementMutatorName,
-        string $actionFactoryName,
-        string $assertionFactoryName
+        private string $domNavigatorCrawlerName,
+        private string $environmentVariableArrayName,
+        private string $pantherClientName,
+        private string $pantherCrawlerName,
+        private string $phpUnitTestCaseName,
+        private string $webDriverElementInspectorName,
+        private string $webDriverElementMutatorName,
+        private string $actionFactoryName,
+        private string $assertionFactoryName
     ) {
-        $this->domNavigatorCrawlerName = $domNavigatorCrawlerName;
-        $this->environmentVariableArrayName = $environmentVariableArrayName;
-        $this->pantherClientName = $pantherClientName;
-        $this->pantherCrawlerName = $pantherCrawlerName;
-        $this->phpUnitTestCaseName = $phpUnitTestCaseName;
-        $this->webDriverElementInspectorName = $webDriverElementInspectorName;
-        $this->webDriverElementMutatorName = $webDriverElementMutatorName;
-        $this->actionFactoryName = $actionFactoryName;
-        $this->assertionFactoryName = $assertionFactoryName;
     }
 
     /**
