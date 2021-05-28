@@ -55,8 +55,6 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @param array<string, string> $input
-     * @param int $expectedExitCode
-     * @param SuiteManifest $expectedCommandOutput
      * @param string[] $expectedGeneratedCodePaths
      * @param string[] $classNames
      *
@@ -111,8 +109,6 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @param array<mixed> $input
-     * @param int $expectedExitCode
-     * @param ErrorOutputInterface $expectedCommandOutput
      *
      * @dataProvider nonLoadableDataDataProvider
      * @dataProvider circularStepImportDataProvider
@@ -196,7 +192,6 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
     /**
      * @dataProvider runFailureUnsupportedStepDataProvider
      *
-     * @param UnsupportedStepException $unsupportedStepException
      * @param array<mixed> $expectedErrorOutputContext
      */
     public function testRunFailureUnsupportedStepException(
@@ -383,7 +378,6 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @param GenerateCommand $command
      * @param string[] $classNames
      */
     private function mockClassNameFactoryOnCommand(GenerateCommand $command, array $classNames): void

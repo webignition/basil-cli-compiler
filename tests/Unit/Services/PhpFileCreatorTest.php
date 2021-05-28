@@ -12,9 +12,6 @@ class PhpFileCreatorTest extends AbstractBaseTest
 {
     /**
      * @dataProvider createDataProvider
-     *
-     * @param string $outputDirectory
-     * @param string $className
      */
     public function testCreate(
         string $outputDirectory,

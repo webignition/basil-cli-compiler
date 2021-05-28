@@ -14,8 +14,6 @@ class CompilerTest extends \PHPUnit\Framework\TestCase
     /**
      * @dataProvider generateDataProvider
      *
-     * @param string $source
-     * @param string $target
      * @param array<mixed> $expectedGeneratedTestDataCollection
      */
     public function testGenerate(string $source, string $target, array $expectedGeneratedTestDataCollection): void
@@ -75,9 +73,6 @@ class CompilerTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @param string $source
-     * @param string $target
-     *
      * @return Process<string>
      */
     private function createGenerateCommandProcess(string $source, string $target): Process

@@ -27,9 +27,6 @@ class CompiledClassResolverTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @dataProvider resolveDataProvider
-     *
-     * @param string $compiledClass
-     * @param string $expectedResolvedClass
      */
     public function testResolve(string $compiledClass, string $expectedResolvedClass): void
     {
