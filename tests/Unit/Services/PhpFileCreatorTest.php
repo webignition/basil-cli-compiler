@@ -23,7 +23,8 @@ class PhpFileCreatorTest extends AbstractBaseTest
     ): void {
         PHPMockery::mock('webignition\BasilCliCompiler\Services', 'file_put_contents')
             ->with($expectedFilePutContentsFilename, $expectedFilePutContentsData)
-            ->andReturn(strlen($expectedFilePutContentsData));
+            ->andReturn(strlen($expectedFilePutContentsData))
+        ;
 
         $creator = new PhpFileCreator($outputDirectory);
         $createdFileName = $creator->create($className, $code);

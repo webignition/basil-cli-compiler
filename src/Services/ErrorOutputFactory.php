@@ -349,8 +349,8 @@ class ErrorOutputFactory
         }
 
         if (
-            $unparseableStatementException instanceof UnparseableActionException ||
-            $unparseableStatementException instanceof UnparseableAssertionException
+            $unparseableStatementException instanceof UnparseableActionException
+            || $unparseableStatementException instanceof UnparseableAssertionException
         ) {
             $statementType = $unparseableStatementException instanceof UnparseableActionException
                 ? 'action'

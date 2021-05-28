@@ -55,8 +55,8 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @param array<string, string> $input
-     * @param string[] $expectedGeneratedCodePaths
-     * @param string[] $classNames
+     * @param string[]              $expectedGeneratedCodePaths
+     * @param string[]              $classNames
      *
      * @dataProvider successDataProvider
      */
@@ -178,7 +178,8 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
                     $mockExternalVariableIdentifiers = \Mockery::mock(ExternalVariableIdentifiers::class);
                     $mockExternalVariableIdentifiers
                         ->shouldReceive('get')
-                        ->andReturn([]);
+                        ->andReturn([])
+                    ;
 
                     $this->mockCompilerCompiledClassResolverExternalVariableIdentifiers(
                         $command,
@@ -208,7 +209,8 @@ class GenerateCommandTest extends \PHPUnit\Framework\TestCase
         $compiler = \Mockery::mock(Compiler::class);
         $compiler
             ->shouldReceive('compile')
-            ->andThrow($unsupportedStepException);
+            ->andThrow($unsupportedStepException)
+        ;
 
         $stdout = new BufferedOutput();
         $stderr = new BufferedOutput();

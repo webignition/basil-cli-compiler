@@ -41,7 +41,6 @@ trait ParseExceptionDataProviderTrait
                         'statement_type' => 'action',
                         'statement' => 'click invalid-identifier',
                         'reason' => 'invalid-identifier',
-
                     ]
                 ),
             ],
@@ -66,7 +65,6 @@ trait ParseExceptionDataProviderTrait
                         'statement_type' => 'assertion',
                         'statement' => '$page.url is',
                         'reason' => 'empty-value',
-
                     ]
                 ),
             ],
@@ -91,7 +89,6 @@ trait ParseExceptionDataProviderTrait
                         'statement_type' => 'action',
                         'statement' => 'click invalid-identifier',
                         'reason' => 'invalid-identifier',
-
                     ]
                 ),
             ],
@@ -116,7 +113,6 @@ trait ParseExceptionDataProviderTrait
                         'statement_type' => 'assertion',
                         'statement' => '$page.url is',
                         'reason' => 'empty-value',
-
                     ]
                 ),
             ],
@@ -139,7 +135,6 @@ trait ParseExceptionDataProviderTrait
                         'test_path' => FixturePaths::getInvalidTest() . '/non-array-actions-data.yml',
                         'step_name' => 'non-array actions data',
                         'reason' => 'invalid-actions-data',
-
                     ]
                 ),
             ],
@@ -162,7 +157,6 @@ trait ParseExceptionDataProviderTrait
                         'test_path' => FixturePaths::getInvalidTest() . '/non-array-assertions-data.yml',
                         'step_name' => 'non-array assertions data',
                         'reason' => 'invalid-assertions-data',
-
                     ]
                 ),
             ],

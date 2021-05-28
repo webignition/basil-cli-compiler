@@ -49,37 +49,44 @@ class ErrorOutputFactoryTest extends AbstractBaseTest
         $configurationSourceNotReadable = \Mockery::mock(ConfigurationInterface::class);
         $configurationSourceNotReadable
             ->shouldReceive('validate')
-            ->andReturn(Configuration::VALIDATION_STATE_SOURCE_NOT_READABLE);
+            ->andReturn(Configuration::VALIDATION_STATE_SOURCE_NOT_READABLE)
+        ;
 
         $configurationTargetNotWritable = \Mockery::mock(ConfigurationInterface::class);
         $configurationTargetNotWritable
             ->shouldReceive('validate')
-            ->andReturn(Configuration::VALIDATION_STATE_TARGET_NOT_WRITABLE);
+            ->andReturn(Configuration::VALIDATION_STATE_TARGET_NOT_WRITABLE)
+        ;
 
         $configurationTargetNotDirectory = \Mockery::mock(ConfigurationInterface::class);
         $configurationTargetNotDirectory
             ->shouldReceive('validate')
-            ->andReturn(Configuration::VALIDATION_STATE_TARGET_NOT_DIRECTORY);
+            ->andReturn(Configuration::VALIDATION_STATE_TARGET_NOT_DIRECTORY)
+        ;
 
         $configurationSourceNotAbsolute = \Mockery::mock(ConfigurationInterface::class);
         $configurationSourceNotAbsolute
             ->shouldReceive('validate')
-            ->andReturn(Configuration::VALIDATION_STATE_SOURCE_NOT_ABSOLUTE);
+            ->andReturn(Configuration::VALIDATION_STATE_SOURCE_NOT_ABSOLUTE)
+        ;
 
         $configurationTargetNotAbsolute = \Mockery::mock(ConfigurationInterface::class);
         $configurationTargetNotAbsolute
             ->shouldReceive('validate')
-            ->andReturn(Configuration::VALIDATION_STATE_TARGET_NOT_ABSOLUTE);
+            ->andReturn(Configuration::VALIDATION_STATE_TARGET_NOT_ABSOLUTE)
+        ;
 
         $configurationSourceEmpty = \Mockery::mock(ConfigurationInterface::class);
         $configurationSourceEmpty
             ->shouldReceive('validate')
-            ->andReturn(Configuration::VALIDATION_STATE_SOURCE_EMPTY);
+            ->andReturn(Configuration::VALIDATION_STATE_SOURCE_EMPTY)
+        ;
 
         $configurationTargetEmpty = \Mockery::mock(ConfigurationInterface::class);
         $configurationTargetEmpty
             ->shouldReceive('validate')
-            ->andReturn(Configuration::VALIDATION_STATE_TARGET_EMPTY);
+            ->andReturn(Configuration::VALIDATION_STATE_TARGET_EMPTY)
+        ;
 
         return [
             'source not readable' => [
