@@ -6,6 +6,7 @@ namespace webignition\BasilCliCompiler\Tests\DataProvider\RunFailure;
 
 use webignition\BaseBasilTestCase\AbstractBaseTest;
 use webignition\BasilCliCompiler\Services\ErrorOutputFactory;
+use webignition\BasilCliCompiler\Tests\DataProvider\FixturePaths;
 use webignition\BasilCompilerModels\Configuration;
 use webignition\BasilCompilerModels\ErrorOutput;
 
@@ -16,22 +17,20 @@ trait EmptyTestDataProviderTrait
      */
     public function emptyTestDataProvider(): array
     {
-        $root = getcwd();
-
-        $emptyTestPath = $root . '/tests/Fixtures/basil/InvalidTest/empty.yml';
+        $emptyTestPath = FixturePaths::getInvalidTest() . '/empty.yml';
         $emptyTestAbsolutePath = '' . $emptyTestPath;
 
         return [
             'test file is empty' => [
                 'input' => [
                     '--source' => $emptyTestPath,
-                    '--target' => $root . '/tests/build/target',
+                    '--target' => FixturePaths::getTarget(),
                 ],
                 'expectedExitCode' => ErrorOutputFactory::CODE_LOADER_EMPTY_TEST,
                 'expectedCommandOutput' => new ErrorOutput(
                     new Configuration(
                         $emptyTestAbsolutePath,
-                        $root . '/tests/build/target',
+                        FixturePaths::getTarget(),
                         AbstractBaseTest::class
                     ),
                     'Empty test at path "' . $emptyTestAbsolutePath . '"',

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace webignition\BasilCliCompiler\Tests\DataProvider\RunSuccess;
 
 use webignition\BaseBasilTestCase\AbstractBaseTest;
+use webignition\BasilCliCompiler\Tests\DataProvider\FixturePaths;
 use webignition\BasilCompilerModels\Configuration;
 use webignition\BasilCompilerModels\SuiteManifest;
 use webignition\BasilCompilerModels\TestManifest;
@@ -22,20 +23,20 @@ trait SuccessDataProviderTrait
         return [
             'single test' => [
                 'input' => [
-                    '--source' => $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
-                    '--target' => $root . '/tests/build/target',
+                    '--source' => FixturePaths::getTest() . '/example.com.verify-open-literal.yml',
+                    '--target' => FixturePaths::getTarget(),
                 ],
                 'expectedExitCode' => 0,
                 'expectedCommandOutput' => new SuiteManifest(
                     new Configuration(
-                        $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
-                        $root . '/tests/build/target',
+                        FixturePaths::getTest() . '/example.com.verify-open-literal.yml',
+                        FixturePaths::getTarget(),
                         AbstractBaseTest::class
                     ),
                     [
                         new TestManifest(
                             new TestModelConfiguration('chrome', 'https://example.com/'),
-                            $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal.yml',
+                            FixturePaths::getTest() . '/example.com.verify-open-literal.yml',
                             $root . '/tests/build/target/GeneratedVerifyOpenLiteralChrome.php',
                             1
                         ),
@@ -50,27 +51,26 @@ trait SuccessDataProviderTrait
             ],
             'single test with multiple browsers' => [
                 'input' => [
-                    '--source' =>
-                        $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal-multiple-browsers.yml',
-                    '--target' => $root . '/tests/build/target',
+                    '--source' => FixturePaths::getTest() . '/example.com.verify-open-literal-multiple-browsers.yml',
+                    '--target' => FixturePaths::getTarget(),
                 ],
                 'expectedExitCode' => 0,
                 'expectedCommandOutput' => new SuiteManifest(
                     new Configuration(
-                        $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal-multiple-browsers.yml',
-                        $root . '/tests/build/target',
+                        FixturePaths::getTest() . '/example.com.verify-open-literal-multiple-browsers.yml',
+                        FixturePaths::getTarget(),
                         AbstractBaseTest::class
                     ),
                     [
                         new TestManifest(
                             new TestModelConfiguration('chrome', 'https://example.com/'),
-                            $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal-multiple-browsers.yml',
+                            FixturePaths::getTest() . '/example.com.verify-open-literal-multiple-browsers.yml',
                             $root . '/tests/build/target/GeneratedVerifyOpenLiteralChrome.php',
                             1
                         ),
                         new TestManifest(
                             new TestModelConfiguration('firefox', 'https://example.com/'),
-                            $root . '/tests/Fixtures/basil/Test/example.com.verify-open-literal-multiple-browsers.yml',
+                            FixturePaths::getTest() . '/example.com.verify-open-literal-multiple-browsers.yml',
                             $root . '/tests/build/target/GeneratedVerifyOpenLiteralFirefox.php',
                             1
                         ),

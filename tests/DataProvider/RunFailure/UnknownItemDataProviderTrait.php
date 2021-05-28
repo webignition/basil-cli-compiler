@@ -6,6 +6,7 @@ namespace webignition\BasilCliCompiler\Tests\DataProvider\RunFailure;
 
 use webignition\BaseBasilTestCase\AbstractBaseTest;
 use webignition\BasilCliCompiler\Services\ErrorOutputFactory;
+use webignition\BasilCliCompiler\Tests\DataProvider\FixturePaths;
 use webignition\BasilCompilerModels\Configuration;
 use webignition\BasilCompilerModels\ErrorOutput;
 
@@ -16,19 +17,17 @@ trait UnknownItemDataProviderTrait
      */
     public function unknownItemDataProvider(): array
     {
-        $root = getcwd();
-
         return [
             'test declares step, step uses unknown dataset' => [
                 'input' => [
-                    '--source' => $root . '/tests/Fixtures/basil/InvalidTest/step-uses-unknown-dataset.yml',
-                    '--target' => $root . '/tests/build/target',
+                    '--source' => FixturePaths::getInvalidTest() . '/step-uses-unknown-dataset.yml',
+                    '--target' => FixturePaths::getTarget(),
                 ],
                 'expectedExitCode' => ErrorOutputFactory::CODE_LOADER_UNKNOWN_ITEM,
                 'expectedCommandOutput' => new ErrorOutput(
                     new Configuration(
-                        $root . '/tests/Fixtures/basil/InvalidTest/step-uses-unknown-dataset.yml',
-                        $root . '/tests/build/target',
+                        FixturePaths::getInvalidTest() . '/step-uses-unknown-dataset.yml',
+                        FixturePaths::getTarget(),
                         AbstractBaseTest::class
                     ),
                     'Unknown dataset "unknown_data_provider_name"',
@@ -36,7 +35,7 @@ trait UnknownItemDataProviderTrait
                     [
                         'type' => 'dataset',
                         'name' => 'unknown_data_provider_name',
-                        'test_path' => $root . '/tests/Fixtures/basil/InvalidTest/step-uses-unknown-dataset.yml',
+                        'test_path' => FixturePaths::getInvalidTest() . '/step-uses-unknown-dataset.yml',
                         'step_name' => 'step name',
                         'statement' => '',
                     ]
@@ -44,14 +43,14 @@ trait UnknownItemDataProviderTrait
             ],
             'test declares step, step uses unknown page' => [
                 'input' => [
-                    '--source' => $root . '/tests/Fixtures/basil/InvalidTest/step-uses-unknown-page.yml',
-                    '--target' => $root . '/tests/build/target',
+                    '--source' => FixturePaths::getInvalidTest() . '/step-uses-unknown-page.yml',
+                    '--target' => FixturePaths::getTarget(),
                 ],
                 'expectedExitCode' => ErrorOutputFactory::CODE_LOADER_UNKNOWN_ITEM,
                 'expectedCommandOutput' => new ErrorOutput(
                     new Configuration(
-                        $root . '/tests/Fixtures/basil/InvalidTest/step-uses-unknown-page.yml',
-                        $root . '/tests/build/target',
+                        FixturePaths::getInvalidTest() . '/step-uses-unknown-page.yml',
+                        FixturePaths::getTarget(),
                         AbstractBaseTest::class
                     ),
                     'Unknown page "unknown_page_import"',
@@ -59,7 +58,7 @@ trait UnknownItemDataProviderTrait
                     [
                         'type' => 'page',
                         'name' => 'unknown_page_import',
-                        'test_path' => $root . '/tests/Fixtures/basil/InvalidTest/step-uses-unknown-page.yml',
+                        'test_path' => FixturePaths::getInvalidTest() . '/step-uses-unknown-page.yml',
                         'step_name' => 'step name',
                         'statement' => '',
                     ]
@@ -67,14 +66,14 @@ trait UnknownItemDataProviderTrait
             ],
             'test declares step, step uses step' => [
                 'input' => [
-                    '--source' => $root . '/tests/Fixtures/basil/InvalidTest/step-uses-unknown-step.yml',
-                    '--target' => $root . '/tests/build/target',
+                    '--source' => FixturePaths::getInvalidTest() . '/step-uses-unknown-step.yml',
+                    '--target' => FixturePaths::getTarget(),
                 ],
                 'expectedExitCode' => ErrorOutputFactory::CODE_LOADER_UNKNOWN_ITEM,
                 'expectedCommandOutput' => new ErrorOutput(
                     new Configuration(
-                        $root . '/tests/Fixtures/basil/InvalidTest/step-uses-unknown-step.yml',
-                        $root . '/tests/build/target',
+                        FixturePaths::getInvalidTest() . '/step-uses-unknown-step.yml',
+                        FixturePaths::getTarget(),
                         AbstractBaseTest::class
                     ),
                     'Unknown step "unknown_step"',
@@ -82,7 +81,7 @@ trait UnknownItemDataProviderTrait
                     [
                         'type' => 'step',
                         'name' => 'unknown_step',
-                        'test_path' => $root . '/tests/Fixtures/basil/InvalidTest/step-uses-unknown-step.yml',
+                        'test_path' => FixturePaths::getInvalidTest() . '/step-uses-unknown-step.yml',
                         'step_name' => 'step name',
                         'statement' => '',
                     ]
