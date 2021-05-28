@@ -43,14 +43,14 @@ class ErrorOutputFactory
     public const REASON_UNKNOWN = 'unknown';
 
     public const CODE_COMMAND_CONFIG_SOURCE_EMPTY = 100;
-    public const CODE_COMMAND_CONFIG_SOURCE_INVALID_DOES_NOT_EXIST = 101;
-    public const CODE_COMMAND_CONFIG_SOURCE_INVALID_NOT_READABLE = 102;
+    public const CODE_COMMAND_CONFIG_SOURCE_DOES_NOT_EXIST = 101;
+    public const CODE_COMMAND_CONFIG_SOURCE_NOT_READABLE = 102;
     public const CODE_COMMAND_CONFIG_TARGET_EMPTY = 103;
-    public const CODE_COMMAND_CONFIG_TARGET_INVALID_DOES_NOT_EXIST = 104;
-    public const CODE_COMMAND_CONFIG_TARGET_INVALID_NOT_A_DIRECTORY = 105;
-    public const CODE_COMMAND_CONFIG_TARGET_INVALID_NOT_WRITABLE = 106;
-    public const CODE_COMMAND_CONFIG_SOURCE_INVALID_NOT_ABSOLUTE = 107;
-    public const CODE_COMMAND_CONFIG_TARGET_INVALID_NOT_ABSOLUTE = 108;
+    public const CODE_COMMAND_CONFIG_TARGET_DOES_NOT_EXIST = 104;
+    public const CODE_COMMAND_CONFIG_TARGET_NOT_A_DIRECTORY = 105;
+    public const CODE_COMMAND_CONFIG_TARGET_NOT_WRITABLE = 106;
+    public const CODE_COMMAND_CONFIG_SOURCE_NOT_ABSOLUTE = 107;
+    public const CODE_COMMAND_CONFIG_TARGET_NOT_ABSOLUTE = 108;
     public const CODE_LOADER_INVALID_YAML = 200;
     public const CODE_LOADER_CIRCULAR_STEP_IMPORT = 201;
     public const CODE_LOADER_EMPTY_TEST = 202;
@@ -63,6 +63,16 @@ class ErrorOutputFactory
     public const CODE_LOADER_UNKNOWN_PAGE_ELEMENT = 209;
     public const CODE_GENERATOR_UNRESOLVED_PLACEHOLDER = 211;
     public const CODE_GENERATOR_UNSUPPORTED_STEP = 212;
+
+    public const MESSAGE_COMMAND_CONFIG_SOURCE_EMPTY = 'source empty; call with --source=SOURCE';
+    public const MESSAGE_COMMAND_CONFIG_SOURCE_DOES_NOT_EXIST = 'source invalid; does not exist';
+    public const MESSAGE_COMMAND_CONFIG_SOURCE_NOT_READABLE = 'source invalid; file is not readable';
+    public const MESSAGE_COMMAND_CONFIG_TARGET_EMPTY = 'target empty; call with --target=TARGET';
+    public const MESSAGE_COMMAND_CONFIG_TARGET_DOES_NOT_EXIST = 'target invalid; does not exist';
+    public const MESSAGE_COMMAND_CONFIG_TARGET_NOT_A_DIRECTORY = 'target invalid; is not a directory (is it a file?)';
+    public const MESSAGE_COMMAND_CONFIG_TARGET_NOT_WRITABLE = 'target invalid; directory is not writable';
+    public const MESSAGE_COMMAND_CONFIG_SOURCE_NOT_ABSOLUTE = 'source invalid: path must be absolute';
+    public const MESSAGE_COMMAND_CONFIG_TARGET_NOT_ABSOLUTE = 'target invalid: path must be absolute';
 
     /**
      * @var array<mixed>
@@ -85,24 +95,15 @@ class ErrorOutputFactory
      * @var array<int, string>
      */
     private array $configurationErrorMessages = [
-        self::CODE_COMMAND_CONFIG_SOURCE_EMPTY =>
-            'source empty; call with --source=SOURCE',
-        self::CODE_COMMAND_CONFIG_SOURCE_INVALID_DOES_NOT_EXIST =>
-            'source invalid; does not exist',
-        self::CODE_COMMAND_CONFIG_SOURCE_INVALID_NOT_READABLE =>
-            'source invalid; file is not readable',
-        self::CODE_COMMAND_CONFIG_TARGET_EMPTY =>
-            'target empty; call with --target=TARGET',
-        self::CODE_COMMAND_CONFIG_TARGET_INVALID_DOES_NOT_EXIST =>
-            'target invalid; does not exist',
-        self::CODE_COMMAND_CONFIG_TARGET_INVALID_NOT_A_DIRECTORY =>
-            'target invalid; is not a directory (is it a file?)',
-        self::CODE_COMMAND_CONFIG_TARGET_INVALID_NOT_WRITABLE =>
-            'target invalid; directory is not writable',
-        self::CODE_COMMAND_CONFIG_SOURCE_INVALID_NOT_ABSOLUTE =>
-            'source invalid: path must be absolute',
-        self::CODE_COMMAND_CONFIG_TARGET_INVALID_NOT_ABSOLUTE =>
-            'target invalid: path must be absolute'
+        self::CODE_COMMAND_CONFIG_SOURCE_EMPTY => self::MESSAGE_COMMAND_CONFIG_SOURCE_EMPTY,
+        self::CODE_COMMAND_CONFIG_SOURCE_DOES_NOT_EXIST => self::MESSAGE_COMMAND_CONFIG_SOURCE_DOES_NOT_EXIST,
+        self::CODE_COMMAND_CONFIG_SOURCE_NOT_READABLE => self::MESSAGE_COMMAND_CONFIG_SOURCE_NOT_READABLE,
+        self::CODE_COMMAND_CONFIG_TARGET_EMPTY => self::MESSAGE_COMMAND_CONFIG_TARGET_EMPTY,
+        self::CODE_COMMAND_CONFIG_TARGET_DOES_NOT_EXIST => self::MESSAGE_COMMAND_CONFIG_TARGET_DOES_NOT_EXIST,
+        self::CODE_COMMAND_CONFIG_TARGET_NOT_A_DIRECTORY => self::MESSAGE_COMMAND_CONFIG_TARGET_NOT_A_DIRECTORY,
+        self::CODE_COMMAND_CONFIG_TARGET_NOT_WRITABLE => self::MESSAGE_COMMAND_CONFIG_TARGET_NOT_WRITABLE,
+        self::CODE_COMMAND_CONFIG_SOURCE_NOT_ABSOLUTE => self::MESSAGE_COMMAND_CONFIG_SOURCE_NOT_ABSOLUTE,
+        self::CODE_COMMAND_CONFIG_TARGET_NOT_ABSOLUTE => self::MESSAGE_COMMAND_CONFIG_TARGET_NOT_ABSOLUTE
     ];
 
     public function __construct(
@@ -114,22 +115,22 @@ class ErrorOutputFactory
         ConfigurationInterface $configuration,
         int $configurationValidationState
     ): ErrorOutputInterface {
-        $errorCode = self::CODE_COMMAND_CONFIG_SOURCE_INVALID_NOT_READABLE;
+        $errorCode = self::CODE_COMMAND_CONFIG_SOURCE_NOT_READABLE;
 
         if (Configuration::VALIDATION_STATE_TARGET_NOT_DIRECTORY === $configurationValidationState) {
-            $errorCode = self::CODE_COMMAND_CONFIG_TARGET_INVALID_NOT_A_DIRECTORY;
+            $errorCode = self::CODE_COMMAND_CONFIG_TARGET_NOT_A_DIRECTORY;
         }
 
         if (Configuration::VALIDATION_STATE_TARGET_NOT_WRITABLE === $configurationValidationState) {
-            $errorCode = self::CODE_COMMAND_CONFIG_TARGET_INVALID_NOT_WRITABLE;
+            $errorCode = self::CODE_COMMAND_CONFIG_TARGET_NOT_WRITABLE;
         }
 
         if (Configuration::VALIDATION_STATE_SOURCE_NOT_ABSOLUTE === $configurationValidationState) {
-            $errorCode = self::CODE_COMMAND_CONFIG_SOURCE_INVALID_NOT_ABSOLUTE;
+            $errorCode = self::CODE_COMMAND_CONFIG_SOURCE_NOT_ABSOLUTE;
         }
 
         if (Configuration::VALIDATION_STATE_TARGET_NOT_ABSOLUTE === $configurationValidationState) {
-            $errorCode = self::CODE_COMMAND_CONFIG_TARGET_INVALID_NOT_ABSOLUTE;
+            $errorCode = self::CODE_COMMAND_CONFIG_TARGET_NOT_ABSOLUTE;
         }
 
         if (Configuration::VALIDATION_STATE_SOURCE_EMPTY === $configurationValidationState) {
