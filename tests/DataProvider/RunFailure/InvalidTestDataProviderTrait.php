@@ -6,6 +6,7 @@ namespace webignition\BasilCliCompiler\Tests\DataProvider\RunFailure;
 
 use webignition\BaseBasilTestCase\AbstractBaseTest;
 use webignition\BasilCliCompiler\Services\ErrorOutputFactory;
+use webignition\BasilCliCompiler\Tests\DataProvider\FixturePaths;
 use webignition\BasilCompilerModels\Configuration;
 use webignition\BasilCompilerModels\ErrorOutput;
 
@@ -16,22 +17,20 @@ trait InvalidTestDataProviderTrait
      */
     public function invalidTestDataProvider(): array
     {
-        $root = getcwd();
-
-        $testPath = $root . '/tests/Fixtures/basil/InvalidTest/invalid-configuration.yml';
+        $testPath = FixturePaths::getInvalidTest() . '/invalid-configuration.yml';
         $testAbsolutePath = '' . $testPath;
 
         return [
             'test has invalid configuration' => [
                 'input' => [
                     '--source' => $testPath,
-                    '--target' => $root . '/tests/build/target',
+                    '--target' => FixturePaths::getTarget(),
                 ],
                 'expectedExitCode' => ErrorOutputFactory::CODE_LOADER_INVALID_TEST,
                 'expectedCommandOutput' => new ErrorOutput(
                     new Configuration(
                         $testAbsolutePath,
-                        $root . '/tests/build/target',
+                        FixturePaths::getTarget(),
                         AbstractBaseTest::class
                     ),
                     'Invalid test at path "' .

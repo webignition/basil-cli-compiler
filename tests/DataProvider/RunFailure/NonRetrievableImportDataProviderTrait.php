@@ -6,6 +6,7 @@ namespace webignition\BasilCliCompiler\Tests\DataProvider\RunFailure;
 
 use webignition\BaseBasilTestCase\AbstractBaseTest;
 use webignition\BasilCliCompiler\Services\ErrorOutputFactory;
+use webignition\BasilCliCompiler\Tests\DataProvider\FixturePaths;
 use webignition\BasilCompilerModels\Configuration;
 use webignition\BasilCompilerModels\ErrorOutput;
 
@@ -21,20 +22,20 @@ trait NonRetrievableImportDataProviderTrait
         $pagePath = $root . '/tests/Fixtures/basil/InvalidPage/unparseable.yml';
         $pageAbsolutePath = '' . $pagePath;
 
-        $testPath = $root . '/tests/Fixtures/basil/InvalidTest/import-unparseable-page.yml';
+        $testPath = FixturePaths::getInvalidTest() . '/import-unparseable-page.yml';
         $testAbsolutePath = '' . $testPath;
 
         return [
             'test imports non-parsable page' => [
                 'input' => [
                     '--source' => $testPath,
-                    '--target' => $root . '/tests/build/target',
+                    '--target' => FixturePaths::getTarget(),
                 ],
                 'expectedExitCode' => ErrorOutputFactory::CODE_LOADER_NON_RETRIEVABLE_IMPORT,
                 'expectedCommandOutput' => new ErrorOutput(
                     new Configuration(
                         $testAbsolutePath,
-                        $root . '/tests/build/target',
+                        FixturePaths::getTarget(),
                         AbstractBaseTest::class
                     ),
                     'Cannot retrieve page "unparseable_page" from "' . $pageAbsolutePath . '"',
