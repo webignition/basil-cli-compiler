@@ -1,0 +1,12 @@
+config:
+  browsers:
+    - chrome
+  url: $example_com.url
+
+imports:
+  pages:
+    example_com: "../Page/with-elements.yml"
+
+"verify page is open":
+  assertions:
+    - $page.url is $example_com.url
