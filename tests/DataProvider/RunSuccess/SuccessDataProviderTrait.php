@@ -49,6 +49,34 @@ trait SuccessDataProviderTrait
                     'GeneratedVerifyOpenLiteralChrome',
                 ],
             ],
+            'single test, verify open literal with page import' => [
+                'input' => [
+                    '--source' => FixturePaths::getTest() . '/example.com.import-page.yml',
+                    '--target' => FixturePaths::getTarget(),
+                ],
+                'expectedExitCode' => 0,
+                'expectedCommandOutput' => new SuiteManifest(
+                    new Configuration(
+                        FixturePaths::getTest() . '/example.com.import-page.yml',
+                        FixturePaths::getTarget(),
+                        AbstractBaseTest::class
+                    ),
+                    [
+                        new TestManifest(
+                            new TestModelConfiguration('chrome', 'http://example.com'),
+                            FixturePaths::getTest() . '/example.com.import-page.yml',
+                            FixturePaths::getTarget() . '/GeneratedImportPage.php',
+                            1
+                        ),
+                    ]
+                ),
+                'expectedGeneratedCodePaths' => [
+                    'tests/Fixtures/php/Test/GeneratedImportPage.php',
+                ],
+                'classNames' => [
+                    'GeneratedImportPage',
+                ],
+            ],
             'single test with multiple browsers' => [
                 'input' => [
                     '--source' => FixturePaths::getTest() . '/example.com.verify-open-literal-multiple-browsers.yml',
